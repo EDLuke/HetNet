@@ -17,4 +17,42 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        android:layout_weight="1"
+        android:layout_below="@+id/dummy_textView">
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/tbl_process_info"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/dummy_textView"
+            android:stretchColumns="*"
+            android:isScrollContainer="true">
+
+            <!-- process name, pid, uid, pkglist -->
+            <TableRow
+                android:id="@+id/tblrow_header"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/tblrow_header_name"
+                    android:text="Name" />
+                <TextView
+                    android:id="@+id/tblrow_header_pid"
+                    android:text="pid" />
+                <TextView
+                    android:id="@+id/tblrow_header_uid"
+                    android:text="uid" />
+                <TextView
+                    android:id="@+id/tblrow_header_pkglist"
+                    android:text="pkglist" />
+            </TableRow>
+
+        </TableLayout>
+    </ScrollView>
 </RelativeLayout>
