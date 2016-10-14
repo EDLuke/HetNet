@@ -124,10 +124,7 @@ public class SystemManager_Main extends Activity{
                         Toast.LENGTH_LONG).show();
                 ActivityManager m_am = (ActivityManager)getApplicationContext().getSystemService(ACTIVITY_SERVICE);
                 mRunningProcesses = m_am.getRunningAppProcesses();
-
-
-
-
+                
 
             }
         });
