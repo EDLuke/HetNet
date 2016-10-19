@@ -1,10 +1,14 @@
 package android_network.hetnet.network;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
@@ -16,10 +20,25 @@ import static android_network.hetnet.network.Constants.EXTENDED_DATA_STATUS;
 
 public class NetworkManager_Main extends AppCompatActivity {
 
+  private static final int REQUEST_READ_PHONE_STATE = 100 ;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_network_manager__main);
+
+    int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
+
+    if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+      ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, REQUEST_READ_PHONE_STATE);
+    } else {
+      //TODO
+    }
+
+    //LOOK HERE
+
+
+
 
     Intent mServiceIntent = new Intent(this, NetworkListFetcher.class);
     this.startService(mServiceIntent);
