@@ -28,4 +28,15 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:onClick="startNetworkManager" />
+
+    <Button
+        android:text="Location Manager"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_System"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="47dp"
+        android:id="@+id/button"
+        android:onClick="startLocationManager"/>
+
 </RelativeLayout>
