@@ -25,7 +25,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".SystemManager_Main" />
+        <activity android:name=".system.SystemManager_Main" />
 
         <activity android:name=".network.NetworkManager_Main" />
         <activity android:name=".location.LocationManager_Main"/>

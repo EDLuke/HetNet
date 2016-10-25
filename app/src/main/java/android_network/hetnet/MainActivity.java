@@ -7,6 +7,7 @@ import android.view.View;
 
 import android_network.hetnet.network.NetworkManager_Main;
 import android_network.hetnet.location.LocationManager_Main;
+import android_network.hetnet.system.SystemManager_Main;
 
 public class MainActivity extends AppCompatActivity {
 
