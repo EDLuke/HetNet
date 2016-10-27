@@ -2,6 +2,7 @@ package android_network.hetnet.system.adapter;
 
 import android.app.ActivityManager;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,6 +62,12 @@ public class RunningApplicationListAdapter extends BaseAdapter {
         pid.setText(Integer.toString(process.pid));
         uid.setText(Integer.toString(process.uid));
         ppkgname.setText(process.pkgList.toString());
+
+      pname.setTextColor(Color.BLACK);
+      pid.setTextColor(Color.BLACK);
+      uid.setTextColor(Color.BLACK);
+      ppkgname.setTextColor(Color.BLACK);
+
         return rowView;
     }
 }

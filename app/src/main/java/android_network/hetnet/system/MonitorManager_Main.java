@@ -1,5 +1,7 @@
 package android_network.hetnet.system;
 
+import android.app.IntentService;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -19,9 +21,14 @@ public class MonitorManager_Main {
   private Queue<Thread> m_thread_queue;
   private boolean       m_running;
 
+  private MonitorService m_service;
+
   public MonitorManager_Main(){
     m_thread_queue = new LinkedList<>();
     m_running = true;
+
+    //TODO: Migrate to Service
+    //m_service = new Intent(this, MonitorService.class);
   }
 
   public void insertNewThread(Thread thread){
@@ -30,9 +37,9 @@ public class MonitorManager_Main {
 
   /* Run all the threads in a rotational fashion*/
   public void startMonitor(){
-    Thread monitorThread = new Thread(){
+    Thread monitorThread = new Thread(new Runnable() {
       @Override
-      public void run(){
+      public void run() {
         try{
           while(m_running){
             Thread currentThread = m_thread_queue.remove();
@@ -40,15 +47,16 @@ public class MonitorManager_Main {
             currentThread.join();
             m_thread_queue.add(currentThread);
 
-//            sleep(10000);
-            m_running = false;
+            Thread.sleep(1000);
           }
         }catch(InterruptedException e){
           Log.e(TAG, "Thread interrupted");
         }
       }
-    };
+    });
 
-    monitorThread.run();
+    monitorThread.start();
   }
+
+
 }
