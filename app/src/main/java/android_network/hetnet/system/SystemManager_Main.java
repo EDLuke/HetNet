@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import android_network.hetnet.R;
 import android_network.hetnet.system.monitor_threads.ActivityManagerThread;
+import android_network.hetnet.system.monitor_threads.DevicePowerThread;
 
 public class SystemManager_Main extends Activity {
   /** Log Tag */
@@ -24,8 +26,9 @@ public class SystemManager_Main extends Activity {
     //this.startService(m_service);
 
     ActivityManagerThread thread_am = new ActivityManagerThread(getApplicationContext(), (ListView)(findViewById(R.id.listview_ps)));
-
+    DevicePowerThread powerThread = new DevicePowerThread(getApplicationContext(), (TextView)(findViewById(R.id.textview_devicepower)));
     monitorManager_main.insertNewThread(thread_am);
+    monitorManager_main.insertNewThread(powerThread);
 
     monitorManager_main.startMonitor();
   }

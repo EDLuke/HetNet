@@ -9,11 +9,25 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".system.SystemManager_Main">
 
-    <ListView
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/listview_ps" />
+        android:layout_alignParentStart="true">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="74dp"
+            android:id="@+id/textview_devicepower"/>
+
+        <ListView
+            android:layout_width="match_parent"
+
+            android:id="@+id/listview_ps"
+            android:layout_height="wrap_content"
+            />
+
+    </LinearLayout>
+
 </RelativeLayout>

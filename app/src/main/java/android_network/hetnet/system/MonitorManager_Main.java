@@ -24,7 +24,7 @@ public class MonitorManager_Main {
   private MonitorService m_service;
 
   public MonitorManager_Main(){
-    m_thread_queue = new LinkedList<>();
+    m_thread_queue = new LinkedList<Thread>();
     m_running = true;
 
     //TODO: Migrate to Service
