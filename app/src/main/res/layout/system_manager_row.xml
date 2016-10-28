@@ -5,7 +5,7 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -14,27 +14,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/pname"
-            android:layout_weight=".25" />
+            android:layout_weight=".25"
+            android:gravity="left"/>
 
         <TextView
             android:text="pid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/pid"
-            android:layout_weight=".25" />
+            android:layout_weight=".25"
+            android:gravity="right"/>
 
         <TextView
             android:text="uid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/uid"
-            android:layout_weight=".25" />
+            android:layout_weight=".25"
+            android:gravity="right"/>
 
-        <TextView
-            android:text="pkglist"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/pkglist"
-            android:layout_weight=".25" />
     </LinearLayout>
 </LinearLayout>

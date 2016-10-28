@@ -3,6 +3,7 @@ package android_network.hetnet.system.adapter;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,17 +57,18 @@ public class RunningApplicationListAdapter extends BaseAdapter {
         TextView pname = (TextView) rowView.findViewById(R.id.pname);
         TextView pid = (TextView) rowView.findViewById(R.id.pid);
         TextView uid = (TextView) rowView.findViewById(R.id.uid);
-        TextView ppkgname = (TextView) rowView.findViewById(R.id.pkglist);
+//        TextView ppkgname = (TextView) rowView.findViewById(R.id.pkglist);
         ActivityManager.RunningAppProcessInfo process = mRunningProcesses.get(i);
         pname.setText(process.processName);
         pid.setText(Integer.toString(process.pid));
         uid.setText(Integer.toString(process.uid));
-        ppkgname.setText(process.pkgList.toString());
+//        ppkgname.setText(process.pkgList.toString());
+//        Log.d("SYSTEM_MANAGER", process.processName);
 
       pname.setTextColor(Color.BLACK);
       pid.setTextColor(Color.BLACK);
       uid.setTextColor(Color.BLACK);
-      ppkgname.setTextColor(Color.BLACK);
+//      ppkgname.setTextColor(Color.BLACK);
 
         return rowView;
     }

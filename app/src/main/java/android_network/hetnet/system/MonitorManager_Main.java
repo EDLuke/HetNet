@@ -21,7 +21,7 @@ public class MonitorManager_Main {
   private Queue<Thread> m_thread_queue;
   private boolean       m_running;
 
-  private MonitorService m_service;
+//  private MonitorService m_service;
 
   public MonitorManager_Main(){
     m_thread_queue = new LinkedList<Thread>();

@@ -13,20 +13,51 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:weightSum="1"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true">
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="74dp"
+            android:layout_height="41dp"
             android:id="@+id/textview_devicepower"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="Package"
+                android:layout_width="99dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView4"
+                android:layout_weight="1" />
+
+            <TextView
+                android:text="PID"
+                android:layout_width="91dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView2"
+                android:layout_weight="1"
+                android:gravity="right"/>
+
+            <TextView
+                android:text="UID"
+                android:layout_width="87dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView5"
+                android:layout_weight="1"
+                android:gravity="right"/>
+
+        </LinearLayout>
 
         <ListView
             android:layout_width="match_parent"
 
             android:id="@+id/listview_ps"
-            android:layout_height="wrap_content"
-            />
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
 
     </LinearLayout>
 
