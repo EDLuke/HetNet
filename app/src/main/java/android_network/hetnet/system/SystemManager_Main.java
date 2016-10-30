@@ -26,7 +26,9 @@ public class SystemManager_Main extends Activity {
     //this.startService(m_service);
 
     ActivityManagerThread thread_am = new ActivityManagerThread(getApplicationContext(), (ListView)(findViewById(R.id.listview_ps)));
-    DevicePowerThread powerThread = new DevicePowerThread(getApplicationContext(), (TextView)(findViewById(R.id.textview_devicepower)));
+    //Device power monitoring thread takes ther app context and 2 UI views to update, one for charging status and one for the percentage
+    DevicePowerThread powerThread = new DevicePowerThread(getApplicationContext(), (TextView)(findViewById(R.id.textview_devicepower)), (TextView) (findViewById(R.id.textview_device_power_percentage)));
+    //Add newly created threads to the threadpool
     monitorManager_main.insertNewThread(thread_am);
     monitorManager_main.insertNewThread(powerThread);
 

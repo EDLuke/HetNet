@@ -35,7 +35,7 @@ public class MonitorManager_Main {
     m_thread_queue.add(thread);
   }
 
-  /* Run all the threads in a rotational fashion*/
+  /* Run all the threads in a rotational (RR?) fashion*/
   public void startMonitor(){
     Thread monitorThread = new Thread(new Runnable() {
       @Override
@@ -50,7 +50,7 @@ public class MonitorManager_Main {
             Thread.sleep(1000);
           }
         }catch(InterruptedException e){
-          Log.e(TAG, "Thread interrupted");
+          Log.e(TAG, "A thread was interrupted");
         }
       }
     });
