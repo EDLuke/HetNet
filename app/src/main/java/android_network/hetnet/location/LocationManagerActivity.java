@@ -1,6 +1,5 @@
 package android_network.hetnet.location;
 
-
 /**
  * Created by lanking on 21/10/2016.
  */
@@ -25,13 +24,18 @@ import android_network.hetnet.R;
 public class LocationManagerActivity extends Activity {
   protected LocationManager locationManager;
   protected SensorManager sManager;
+  LocationParser loc;
   TextView txtLat;
   TextView txtGyro;
+  TextView txtAddress;
   LocationListener listener = new LocationListener() {
     @Override
     public void onLocationChanged(Location location) {
       txtLat = (TextView) findViewById(R.id.location_text);
+      txtAddress = (TextView) findViewById(R.id.Parsed_Address);
       txtLat.setText("Latitude:" + location.getLatitude() + ", Longitude:" + location.getLongitude());
+      String latlgn = location.getLatitude() + "," + location.getLongitude();
+      new LocationParser(txtAddress).execute(latlgn);
     }
 
     @Override
