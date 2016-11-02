@@ -57,17 +57,15 @@ public class RunningApplicationListAdapter extends BaseAdapter {
     TextView pname = (TextView) rowView.findViewById(R.id.pname);
     TextView pid = (TextView) rowView.findViewById(R.id.pid);
     TextView uid = (TextView) rowView.findViewById(R.id.uid);
-    TextView ppkgname = (TextView) rowView.findViewById(R.id.pkglist);
+
     ActivityManager.RunningAppProcessInfo process = mRunningProcesses.get(i);
     pname.setText(process.processName);
     pid.setText(Integer.toString(process.pid));
     uid.setText(Integer.toString(process.uid));
-    ppkgname.setText(process.pkgList.toString());
 
     pname.setTextColor(Color.BLACK);
     pid.setTextColor(Color.BLACK);
     uid.setTextColor(Color.BLACK);
-    ppkgname.setTextColor(Color.BLACK);
 
     return rowView;
   }
