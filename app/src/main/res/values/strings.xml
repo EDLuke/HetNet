@@ -13,4 +13,5 @@
     <string name="pid_title">PID</string>
     <string name="uid_title">UID</string>
     <string name="my_address">My Address</string>
+    <string name="current_address">Current Address</string>
 </resources>

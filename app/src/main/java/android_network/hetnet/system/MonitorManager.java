@@ -5,18 +5,13 @@ import android.util.Log;
 import java.util.LinkedList;
 import java.util.Queue;
 
-/**
- * Monitor Manager
- */
 public class MonitorManager {
   /**
    * Log Tag
    */
   private static final String TAG = "MonitorManager";
-
   private Queue<Thread> m_thread_queue;
   private boolean m_running;
-
   private MonitorService m_service;
 
   public MonitorManager() {
@@ -53,6 +48,4 @@ public class MonitorManager {
 
     monitorThread.start();
   }
-
-
 }

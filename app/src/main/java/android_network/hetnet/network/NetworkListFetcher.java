@@ -19,12 +19,6 @@ import static android_network.hetnet.Constants.BROADCAST_ACTION;
 import static android_network.hetnet.Constants.EXTENDED_DATA_STATUS;
 
 public class NetworkListFetcher extends IntentService {
-
-  /**
-   * Creates an IntentService.  Invoked by your subclass's constructor.
-   *
-   * @param name Used to name the worker thread, important only for debugging.
-   */
   public NetworkListFetcher(String name) {
     super(name);
   }
@@ -47,7 +41,6 @@ public class NetworkListFetcher extends IntentService {
 
     // If WiFi disabled then enable it
     if (!wifiManager.isWifiEnabled()) {
-      System.out.println("Turning WiFi On");
       Toast.makeText(getApplicationContext(), "Turning WiFi On", Toast.LENGTH_LONG).show();
       wifiManager.setWifiEnabled(true);
     }
@@ -80,7 +73,7 @@ public class NetworkListFetcher extends IntentService {
   }
 
   private class WifiReceiver extends BroadcastReceiver {
-    // This method call when number of WiFi connections changed
+    // This method is called when number of WiFi connections changed
     public void onReceive(Context c, Intent intent) {
       StringBuilder sb = new StringBuilder();
       List<ScanResult> wifiList = wifiManager.getScanResults();

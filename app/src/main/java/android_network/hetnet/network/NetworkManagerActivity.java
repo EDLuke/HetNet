@@ -52,6 +52,7 @@ public class NetworkManagerActivity extends Activity {
     public void onReceive(Context context, Intent intent) {
       String result = intent.getStringExtra(EXTENDED_DATA_STATUS);
       TextView networkList = (TextView) findViewById(R.id.networkList);
+
       if (networkList != null) {
         networkList.setText(result);
       }

@@ -18,7 +18,6 @@ import android_network.hetnet.R;
  * AU: Gabe
  */
 public class RunningApplicationListAdapter extends BaseAdapter {
-
   private List<ActivityManager.RunningAppProcessInfo> mRunningProcesses;
   private Context mContext;
 
@@ -29,18 +28,20 @@ public class RunningApplicationListAdapter extends BaseAdapter {
 
   @Override
   public int getCount() {
-    if (mRunningProcesses != null)
+    if (mRunningProcesses != null) {
       return mRunningProcesses.size();
-    else
+    } else {
       return -1;
+    }
   }
 
   @Override
   public Object getItem(int i) {
-    if (mRunningProcesses != null)
+    if (mRunningProcesses != null) {
       return mRunningProcesses.get(i);
-    else
+    } else {
       return null;
+    }
   }
 
   @Override

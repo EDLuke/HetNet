@@ -24,18 +24,18 @@ import android_network.hetnet.R;
 public class LocationManagerActivity extends Activity {
   protected LocationManager locationManager;
   protected SensorManager sManager;
-  LocationParser loc;
   TextView txtLat;
   TextView txtGyro;
   TextView txtAddress;
+
   LocationListener listener = new LocationListener() {
     @Override
     public void onLocationChanged(Location location) {
       txtLat = (TextView) findViewById(R.id.location_text);
       txtAddress = (TextView) findViewById(R.id.Parsed_Address);
       txtLat.setText("Latitude:" + location.getLatitude() + ", Longitude:" + location.getLongitude());
-      String latlgn = location.getLatitude() + "," + location.getLongitude();
-      new LocationParser(txtAddress).execute(latlgn);
+      String latLong = location.getLatitude() + "," + location.getLongitude();
+      new LocationParser(getApplicationContext(), txtAddress).execute(latLong);
     }
 
     @Override
@@ -53,7 +53,8 @@ public class LocationManagerActivity extends Activity {
 
     }
   };
-  SensorEventListener my_sensor = new SensorEventListener() {
+
+  SensorEventListener mySensor = new SensorEventListener() {
     @Override
     public void onSensorChanged(SensorEvent event) {
       if (event.accuracy == SensorManager.SENSOR_STATUS_UNRELIABLE) {
@@ -80,8 +81,10 @@ public class LocationManagerActivity extends Activity {
     txtGyro = (TextView) findViewById(R.id.gyroscope);
     locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
     sManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-    sManager.registerListener(my_sensor, sManager.getDefaultSensor(Sensor.TYPE_ORIENTATION), SensorManager.SENSOR_DELAY_NORMAL);
-    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+    sManager.registerListener(mySensor, sManager.getDefaultSensor(Sensor.TYPE_ORIENTATION), SensorManager.SENSOR_DELAY_NORMAL);
+
+    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+      && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
       // TODO: Consider calling
       //    ActivityCompat#requestPermissions
       // here to request the missing permissions, and then overriding
@@ -91,9 +94,9 @@ public class LocationManagerActivity extends Activity {
       // for ActivityCompat#requestPermissions for more details.
       return;
     }
+
     locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, listener);
     locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 1, listener);
   }
-
 }
 

@@ -1,9 +1,5 @@
 package android_network.hetnet;
 
-/**
- * Created by abroy240484 on 10/18/16.
- */
-
 public class Constants {
   // Defines a custom Intent action
   public static final String BROADCAST_ACTION = "com.example.android.threadsample.BROADCAST";
