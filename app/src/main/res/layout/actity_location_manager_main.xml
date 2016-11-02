@@ -21,16 +21,6 @@
             android:layout_alignParentStart="true" />
 
         <TextView
-            android:id="@+id/location_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="My Location"
-            android:layout_marginTop="21dp"
-            android:layout_marginStart="83dp"
-            android:layout_below="@+id/textView"
-            android:layout_alignStart="@+id/textView" />
-
-        <TextView
             android:text="Tracking Gyroscope"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -47,5 +37,23 @@
             android:layout_alignStart="@+id/textView"
             android:layout_marginBottom="73dp"
             android:id="@+id/textView3" />
+
+        <TextView
+            android:id="@+id/location_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="My Location"
+            android:layout_marginTop="21dp"
+            android:layout_below="@+id/textView"
+            android:layout_alignStart="@+id/textView" />
+
+        <TextView
+            android:text="My address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/Parsed_Address"
+            android:layout_marginTop="33dp"
+            android:layout_below="@+id/location_text"
+            android:layout_alignStart="@+id/location_text" />
 
 </RelativeLayout>

@@ -23,16 +23,22 @@ import android.location.LocationManager;
 
 import android_network.hetnet.R;
 
+
 public class LocationManager_Main extends Activity {
     protected LocationManager locationManager;
     protected SensorManager sManager;
+    Location_parser loc;
     TextView txtLat;
     TextView txtGyro;
+    TextView txtAddress;
     LocationListener listener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
             txtLat = (TextView) findViewById(R.id.location_text);
+            txtAddress = (TextView) findViewById(R.id.Parsed_Address);
             txtLat.setText("Latitude:" + location.getLatitude() + ", Longitude:" + location.getLongitude());
+            String latlgn = location.getLatitude() + "," + location.getLongitude();
+            new Location_parser(txtAddress).execute(latlgn);
         }
 
         @Override
