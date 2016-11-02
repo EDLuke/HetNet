@@ -1,15 +1,15 @@
 package android_network.hetnet;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import android_network.hetnet.network.NetworkManager_Main;
-import android_network.hetnet.location.LocationManager_Main;
-import android_network.hetnet.system.SystemManager_Main;
+import android_network.hetnet.location.LocationManagerActivity;
+import android_network.hetnet.network.NetworkManagerActivity;
+import android_network.hetnet.system.SystemManagerActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
    * Creates System Manager Activity
    */
   public void startSystemManager(View view) {
-    Intent intent = new Intent(this, SystemManager_Main.class);
+    Intent intent = new Intent(this, SystemManagerActivity.class);
     startActivity(intent);
   }
 
@@ -29,14 +29,15 @@ public class MainActivity extends AppCompatActivity {
    * Creates Network Manager Activity
    */
   public void startNetworkManager(View view) {
-    Intent intent = new Intent(this, NetworkManager_Main.class);
+    Intent intent = new Intent(this, NetworkManagerActivity.class);
     startActivity(intent);
   }
+
   /**
    * Creates Location Manager Activity
    */
   public void startLocationManager(View view) {
-    Intent intent = new Intent(this, LocationManager_Main.class);
+    Intent intent = new Intent(this, LocationManagerActivity.class);
     startActivity(intent);
   }
 

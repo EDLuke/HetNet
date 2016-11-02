@@ -1,3 +1,15 @@
 <resources>
-    <string name="app_name">HetNet</string>
+    <string name="app_name">Heterogeneous Networks</string>
+    <string name="system_manager_title">System Manager</string>
+    <string name="network_manager_title">Network Manager</string>
+    <string name="location_manager_title">Location Manager</string>
+    <string name="process_name">Name</string>
+    <string name="pid">pid</string>
+    <string name="uid">uid</string>
+    <string name="tracking_gps_location">Tracking GPS Location</string>
+    <string name="my_location">My Location</string>
+    <string name="tracking_gyroscope">Tracking Gyroscope</string>
+    <string name="package_title">Package</string>
+    <string name="pid_title">PID</string>
+    <string name="uid_title">UID</string>
 </resources>

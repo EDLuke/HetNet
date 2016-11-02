@@ -1,6 +1,7 @@
 package android_network.hetnet.network;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,35 +11,27 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
 import android_network.hetnet.R;
 
-import static android_network.hetnet.network.Constants.BROADCAST_ACTION;
-import static android_network.hetnet.network.Constants.EXTENDED_DATA_STATUS;
+import static android_network.hetnet.Constants.BROADCAST_ACTION;
+import static android_network.hetnet.Constants.EXTENDED_DATA_STATUS;
 
-public class NetworkManager_Main extends AppCompatActivity {
+public class NetworkManagerActivity extends Activity {
 
-  private static final int REQUEST_READ_PHONE_STATE = 100 ;
+  private static final int REQUEST_READ_PHONE_STATE = 100;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_network_manager__main);
+    setContentView(R.layout.activity_network_manager);
 
     int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
 
     if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
       ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, REQUEST_READ_PHONE_STATE);
-    } else {
-      //TODO
     }
-
-    //LOOK HERE
-
-
-
 
     Intent mServiceIntent = new Intent(this, NetworkListFetcher.class);
     this.startService(mServiceIntent);
@@ -56,12 +49,12 @@ public class NetworkManager_Main extends AppCompatActivity {
     }
 
     // Called when the BroadcastReceiver gets an Intent it's registered to receive
-
     public void onReceive(Context context, Intent intent) {
       String result = intent.getStringExtra(EXTENDED_DATA_STATUS);
       TextView networkList = (TextView) findViewById(R.id.networkList);
-      System.out.println(result);
-      networkList.setText(result);
+      if (networkList != null) {
+        networkList.setText(result);
+      }
     }
   }
 }

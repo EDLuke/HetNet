@@ -1,4 +1,4 @@
-package android_network.hetnet.network;
+package android_network.hetnet;
 
 /**
  * Created by abroy240484 on 10/18/16.

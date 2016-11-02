@@ -13,15 +13,10 @@ import android.telephony.CellInfoLte;
 import android.telephony.TelephonyManager;
 import android.widget.Toast;
 
-import java.lang.reflect.Method;
-import android.telephony.PhoneStateListener;
-import android.telephony.SignalStrength;
-import android.telephony.TelephonyManager;
-
 import java.util.List;
 
-import static android_network.hetnet.network.Constants.BROADCAST_ACTION;
-import static android_network.hetnet.network.Constants.EXTENDED_DATA_STATUS;
+import static android_network.hetnet.Constants.BROADCAST_ACTION;
+import static android_network.hetnet.Constants.EXTENDED_DATA_STATUS;
 
 public class NetworkListFetcher extends IntentService {
 
@@ -38,40 +33,29 @@ public class NetworkListFetcher extends IntentService {
     super("NetworkListFetcher");
   }
 
-  WifiManager mainWifi;
+  WifiManager wifiManager;
   String mainText;
-  TelephonyManager tm;
+  TelephonyManager telephonyManager;
 
   @Override
   protected void onHandleIntent(Intent intent) {
     // Getting the WiFi Manager
-    mainWifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+    wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 
     // Getting telephony manager for LTE
-    tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-
-
-    // turning on LTE
-    //Method setMobileDataEnabledMethod = tm.getClass().getDeclaredMethod("setDataEnabled", boolean.class);
-
-    //if (null != setMobileDataEnabledMethod)
-    //{
-      //setMobileDataEnabledMethod.invoke(tm, mobileDataEnabled);
-    //}
-
-
+    telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 
     // If WiFi disabled then enable it
-    if (!mainWifi.isWifiEnabled()) {
+    if (!wifiManager.isWifiEnabled()) {
       System.out.println("Turning WiFi On");
       Toast.makeText(getApplicationContext(), "Turning WiFi On", Toast.LENGTH_LONG).show();
-      mainWifi.setWifiEnabled(true);
+      wifiManager.setWifiEnabled(true);
     }
 
     // Initiate the network scan
     WifiReceiver receiverWifi = new WifiReceiver();
     registerReceiver(receiverWifi, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-    //mainWifi.startScan();
+    wifiManager.startScan();
 
     // Sending the message back by broadcasting the Intent to receivers in this app.
     while (null == mainText) {
@@ -79,12 +63,10 @@ public class NetworkListFetcher extends IntentService {
     }
 
     // trial
-    List<CellInfo> cellInfoList= tm.getAllCellInfo();
+    List<CellInfo> cellInfoList = telephonyManager.getAllCellInfo();
 
-    for (CellInfo cellInfo: cellInfoList)
-    {
-      if (cellInfo instanceof CellInfoLte)
-      {
+    for (CellInfo cellInfo : cellInfoList) {
+      if (cellInfo instanceof CellInfoLte) {
         mainText = cellInfo.toString();
       }
     }
@@ -101,7 +83,7 @@ public class NetworkListFetcher extends IntentService {
     // This method call when number of WiFi connections changed
     public void onReceive(Context c, Intent intent) {
       StringBuilder sb = new StringBuilder();
-      List<ScanResult> wifiList = mainWifi.getScanResults();
+      List<ScanResult> wifiList = wifiManager.getScanResults();
       sb.append("\nNumber Of WiFi connections: ").append(wifiList.size()).append("\n\n");
 
       for (int i = 0; i < wifiList.size(); i++) {
@@ -110,7 +92,6 @@ public class NetworkListFetcher extends IntentService {
         sb.append("\n\n");
       }
 
-      System.out.println("String: " + String.valueOf(sb));
       mainText = String.valueOf(sb);
     }
   }
