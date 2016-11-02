@@ -32,7 +32,7 @@ public class LocationManagerActivity extends Activity {
     @Override
     public void onLocationChanged(Location location) {
       txtLat = (TextView) findViewById(R.id.location_text);
-      txtAddress = (TextView) findViewById(R.id.Parsed_Address);
+      txtAddress = (TextView) findViewById(R.id.parsed_address);
       txtLat.setText("Latitude:" + location.getLatitude() + ", Longitude:" + location.getLongitude());
       String latLong = location.getLatitude() + "," + location.getLongitude();
       new LocationParser(getApplicationContext(), txtAddress).execute(latLong);
