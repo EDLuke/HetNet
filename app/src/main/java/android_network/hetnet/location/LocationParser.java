@@ -4,9 +4,7 @@ package android_network.hetnet.location;
  * Created by lanking on 27/10/2016.
  */
 
-import android.content.Context;
 import android.os.AsyncTask;
-import android.widget.TextView;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -15,19 +13,19 @@ import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import android_network.hetnet.R;
 
 public class LocationParser extends AsyncTask<String, Void, String> {
   private final String USER_AGENT;
-  private TextView textView;
-  private Context context;
+    public AsyncResponse sender = null;
 
-  LocationParser(Context context, TextView textView) {
-    this.context = context;
-    this.textView = textView;
-    USER_AGENT = "Mozilla/5.0";
+  LocationParser(AsyncResponse sender) {
+      this.sender = sender;
+      USER_AGENT = "Mozilla/5.0";
   }
 
+  public interface AsyncResponse{
+      void processFinish(String output);
+  }
   @Override
   protected String doInBackground(String... Strings) {
     String latLong = Strings[0];
@@ -44,7 +42,7 @@ public class LocationParser extends AsyncTask<String, Void, String> {
 
   @Override
   protected void onPostExecute(String Address) {
-    textView.setText(String.format("%s%s", context.getString(R.string.current_address), Address));
+    sender.processFinish(Address);
   }
 
   private String gettingAddress(String latLong) throws Exception {

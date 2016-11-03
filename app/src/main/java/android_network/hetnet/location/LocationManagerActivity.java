@@ -35,7 +35,12 @@ public class LocationManagerActivity extends Activity {
       txtAddress = (TextView) findViewById(R.id.parsed_address);
       txtLat.setText("Latitude:" + location.getLatitude() + ", Longitude:" + location.getLongitude());
       String latLong = location.getLatitude() + "," + location.getLongitude();
-      new LocationParser(getApplicationContext(), txtAddress).execute(latLong);
+      LocationParser my_parser = new LocationParser(new LocationParser.AsyncResponse() {
+        @Override
+        public void processFinish(String output) {
+          txtAddress.setText("Current Address: "+ output);
+        }});
+      my_parser.execute(latLong);
     }
 
     @Override
@@ -86,12 +91,6 @@ public class LocationManagerActivity extends Activity {
     if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
       && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
       // TODO: Consider calling
-      //    ActivityCompat#requestPermissions
-      // here to request the missing permissions, and then overriding
-      //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-      //                                          int[] grantResults)
-      // to handle the case where the user grants the permission. See the documentation
-      // for ActivityCompat#requestPermissions for more details.
       return;
     }
 
