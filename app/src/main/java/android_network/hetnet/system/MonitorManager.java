@@ -12,7 +12,7 @@ public class MonitorManager {
   private static final String TAG = "MonitorManager";
   private Queue<Thread> m_thread_queue;
   private boolean m_running;
-  private MonitorService m_service;
+  //private MonitorService m_service;
 
   public MonitorManager() {
     m_thread_queue = new LinkedList<Thread>();
