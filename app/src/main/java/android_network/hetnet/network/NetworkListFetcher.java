@@ -28,7 +28,7 @@ public class NetworkListFetcher extends IntentService {
   }
 
   WifiManager wifiManager;
-  String mainText;
+  StringBuilder mainText = new StringBuilder();
   TelephonyManager telephonyManager;
 
   @Override
@@ -51,41 +51,34 @@ public class NetworkListFetcher extends IntentService {
     wifiManager.startScan();
 
     // Sending the message back by broadcasting the Intent to receivers in this app.
-    while (null == mainText) {
+    while (String.valueOf(mainText).equals("")) {
       ;
     }
 
-    // trial
+    // Get LTE info
     List<CellInfo> cellInfoList = telephonyManager.getAllCellInfo();
 
     for (CellInfo cellInfo : cellInfoList) {
       if (cellInfo instanceof CellInfoLte) {
-        mainText = cellInfo.toString();
+        mainText.append(cellInfo.toString());
       }
     }
 
-    while (null == mainText) {
-      ;
-    }
-
-    Intent localIntent = new Intent(BROADCAST_ACTION).putExtra(EXTENDED_DATA_STATUS, mainText);
+    Intent localIntent = new Intent(BROADCAST_ACTION).putExtra(EXTENDED_DATA_STATUS, String.valueOf(mainText));
     LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
   }
 
   private class WifiReceiver extends BroadcastReceiver {
     // This method is called when number of WiFi connections changed
     public void onReceive(Context c, Intent intent) {
-      StringBuilder sb = new StringBuilder();
       List<ScanResult> wifiList = wifiManager.getScanResults();
-      sb.append("\nNumber Of WiFi connections: ").append(wifiList.size()).append("\n\n");
+      mainText.append("\nNumber Of WiFi connections: ").append(wifiList.size()).append("\n\n");
 
       for (int i = 0; i < wifiList.size(); i++) {
-        sb.append(Integer.valueOf(i + 1).toString()).append(". ");
-        sb.append((wifiList.get(i)).toString());
-        sb.append("\n\n");
+        mainText.append(Integer.valueOf(i + 1).toString()).append(". ");
+        mainText.append((wifiList.get(i)).toString());
+        mainText.append("\n\n");
       }
-
-      mainText = String.valueOf(sb);
     }
   }
 }
