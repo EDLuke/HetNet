@@ -39,6 +39,30 @@ public class NetworkListFetcher extends IntentService {
     // Getting telephony manager for LTE
     telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 
+    // Trial for carrier cost
+    // DON'T DELETE!!!
+    String carrierName = telephonyManager.getNetworkOperatorName();
+
+    String cost = "$0";
+
+    if (carrierName.equals("Verizon")) {
+      cost = "$1";
+    }
+    if (carrierName.equals("AT&T")){
+      cost = "$2";
+    }
+    if (carrierName.equals("Sprint")){
+      cost = "$3";
+    }
+    if (carrierName.equals("Tmobile")){
+      cost = "$4";
+    }
+
+    System.out.println("Carrier Name: " + carrierName);
+    System.out.println("Cost: " + cost);
+
+    // END OF TRIAL
+
     // If WiFi disabled then enable it
     if (!wifiManager.isWifiEnabled()) {
       Toast.makeText(getApplicationContext(), "Turning WiFi On", Toast.LENGTH_LONG).show();
