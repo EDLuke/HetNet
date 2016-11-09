@@ -11,6 +11,7 @@ import java.util.List;
 import android_network.hetnet.system.adapter.RunningApplicationListAdapter;
 import android_network.hetnet.system.event.ActivityManagerInfoEvent;
 
+
 /**
  * Activity Manager Thread
  */
