@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
-import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -31,7 +30,7 @@ public class DevicePowerThread extends Thread {
 //    BatteryManager batteryManager = (BatteryManager) (m_context.getSystemService(Context.BATTERY_SERVICE));
         int level = m_iBatteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
         int scale = m_iBatteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
-
+//TODO: This is not the pattery %
         float batteryPct = level / (float) scale;
 
         //Post to event bus

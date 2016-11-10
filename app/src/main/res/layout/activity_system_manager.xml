@@ -23,16 +23,17 @@
             android:layout_height="28dp">
 
             <TextView
+                android:text="CPU:"
+                android:layout_width="177dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/cpu_usage" />
+
+            <TextView
                 android:id="@+id/textview_devicepower"
                 android:layout_width="match_parent"
                 android:layout_height="41dp"
                 android:layout_weight="1"/>
 
-            <TextView
-                android:id="@+id/textview_device_power_percentage"
-                android:layout_width="99dp"
-                android:layout_height="49dp"
-                android:gravity="right"/>
         </LinearLayout>
 
         <LinearLayout

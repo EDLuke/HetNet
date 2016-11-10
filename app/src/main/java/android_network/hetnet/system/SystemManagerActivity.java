@@ -18,6 +18,7 @@ import android_network.hetnet.R;
 import android_network.hetnet.system.adapter.RunningApplicationListAdapter;
 import android_network.hetnet.system.event.ThreadInfoUpdatedEvent;
 import android_network.hetnet.system.monitor_threads.ActivityManagerThread;
+import android_network.hetnet.system.monitor_threads.CPUUsageThread;
 import android_network.hetnet.system.monitor_threads.DevicePowerThread;
 
 public class SystemManagerActivity extends Activity {
@@ -40,10 +41,11 @@ public class SystemManagerActivity extends Activity {
     //Have them managed by Monitor Manager instead
     ActivityManagerThread thread_am = new ActivityManagerThread(getApplicationContext());
     DevicePowerThread powerThread   = new DevicePowerThread(getApplicationContext());
+    CPUUsageThread cpuThread = new CPUUsageThread(getApplicationContext());
 
     monitorManager.insertNewThread(thread_am, "ActivityManagerThread", findViewById(R.id.listview_ps));
     monitorManager.insertNewThread(powerThread, "DevicePowerThread", findViewById(R.id.textview_devicepower));
-
+    monitorManager.insertNewThread(cpuThread, "CPU_USAGE_THREAD", findViewById(R.id.cpu_usage));
     monitorManager.startMonitor();
   }
 
@@ -72,6 +74,16 @@ public class SystemManagerActivity extends Activity {
         float batteryPct = (float)extraMsg;
         ((TextView)ui_element).setText(String.format("Current Battery Level: %s", batteryPct));
         break;
+      case "CPU_USAGE_THREAD":
+
+        float cpuUsagePercentageAsDecimal = (float) extraMsg;
+//        Log.d("DEBUG", "CPU_Thread Runs " + String.valueOf(cpuUsagePercentageAsDecimal));
+        //Multiply decimal by 100 to get percentage, cast to an int which causes the loss of some percision
+//        int percent = (int) (cpuUsagePercentageAsDecimal * 100) / 100;
+//        Log.d("Gen Percent", String.valueOf(percent));
+        ((TextView) ui_element).setText(String.format("CPU: " + String.valueOf(cpuUsagePercentageAsDecimal)));
+        break;
+
       default:
         Log.e(TAG, "Invalid thread name");
     }
