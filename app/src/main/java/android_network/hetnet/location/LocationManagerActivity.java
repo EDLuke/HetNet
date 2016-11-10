@@ -16,34 +16,29 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.ActivityCompat;
 import android.widget.TextView;
-
 import android_network.hetnet.R;
 
 public class LocationManagerActivity extends Activity {
   protected LocationManager locationManager;
   protected SensorManager sManager;
-  String address;
+  String address = "Please Waiting";
+  String latLong = "";
   TextView txtLat;
   TextView txtGyro;
   TextView txtAddress;
+
 
   LocationListener listener = new LocationListener() {
     @Override
     public void onLocationChanged(Location location) {
       txtLat = (TextView) findViewById(R.id.location_text);
-      txtAddress = (TextView) findViewById(R.id.parsed_address);
       txtLat.setText("Latitude:" + location.getLatitude() + ", Longitude:" + location.getLongitude());
-      String latLong = location.getLatitude() + "," + location.getLongitude();
-      LocationParser my_parser = new LocationParser(new LocationParser.AsyncResponse() {
+      latLong = location.getLatitude() + "," + location.getLongitude();
 
-        @Override
-        public void processFinish(String output) {
-          address = output;
-        }});
-      my_parser.execute(latLong);
-      txtAddress.setText("Current Address: "+ address);
     }
 
     @Override
@@ -53,12 +48,10 @@ public class LocationManagerActivity extends Activity {
 
     @Override
     public void onProviderEnabled(String provider) {
-
     }
 
     @Override
     public void onProviderDisabled(String provider) {
-
     }
   };
 
@@ -92,13 +85,29 @@ public class LocationManagerActivity extends Activity {
     sManager.registerListener(mySensor, sManager.getDefaultSensor(Sensor.TYPE_ORIENTATION), SensorManager.SENSOR_DELAY_NORMAL);
 
     if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-      && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
       // TODO: Consider calling
       return;
     }
-
     locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, listener);
     locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 1, listener);
+
+    final Handler handler = new Handler();
+    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+      @Override
+      public void run() {
+        new LocationParser(new LocationParser.AsyncResponse() {
+
+          @Override
+          public void processFinish(String output) {
+            address = output;
+            txtAddress = (TextView) findViewById(R.id.parsed_address);
+            txtAddress.setText("Current Address: " + address);
+          }
+        }).execute(latLong);
+      }
+    }, 5000);
+
   }
 }
 
