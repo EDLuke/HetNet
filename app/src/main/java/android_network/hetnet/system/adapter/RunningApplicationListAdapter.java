@@ -2,7 +2,9 @@ package android_network.hetnet.system.adapter;
 
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,8 @@ import android.widget.TextView;
 import java.util.List;
 
 import android_network.hetnet.R;
+import android_network.hetnet.system.ProcessDetailActivity;
+import android_network.hetnet.system.SystemManagerActivity;
 
 /**
  * RunningApplicationListAdapter
@@ -58,11 +62,20 @@ public class RunningApplicationListAdapter extends BaseAdapter {
     TextView pid = (TextView) rowView.findViewById(R.id.pid);
     TextView uid = (TextView) rowView.findViewById(R.id.uid);
 
-    ActivityManager.RunningAppProcessInfo process = mRunningProcesses.get(i);
+    final ActivityManager.RunningAppProcessInfo process = mRunningProcesses.get(i);
     pname.setText(process.processName);
     pid.setText(Integer.toString(process.pid));
     uid.setText(Integer.toString(process.uid));
-
+    rowView.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+          Intent i = new Intent(view.getContext(),ProcessDetailActivity.class);
+          Bundle b = new Bundle();
+          b.putParcelable("PROC", process);
+          i.putExtras(b);
+          view.getContext().startActivity(i);
+      }
+    });
     pname.setTextColor(Color.BLACK);
     pid.setTextColor(Color.BLACK);
     uid.setTextColor(Color.BLACK);

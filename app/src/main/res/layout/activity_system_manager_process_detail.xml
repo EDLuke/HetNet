@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1">
+
+    <TextView
+        android:text="Name"
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:id="@+id/package_name_textview" />
+
+    <TextView
+        android:text="PID"
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:id="@+id/pid_textview" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="62dp">
+
+        <TextView
+            android:text="Delvik Private Mem"
+            android:layout_width="125dp"
+            android:layout_height="36dp"
+            android:id="@+id/delvik_private" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:id="@+id/delvik_private_val"
+            android:gravity="right"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="55dp">
+
+        <TextView
+            android:text="Delvik Shared Mem"
+            android:layout_width="125dp"
+            android:layout_height="36dp"
+            android:id="@+id/delvik_shared" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:id="@+id/delvik_shared_val"
+            android:gravity="right"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <TextView
+            android:text="Delvik PSS"
+            android:layout_width="125dp"
+            android:layout_height="36dp"
+            android:id="@+id/delvik_pss" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:id="@+id/delvik_pss_val"
+            android:gravity="right"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="55dp">
+
+        <TextView
+            android:text="Native Private"
+            android:layout_width="125dp"
+            android:layout_height="36dp"
+            android:id="@+id/native_private" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:id="@+id/native_private_val"
+            android:gravity="right"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="55dp">
+
+        <TextView
+            android:text="Native Private Mem"
+            android:layout_width="125dp"
+            android:layout_height="36dp"
+            android:id="@+id/native_shared" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:id="@+id/native_shared_val"
+            android:gravity="right"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="55dp">
+
+        <TextView
+            android:text="Native PSS Mem"
+            android:layout_width="125dp"
+            android:layout_height="36dp"
+            android:id="@+id/native_pss" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:id="@+id/native_pss_val"
+            android:gravity="right"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="55dp">
+
+        <TextView
+            android:text="Total Mem"
+            android:layout_width="125dp"
+            android:layout_height="36dp"
+            android:id="@+id/total_mem" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:id="@+id/total_mem_val"
+            android:gravity="right"/>
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

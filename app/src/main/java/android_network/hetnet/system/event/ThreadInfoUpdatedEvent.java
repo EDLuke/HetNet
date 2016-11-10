@@ -3,15 +3,17 @@ package android_network.hetnet.system.event;
 import android.view.View;
 
 /**
- * Created by lukez_000 on 11/02/2016.
+ * ThreadInfoUpdatedEvent
  */
-public class ThreadInfoUpdatedEvent extends ThreadInfoEvent {
+public class ThreadInfoUpdatedEvent {
+  public final String m_thread_name;
+  public final String m_message;
   public final View   m_ui;
   public final Object m_extraMsg;
 
   public ThreadInfoUpdatedEvent(String threadName, String message, View view, Object extraMsg) {
-    super(threadName, message);
-
+    this.m_thread_name = threadName;
+    this.m_message = message;
     this.m_extraMsg = extraMsg;
     this.m_ui       = view;
   }

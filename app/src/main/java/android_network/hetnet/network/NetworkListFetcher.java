@@ -77,6 +77,7 @@ public class NetworkListFetcher extends IntentService {
     // Sending the message back by broadcasting the Intent to receivers in this app.
     while (String.valueOf(mainText).equals("")) {
       ;
+
     }
 
     // Get LTE info
@@ -88,7 +89,9 @@ public class NetworkListFetcher extends IntentService {
       }
     }
 
+
     Intent localIntent = new Intent(BROADCAST_ACTION).putExtra(EXTENDED_DATA_STATUS, String.valueOf(mainText));
+
     LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
   }
 

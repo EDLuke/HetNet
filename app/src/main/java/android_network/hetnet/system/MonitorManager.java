@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import android_network.hetnet.system.event.ActivityManagerInfoEvent;
+import android_network.hetnet.system.event.CPUUsageEvent;
 import android_network.hetnet.system.event.DevicePowerThreadInfoEvent;
 import android_network.hetnet.system.event.ThreadInfoEvent;
 import android_network.hetnet.system.event.ThreadInfoUpdatedEvent;
@@ -76,6 +77,10 @@ public class MonitorManager {
         break;
       case "DevicePowerThread":
         extraMsg = ((DevicePowerThreadInfoEvent)event).m_batteryPct;
+        break;
+      case "CPU_USAGE_THREAD":
+        extraMsg = ((CPUUsageEvent)event).getCpuUsage();
+        Log.d("CPU_DEBUG", String.valueOf(extraMsg));
         break;
       default:
         Log.e(TAG, "Incorrect thread name received in Monitor Manager");

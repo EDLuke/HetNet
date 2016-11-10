@@ -24,6 +24,7 @@ import android_network.hetnet.R;
 public class LocationManagerActivity extends Activity {
   protected LocationManager locationManager;
   protected SensorManager sManager;
+  String address;
   TextView txtLat;
   TextView txtGyro;
   TextView txtAddress;
@@ -36,11 +37,13 @@ public class LocationManagerActivity extends Activity {
       txtLat.setText("Latitude:" + location.getLatitude() + ", Longitude:" + location.getLongitude());
       String latLong = location.getLatitude() + "," + location.getLongitude();
       LocationParser my_parser = new LocationParser(new LocationParser.AsyncResponse() {
+
         @Override
         public void processFinish(String output) {
-          txtAddress.setText("Current Address: "+ output);
+          address = output;
         }});
       my_parser.execute(latLong);
+      txtAddress.setText("Current Address: "+ address);
     }
 
     @Override
