@@ -92,12 +92,10 @@ public class LocationManagerActivity extends Activity {
     locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, listener);
     locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 1, listener);
 
-    final Handler handler = new Handler();
     new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
       @Override
       public void run() {
         new LocationParser(new LocationParser.AsyncResponse() {
-
           @Override
           public void processFinish(String output) {
             address = output;
