@@ -5,7 +5,7 @@ import android.app.ActivityManager;
 import java.util.Calendar;
 import java.util.List;
 
-import android_network.hetnet.trigger_events.TriggerEvent;
+import android_network.hetnet.common.trigger_events.TriggerEvent;
 
 /**
  * ActivityManagerInfoEvent

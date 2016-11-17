@@ -1,13 +1,13 @@
-package android_network.hetnet.network;
+package android_network.hetnet.location;
 
 import java.util.Date;
 
-public class NetworkResponseEvent {
+public class LocationResponseEvent {
   private String eventOriginator;
   private String listOfNetworks;
   private Date timeOfEvent;
 
-  public NetworkResponseEvent(String eventOriginator, String listOfNetworks, Date timeOfEvent) {
+  public LocationResponseEvent(String eventOriginator, String listOfNetworks, Date timeOfEvent) {
     this.eventOriginator = eventOriginator;
     this.listOfNetworks = listOfNetworks;
     this.timeOfEvent = timeOfEvent;

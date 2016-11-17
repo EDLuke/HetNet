@@ -1,4 +1,4 @@
-package android_network.hetnet;
+package android_network.hetnet.common;
 
 public class Constants {
   // Defines a custom Intent action

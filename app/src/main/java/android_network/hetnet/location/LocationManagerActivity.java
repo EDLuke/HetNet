@@ -6,14 +6,11 @@ package android_network.hetnet.location;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,7 +28,6 @@ public class LocationManagerActivity extends Activity {
   TextView txtLat;
   TextView txtGyro;
   TextView txtAddress;
-
 
 
   SensorEventListener mySensor = new SensorEventListener() {
@@ -80,7 +76,8 @@ public class LocationManagerActivity extends Activity {
             latLong = output;
           }
         }).execute();
-      }},3000);
+      }
+    }, 3000);
 
     new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
       @Override

@@ -2,7 +2,7 @@ package android_network.hetnet.system.event;
 
 import java.util.Calendar;
 
-import android_network.hetnet.trigger_events.TriggerEvent;
+import android_network.hetnet.common.trigger_events.TriggerEvent;
 
 /**
  * DevicePowerTriggerEvent

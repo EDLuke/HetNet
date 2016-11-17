@@ -10,11 +10,11 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import android_network.hetnet.common.trigger_events.TriggerEvent;
 import android_network.hetnet.system.event.ActivityManagerInfoEvent;
 import android_network.hetnet.system.event.CPUUsageEvent;
 import android_network.hetnet.system.event.DevicePowerTriggerEvent;
 import android_network.hetnet.system.event.ThreadInfoUpdatedEvent;
-import android_network.hetnet.trigger_events.TriggerEvent;
 
 public class MonitorManager {
   /**

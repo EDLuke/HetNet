@@ -14,7 +14,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.Calendar;
 
-import static android_network.hetnet.Constants.NETWORK_EVENT_TRACKER;
+import static android_network.hetnet.common.Constants.NETWORK_EVENT_TRACKER;
 
 public class NetworkEventTracker extends Service {
 

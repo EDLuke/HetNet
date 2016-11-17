@@ -13,13 +13,13 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import android_network.hetnet.trigger_events.UITriggerEvent;
+import android_network.hetnet.common.trigger_events.UITriggerEvent;
+import android_network.hetnet.policy_engine.PolicyEngine;
 
-import static android_network.hetnet.Constants.NETWORK_EVENT_TRACKER;
-import static android_network.hetnet.Constants.NETWORK_LIST_FETCHER;
+import static android_network.hetnet.common.Constants.NETWORK_EVENT_TRACKER;
+import static android_network.hetnet.common.Constants.NETWORK_LIST_FETCHER;
 
 public class MainActivity extends Activity {
-
   private static final int REQUEST_READ_PHONE_STATE = 100;
   private static final int REQUEST_ACCESS_COARSE_LOCATION = 101;
   private static final int REQUEST_ACCESS_NETWORK_STATE = 102;

@@ -27,12 +27,11 @@
         </activity>
 
         <activity android:name=".system.SystemManagerActivity"/>
-        <activity android:name=".network.NetworkManagerActivity"/>
         <activity android:name=".location.LocationManagerActivity"/>
         <activity android:name=".system.ProcessDetailActivity"/>
 
         <service
-            android:name=".PolicyEngine"
+            android:name=".policy_engine.PolicyEngine"
             android:exported="false"/>
 
         <service

@@ -1,4 +1,4 @@
-package android_network.hetnet;
+package android_network.hetnet.policy_engine;
 
 import android.app.Service;
 import android.content.Intent;
@@ -9,16 +9,14 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.Calendar;
-
+import android_network.hetnet.common.trigger_events.TriggerEvent;
+import android_network.hetnet.common.trigger_events.UITriggerEvent;
 import android_network.hetnet.network.NetworkEventTracker;
+import android_network.hetnet.network.NetworkListFetcher;
 import android_network.hetnet.network.NetworkRequestEvent;
 import android_network.hetnet.network.NetworkResponseEvent;
-import android_network.hetnet.network.NetworkListFetcher;
-import android_network.hetnet.trigger_events.TriggerEvent;
-import android_network.hetnet.trigger_events.UITriggerEvent;
 
-import static android_network.hetnet.Constants.POLICY_ENGINE;
+import static android_network.hetnet.common.Constants.POLICY_ENGINE;
 
 public class PolicyEngine extends Service {
   @Override
@@ -52,6 +50,6 @@ public class PolicyEngine extends Service {
 
   @Subscribe(threadMode = ThreadMode.ASYNC)
   public void onMessageEvent(NetworkResponseEvent event) {
-    EventBus.getDefault().post(new UITriggerEvent(event.getEventOriginator(), event.getListOfNetworks(), Calendar.getInstance().getTime()));
+    EventBus.getDefault().post(new UITriggerEvent(event.getEventOriginator(), event.getListOfNetworks(), event.getTimeOfEvent()));
   }
 }

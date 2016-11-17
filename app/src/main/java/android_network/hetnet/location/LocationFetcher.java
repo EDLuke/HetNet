@@ -24,92 +24,95 @@ public class LocationFetcher extends AsyncTask<Void, Void, Void> {
   public interface AsyncResponse {
     void processFinish(String output);
   }
-  
-  public interface AsyncResponse{
-        void processFinish(String output);
-    }
 
-    public LocationFetcher(Context context, AsyncResponse sender) {
-        this.ContextAsync = context.getApplicationContext();;
-        this.sender = sender;
-    }
-
-    LocationListener listener = new LocationListener() {
-        @Override
-        public void onLocationChanged(Location location) {
-            LatLgn = location.getLatitude() + "," + location.getLongitude();
-        }
+  public interface AsyncResponse {
+    void processFinish(String output);
+  }
 
   public LocationFetcher(Context context, AsyncResponse sender) {
-    this.ContextAsync = context;
+    this.ContextAsync = context.getApplicationContext();
+    ;
     this.sender = sender;
   }
 
   LocationListener listener = new LocationListener() {
     @Override
     public void onLocationChanged(Location location) {
-      LatLgn = location.getLongitude() + "," + location.getLatitude();
-    protected void onPreExecute() {
+      LatLgn = location.getLatitude() + "," + location.getLongitude();
+    }
+
+    public LocationFetcher(Context context, AsyncResponse sender) {
+      this.ContextAsync = context;
+      this.sender = sender;
+    }
+
+    LocationListener listener = new LocationListener() {
+      @Override
+      public void onLocationChanged(Location location) {
+        LatLgn = location.getLongitude() + "," + location.getLatitude();
+
+      protected void onPreExecute() {
         super.onPreExecute();
         locationManager = (LocationManager) ContextAsync.getSystemService(ContextAsync.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(ContextAsync, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(ContextAsync,
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Disabled = "True";
-            return;
+          Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+          Disabled = "True";
+          return;
         }
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 1000, listener);
 
+      }
+
+      @Override
+      public void onStatusChanged(String provider, int status, Bundle extras) {
+      }
+
+      @Override
+      public void onProviderEnabled(String provider) {
+      }
+
+      @Override
+      public void onProviderDisabled(String provider) {
+      }
+    };
+
+    @Override
+    protected void onPreExecute() {
+      super.onPreExecute();
+      locationManager = (LocationManager) ContextAsync.getSystemService(ContextAsync.LOCATION_SERVICE);
+      if (ActivityCompat.checkSelfPermission(ContextAsync, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(ContextAsync,
+        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        Disabled = "True";
+        return;
+      }
+      locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, listener);
+      locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, listener);
+
     }
 
     @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
+    protected void onCancelled() {
+      System.out.println("Cancelled by user!");
+      if (ActivityCompat.checkSelfPermission(ContextAsync, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(ContextAsync,
+        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        Disabled = "True";
+        return;
+      }
+      locationManager.removeUpdates(listener);
     }
 
     @Override
-    public void onProviderEnabled(String provider) {
+    protected Void doInBackground(Void... params) {
+      while (LatLgn.equals("")) {
+      }
+      ;
+      return null;
     }
 
     @Override
-    public void onProviderDisabled(String provider) {
+    protected void onPostExecute(Void result) {
+      super.onPostExecute(result);
+      sender.processFinish(LatLgn);
     }
-  };
-
-  @Override
-  protected void onPreExecute() {
-    super.onPreExecute();
-    locationManager = (LocationManager) ContextAsync.getSystemService(ContextAsync.LOCATION_SERVICE);
-    if (ActivityCompat.checkSelfPermission(ContextAsync, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(ContextAsync,
-      Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-      Disabled = "True";
-      return;
-    }
-    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, listener);
-    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, listener);
-
-  }
-
-  @Override
-  protected void onCancelled() {
-    System.out.println("Cancelled by user!");
-    if (ActivityCompat.checkSelfPermission(ContextAsync, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(ContextAsync,
-      Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-      Disabled = "True";
-      return;
-    }
-    locationManager.removeUpdates(listener);
-  }
-
-  @Override
-  protected Void doInBackground(Void... params) {
-    while (LatLgn.equals("")) {
-    }
-    ;
-    return null;
-  }
-
-  @Override
-  protected void onPostExecute(Void result) {
-    super.onPostExecute(result);
-    sender.processFinish(LatLgn);
   }
 }

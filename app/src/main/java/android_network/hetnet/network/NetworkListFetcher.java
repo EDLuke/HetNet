@@ -12,15 +12,15 @@ import android.support.annotation.Nullable;
 import android.telephony.CellInfo;
 import android.telephony.CellInfoLte;
 import android.telephony.TelephonyManager;
-import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.Calendar;
 import java.util.List;
 
-import static android_network.hetnet.Constants.NETWORK_LIST_FETCHER;
+import static android_network.hetnet.common.Constants.NETWORK_LIST_FETCHER;
 
 public class NetworkListFetcher extends Service {
   WifiManager wifiManager;
@@ -46,8 +46,13 @@ public class NetworkListFetcher extends Service {
 
   @Subscribe(threadMode = ThreadMode.ASYNC)
   protected void onMessageEvent(NetworkRequestEvent event) {
-    // Getting the WiFi Manager
-    wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+    getWifiInfo();
+    getLTEInfo();
+    EventBus.getDefault().post(new NetworkResponseEvent(NETWORK_LIST_FETCHER, String.valueOf(mainText), Calendar.getInstance().getTime()));
+  }
+
+  private void getLTEInfo() {
+    // Get LTE info
 
     // Getting telephony manager for LTE
     telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
@@ -74,6 +79,19 @@ public class NetworkListFetcher extends Service {
     System.out.println("Carrier Name: " + carrierName);
     System.out.println("Cost: " + cost);
 
+    List<CellInfo> cellInfoList = telephonyManager.getAllCellInfo();
+
+    for (CellInfo cellInfo : cellInfoList) {
+      if (cellInfo instanceof CellInfoLte) {
+        mainText.append(cellInfo.toString());
+      }
+    }
+  }
+
+  private void getWifiInfo() {
+    // Getting the WiFi Manager
+    wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+
     // END OF TRIAL
 
     // Initiate the network scan
@@ -85,17 +103,6 @@ public class NetworkListFetcher extends Service {
     while (String.valueOf(mainText).equals("")) {
       ;
     }
-
-    // Get LTE info
-    List<CellInfo> cellInfoList = telephonyManager.getAllCellInfo();
-
-    for (CellInfo cellInfo : cellInfoList) {
-      if (cellInfo instanceof CellInfoLte) {
-        mainText.append(cellInfo.toString());
-      }
-    }
-
-    EventBus.getDefault().post(new NetworkResponseEvent(NETWORK_LIST_FETCHER, String.valueOf(mainText)));
   }
 
   private class WifiReceiver extends BroadcastReceiver {
