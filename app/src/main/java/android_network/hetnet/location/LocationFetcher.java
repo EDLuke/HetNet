@@ -24,6 +24,21 @@ public class LocationFetcher extends AsyncTask<Void, Void, Void> {
   public interface AsyncResponse {
     void processFinish(String output);
   }
+  
+  public interface AsyncResponse{
+        void processFinish(String output);
+    }
+
+    public LocationFetcher(Context context, AsyncResponse sender) {
+        this.ContextAsync = context.getApplicationContext();;
+        this.sender = sender;
+    }
+
+    LocationListener listener = new LocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+            LatLgn = location.getLatitude() + "," + location.getLongitude();
+        }
 
   public LocationFetcher(Context context, AsyncResponse sender) {
     this.ContextAsync = context;
@@ -34,6 +49,16 @@ public class LocationFetcher extends AsyncTask<Void, Void, Void> {
     @Override
     public void onLocationChanged(Location location) {
       LatLgn = location.getLongitude() + "," + location.getLatitude();
+    protected void onPreExecute() {
+        super.onPreExecute();
+        locationManager = (LocationManager) ContextAsync.getSystemService(ContextAsync.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(ContextAsync, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(ContextAsync,
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Disabled = "True";
+            return;
+        }
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 1000, listener);
+
     }
 
     @Override

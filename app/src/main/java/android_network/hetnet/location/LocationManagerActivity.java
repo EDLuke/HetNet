@@ -33,28 +33,6 @@ public class LocationManagerActivity extends Activity {
   TextView txtAddress;
 
 
-  LocationListener listener = new LocationListener() {
-    @Override
-    public void onLocationChanged(Location location) {
-      txtLat = (TextView) findViewById(R.id.location_text);
-      txtLat.setText("Latitude:" + location.getLatitude() + ", Longitude:" + location.getLongitude());
-      latLong = location.getLatitude() + "," + location.getLongitude();
-
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-    }
-  };
 
   SensorEventListener mySensor = new SensorEventListener() {
     @Override
@@ -63,9 +41,9 @@ public class LocationManagerActivity extends Activity {
         return;
       }
       //else it will output the Roll, Pitch and Yawn values
-      txtGyro.setText("Orientation X (Roll) :" + Float.toString(event.values[2]) + "\n" +
-        "Orientation Y (Pitch) :" + Float.toString(event.values[1]) + "\n" +
-        "Orientation Z (Yaw) :" + Float.toString(event.values[0]));
+      txtGyro.setText("Speed X (Roll) :" + Float.toString(event.values[2]) + "\n" +
+        "Speed Y (Pitch) :" + Float.toString(event.values[1]) + "\n" +
+        "Speed Z (Yaw) :" + Float.toString(event.values[0]));
     }
 
     @Override
@@ -81,9 +59,8 @@ public class LocationManagerActivity extends Activity {
 
     txtLat = (TextView) findViewById(R.id.location_text);
     txtGyro = (TextView) findViewById(R.id.gyroscope);
-    locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
     sManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-    sManager.registerListener(mySensor, sManager.getDefaultSensor(Sensor.TYPE_ORIENTATION), SensorManager.SENSOR_DELAY_NORMAL);
+    sManager.registerListener(mySensor, sManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION), SensorManager.SENSOR_DELAY_NORMAL);
 
     if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
       && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -92,6 +69,18 @@ public class LocationManagerActivity extends Activity {
     }
     locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, listener);
     locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 1, listener);
+    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+      @Override
+      public void run() {
+        new LocationFetcher(LocationManagerActivity.this, new LocationFetcher.AsyncResponse() {
+          @Override
+          public void processFinish(String output) {
+            txtLat = (TextView) findViewById(R.id.location_text);
+            txtLat.setText("Lat,Long:" + output);
+            latLong = output;
+          }
+        }).execute();
+      }},3000);
 
     new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
       @Override
@@ -109,4 +98,3 @@ public class LocationManagerActivity extends Activity {
 
   }
 }
-
