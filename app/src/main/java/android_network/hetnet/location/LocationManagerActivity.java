@@ -1,12 +1,6 @@
 package android_network.hetnet.location;
 
-/**
- * Created by lanking on 21/10/2016.
- */
-
-import android.Manifest;
 import android.app.Activity;
-import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -15,20 +9,16 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v4.app.ActivityCompat;
 import android.widget.TextView;
-
 import android_network.hetnet.R;
 
 public class LocationManagerActivity extends Activity {
-  protected LocationManager locationManager;
   protected SensorManager sManager;
   String address = "Please Waiting";
   String latLong = "";
   TextView txtLat;
   TextView txtGyro;
   TextView txtAddress;
-
 
   SensorEventListener mySensor = new SensorEventListener() {
     @Override
@@ -58,13 +48,6 @@ public class LocationManagerActivity extends Activity {
     sManager = (SensorManager) getSystemService(SENSOR_SERVICE);
     sManager.registerListener(mySensor, sManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION), SensorManager.SENSOR_DELAY_NORMAL);
 
-    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-      && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-      // TODO: Consider calling
-      return;
-    }
-    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, listener);
-    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 1, listener);
     new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
       @Override
       public void run() {
@@ -95,3 +78,4 @@ public class LocationManagerActivity extends Activity {
 
   }
 }
+
