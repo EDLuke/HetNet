@@ -24,7 +24,7 @@ import static android_network.hetnet.common.Constants.NETWORK_LIST_FETCHER;
 
 public class NetworkListFetcher extends Service {
   WifiManager wifiManager;
-  StringBuilder mainText = new StringBuilder();
+  StringBuilder mainText;
   TelephonyManager telephonyManager;
 
   @Override
@@ -35,6 +35,7 @@ public class NetworkListFetcher extends Service {
 
   @Override
   public int onStartCommand(Intent intent, int flags, int startId) {
+    mainText = new StringBuilder();
     return START_STICKY;
   }
 
