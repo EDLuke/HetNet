@@ -79,7 +79,7 @@ public class MainActivity extends Activity {
       eventList.setText("Event received: " + event.eventOriginator + " " + event.eventName + " " + event.timeOfEvent);
       networkList.setText("");
     } else if (event.eventOriginator.equals(NETWORK_LIST_FETCHER)) {
-      eventList.setText("Event received: " + event.eventOriginator + " " + event.eventName + " " + event.timeOfEvent);
+      eventList.setText("Event received: " + event.eventOriginator + " " + event.timeOfEvent);
       networkList.setText(event.eventName);
     }
   }

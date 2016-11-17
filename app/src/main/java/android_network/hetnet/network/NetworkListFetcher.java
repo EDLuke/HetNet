@@ -35,7 +35,6 @@ public class NetworkListFetcher extends Service {
 
   @Override
   public int onStartCommand(Intent intent, int flags, int startId) {
-    mainText = new StringBuilder();
     return START_STICKY;
   }
 
@@ -92,31 +91,34 @@ public class NetworkListFetcher extends Service {
   }
 
   private void getWifiInfo() {
+    mainText = new StringBuilder();
+
     // Getting the WiFi Manager
     wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 
     // Initiate the network scan
-    WifiReceiver receiverWifi = new WifiReceiver();
-    registerReceiver(receiverWifi, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+    registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
     wifiManager.startScan();
 
     // Sending the message back by broadcasting the Intent to receivers in this app.
     while (String.valueOf(mainText).equals("")) {
       ;
     }
+
+    unregisterReceiver(wifiReceiver);
   }
 
-  private class WifiReceiver extends BroadcastReceiver {
+  private BroadcastReceiver wifiReceiver = new BroadcastReceiver() {
     // This method is called when number of WiFi connections changed
-    public void onReceive(Context c, Intent intent) {
+    public void onReceive(Context context, Intent intent) {
       List<ScanResult> wifiList = wifiManager.getScanResults();
       mainText.append("\nNumber Of WiFi connections: ").append(wifiList.size()).append("\n\n");
-
+      System.out.println("Number of WiFi connections changed to: " + wifiList.size());
       for (int i = 0; i < wifiList.size(); i++) {
         mainText.append(Integer.valueOf(i + 1).toString()).append(". ");
         mainText.append((wifiList.get(i)).toString());
         mainText.append("\n\n");
       }
     }
-  }
+  };
 }
