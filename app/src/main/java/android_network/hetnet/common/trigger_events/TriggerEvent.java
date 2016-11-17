@@ -2,9 +2,6 @@ package android_network.hetnet.common.trigger_events;
 
 import java.util.Date;
 
-/**
- * Created by lukez_000 on 11/02/2016.
- */
 public class TriggerEvent {
   public String eventOriginator;
   public String eventName;

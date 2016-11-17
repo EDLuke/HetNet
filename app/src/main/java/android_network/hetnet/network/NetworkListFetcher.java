@@ -52,32 +52,34 @@ public class NetworkListFetcher extends Service {
   }
 
   private void getLTEInfo() {
-    // Get LTE info
-
     // Getting telephony manager for LTE
     telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 
-    // Trial for carrier cost
-    // DON'T DELETE!!!
+    // Trial for carrier cost - DON'T DELETE!!!
     String carrierName = telephonyManager.getNetworkOperatorName();
-
     String cost = "$0";
 
-    if (carrierName.equals("Verizon")) {
-      cost = "$1";
-    }
-    if (carrierName.equals("AT&T")) {
-      cost = "$2";
-    }
-    if (carrierName.equals("Sprint")) {
-      cost = "$3";
-    }
-    if (carrierName.equals("Tmobile")) {
-      cost = "$4";
+    switch (carrierName) {
+      case "Fi Network":
+        cost = "$0.5";
+        break;
+      case "Verizon":
+        cost = "$1";
+        break;
+      case "AT&T":
+        cost = "$2";
+        break;
+      case "Sprint":
+        cost = "$3";
+        break;
+      case "Tmobile":
+        cost = "$4";
+        break;
     }
 
     System.out.println("Carrier Name: " + carrierName);
     System.out.println("Cost: " + cost);
+    // END OF TRIAL
 
     List<CellInfo> cellInfoList = telephonyManager.getAllCellInfo();
 
@@ -91,8 +93,6 @@ public class NetworkListFetcher extends Service {
   private void getWifiInfo() {
     // Getting the WiFi Manager
     wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-
-    // END OF TRIAL
 
     // Initiate the network scan
     WifiReceiver receiverWifi = new WifiReceiver();

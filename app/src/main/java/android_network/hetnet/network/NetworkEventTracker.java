@@ -33,7 +33,6 @@ public class NetworkEventTracker extends Service {
   private BroadcastReceiver networkStateReceiver = new BroadcastReceiver() {
     @Override
     public void onReceive(Context context, Intent intent) {
-      System.out.println("Network State Changed");
       ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
       NetworkInfo ni = manager.getActiveNetworkInfo();
       EventBus.getDefault().post(new NetworkTriggerEvent(NETWORK_EVENT_TRACKER, ni.getState().toString(), Calendar.getInstance().getTime()));
