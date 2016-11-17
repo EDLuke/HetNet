@@ -1,29 +1,27 @@
 package android_network.hetnet.system.event;
 
-import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.util.Calendar;
 
-import android_network.hetnet.system.event.ThreadInfoEvent;
+import android_network.hetnet.trigger_events.TriggerEvent;
 
 /**
  * Created by gabe on 11/9/16.
  */
 
-public class CPUUsageEvent extends ThreadInfoEvent {
+public class CPUUsageEvent extends TriggerEvent {
 
-        String m_thread_name;
-        float cpuUsage;
+  String m_thread_name;
+  float cpuUsage;
 
-    public CPUUsageEvent(String threadName, String message, float cpu) {
-        super(threadName, message);
-        this.m_thread_name = threadName;
-        this.cpuUsage = cpu;
-    }
+  public CPUUsageEvent(String threadName, String message, float cpu) {
+    super(threadName, message, Calendar.getInstance().getTime());
+    this.m_thread_name = threadName;
+    this.cpuUsage = cpu;
+  }
 
-    public float getCpuUsage() {
-        return cpuUsage;
-    }
-
+  public float getCpuUsage() {
+    return cpuUsage;
+  }
 
 
 }

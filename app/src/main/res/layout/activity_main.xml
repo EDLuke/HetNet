@@ -9,31 +9,39 @@
                 android:paddingTop="@dimen/activity_vertical_margin"
                 tools:context="android_network.hetnet.MainActivity">
 
-    <Button
-        android:id="@+id/btn_system_manager"
-        android:layout_width="@dimen/button_width"
+    <TextView
+        android:id="@+id/policy_engine_title"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:text="@string/system_manager_title"
-        android:onClick="startSystemManager"/>
+        android:text="@string/policy_engine_title"/>
 
-    <Button
-        android:id="@+id/btn_network_manager"
-        android:layout_width="@dimen/button_width"
+    <TextView
+        android:id="@+id/event_list"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/btn_system_manager"
-        android:layout_below="@+id/btn_system_manager"
-        android:text="@string/network_manager_title"
-        android:onClick="startNetworkManager"/>
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:layout_below="@+id/policy_engine_title"
+        android:text=""/>
 
-    <Button
-        android:id="@+id/btn_location_manager"
-        android:layout_width="@dimen/button_width"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/btn_network_manager"
-        android:layout_below="@+id/btn_network_manager"
-        android:text="@string/location_manager_title"
-        android:onClick="startLocationManager"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/event_list">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/network_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:text=""/>
+        </LinearLayout>
+    </ScrollView>
 </RelativeLayout>

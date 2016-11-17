@@ -16,16 +16,17 @@ import java.util.regex.Pattern;
 
 public class LocationParser extends AsyncTask<String, Void, String> {
   private final String USER_AGENT;
-    public AsyncResponse sender = null;
+  public AsyncResponse sender = null;
 
   LocationParser(AsyncResponse sender) {
-      this.sender = sender;
-      USER_AGENT = "Mozilla/5.0";
+    this.sender = sender;
+    USER_AGENT = "Mozilla/5.0";
   }
 
-  public interface AsyncResponse{
-      void processFinish(String output);
+  public interface AsyncResponse {
+    void processFinish(String output);
   }
+
   @Override
   protected String doInBackground(String... Strings) {
     String latLong = Strings[0];

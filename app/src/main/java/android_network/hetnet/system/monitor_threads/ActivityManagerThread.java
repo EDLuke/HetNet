@@ -2,13 +2,9 @@ package android_network.hetnet.system.monitor_threads;
 
 import android.app.ActivityManager;
 import android.content.Context;
-import android.widget.ListView;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.util.List;
-
-import android_network.hetnet.system.adapter.RunningApplicationListAdapter;
 import android_network.hetnet.system.event.ActivityManagerInfoEvent;
 
 

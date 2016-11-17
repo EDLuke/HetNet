@@ -12,9 +12,9 @@ import java.util.Queue;
 
 import android_network.hetnet.system.event.ActivityManagerInfoEvent;
 import android_network.hetnet.system.event.CPUUsageEvent;
-import android_network.hetnet.system.event.DevicePowerThreadInfoEvent;
-import android_network.hetnet.system.event.ThreadInfoEvent;
+import android_network.hetnet.system.event.DevicePowerTriggerEvent;
 import android_network.hetnet.system.event.ThreadInfoUpdatedEvent;
+import android_network.hetnet.trigger_events.TriggerEvent;
 
 public class MonitorManager {
   /**
@@ -65,21 +65,21 @@ public class MonitorManager {
 
 
   @Subscribe
-  public void onMessageEvent(ThreadInfoEvent event){
-    String threadName = event.m_thread_name;
-    String message    = event.m_message;
-    View   ui_element = m_thread_ui_map.get(threadName);
-    Object extraMsg   = null;
+  public void onMessageEvent(TriggerEvent event) {
+    String threadName = event.eventOriginator;
+    String message = event.eventName;
+    View ui_element = m_thread_ui_map.get(threadName);
+    Object extraMsg = null;
 
-    switch (threadName){
+    switch (threadName) {
       case "ActivityManagerThread":
-        extraMsg = ((ActivityManagerInfoEvent)event).m_runningAppProcessInfos;
+        extraMsg = ((ActivityManagerInfoEvent) event).m_runningAppProcessInfos;
         break;
       case "DevicePowerThread":
-        extraMsg = ((DevicePowerThreadInfoEvent)event).m_batteryPct;
+        extraMsg = ((DevicePowerTriggerEvent) event).m_batteryPct;
         break;
       case "CPU_USAGE_THREAD":
-        extraMsg = ((CPUUsageEvent)event).getCpuUsage();
+        extraMsg = ((CPUUsageEvent) event).getCpuUsage();
         Log.d("CPU_DEBUG", String.valueOf(extraMsg));
         break;
       default:

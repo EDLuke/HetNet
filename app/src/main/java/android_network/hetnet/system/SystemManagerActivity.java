@@ -40,7 +40,7 @@ public class SystemManagerActivity extends Activity {
     //Decouple ui elements with individual threads
     //Have them managed by Monitor Manager instead
     ActivityManagerThread thread_am = new ActivityManagerThread(getApplicationContext());
-    DevicePowerThread powerThread   = new DevicePowerThread(getApplicationContext());
+    DevicePowerThread powerThread = new DevicePowerThread(getApplicationContext());
     CPUUsageThread cpuThread = new CPUUsageThread(getApplicationContext());
 
     monitorManager.insertNewThread(thread_am, "ActivityManagerThread", findViewById(R.id.listview_ps));
@@ -50,7 +50,7 @@ public class SystemManagerActivity extends Activity {
   }
 
   @Override
-  protected void onStop(){
+  protected void onStop() {
     //Unregister from the event bus
     EventBus.getDefault().unregister(this);
     super.onStop();
@@ -58,21 +58,21 @@ public class SystemManagerActivity extends Activity {
 
 
   @Subscribe(threadMode = ThreadMode.MAIN)
-  public void onMessageEvent(ThreadInfoUpdatedEvent event){
+  public void onMessageEvent(ThreadInfoUpdatedEvent event) {
     String threadName = event.m_thread_name;
-    String message    = event.m_message;
-    View   ui_element = event.m_ui;
-    Object extraMsg   = event.m_extraMsg;
+    String message = event.m_message;
+    View ui_element = event.m_ui;
+    Object extraMsg = event.m_extraMsg;
 
     switch (threadName) {
       case "ActivityManagerThread":
-        List<ActivityManager.RunningAppProcessInfo> runningAppProcessInfos = (List<ActivityManager.RunningAppProcessInfo>)extraMsg;
+        List<ActivityManager.RunningAppProcessInfo> runningAppProcessInfos = (List<ActivityManager.RunningAppProcessInfo>) extraMsg;
         RunningApplicationListAdapter adapter = new RunningApplicationListAdapter(getApplicationContext(), runningAppProcessInfos);
-        ((ListView)ui_element).setAdapter(adapter);
+        ((ListView) ui_element).setAdapter(adapter);
         break;
       case "DevicePowerThread":
-        float batteryPct = (float)extraMsg;
-        ((TextView)ui_element).setText(String.format("Current Battery Level: %s", batteryPct));
+        float batteryPct = (float) extraMsg;
+        ((TextView) ui_element).setText(String.format("Current Battery Level: %s", batteryPct));
         break;
       case "CPU_USAGE_THREAD":
 

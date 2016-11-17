@@ -3,6 +3,7 @@
     <string name="system_manager_title">System Manager</string>
     <string name="network_manager_title">Network Manager</string>
     <string name="location_manager_title">Location Manager</string>
+    <string name="policy_engine_title">Policy Engine</string>
     <string name="process_name">Name</string>
     <string name="pid">pid</string>
     <string name="uid">uid</string>

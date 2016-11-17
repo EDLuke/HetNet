@@ -15,7 +15,6 @@ import java.util.List;
 
 import android_network.hetnet.R;
 import android_network.hetnet.system.ProcessDetailActivity;
-import android_network.hetnet.system.SystemManagerActivity;
 
 /**
  * RunningApplicationListAdapter
@@ -69,11 +68,11 @@ public class RunningApplicationListAdapter extends BaseAdapter {
     rowView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-          Intent i = new Intent(view.getContext(),ProcessDetailActivity.class);
-          Bundle b = new Bundle();
-          b.putParcelable("PROC", process);
-          i.putExtras(b);
-          view.getContext().startActivity(i);
+        Intent i = new Intent(view.getContext(), ProcessDetailActivity.class);
+        Bundle b = new Bundle();
+        b.putParcelable("PROC", process);
+        i.putExtras(b);
+        view.getContext().startActivity(i);
       }
     });
     pname.setTextColor(Color.BLACK);

@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="android_network.hetnet">
+          package="android_network.hetnet">
 
-    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:allowBackup="true"
@@ -20,25 +21,31 @@
 
         <activity android:name=".MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
-        <activity android:name=".system.SystemManagerActivity" />
+        <activity android:name=".system.SystemManagerActivity"/>
+        <activity android:name=".network.NetworkManagerActivity"/>
+        <activity android:name=".location.LocationManagerActivity"/>
+        <activity android:name=".system.ProcessDetailActivity"/>
 
-        <activity android:name=".network.NetworkManagerActivity" />
-        <activity android:name=".location.LocationManagerActivity" />
-
-        <activity android:name=".system.ProcessDetailActivity" />
+        <service
+            android:name=".PolicyEngine"
+            android:exported="false"/>
 
         <service
             android:name=".network.NetworkListFetcher"
-            android:exported="false" />
+            android:exported="false"/>
+
+        <service
+            android:name=".network.NetworkEventTracker"
+            android:exported="false"/>
 
         <uses-feature
             android:name="android.hardware.nfc"
-            android:required="true" />
+            android:required="true"/>
     </application>
 
 </manifest>
