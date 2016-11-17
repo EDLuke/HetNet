@@ -26,14 +26,14 @@ public class LocationFetcher extends AsyncTask<Void, Void, Void> {
     }
 
     public LocationFetcher(Context context, AsyncResponse sender) {
-        this.ContextAsync = context;
+        this.ContextAsync = context.getApplicationContext();;
         this.sender = sender;
     }
 
     LocationListener listener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
-            LatLgn = location.getLongitude() + "," + location.getLatitude();
+            LatLgn = location.getLatitude() + "," + location.getLongitude();
         }
 
         @Override
@@ -58,8 +58,7 @@ public class LocationFetcher extends AsyncTask<Void, Void, Void> {
             Disabled = "True";
             return;
         }
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, listener);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, listener);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 1000, listener);
 
     }
     @Override
