@@ -27,7 +27,6 @@
         </activity>
 
         <activity android:name=".system.SystemManagerActivity"/>
-        <activity android:name=".location.LocationManagerActivity"/>
         <activity android:name=".system.ProcessDetailActivity"/>
 
         <service
@@ -40,6 +39,10 @@
 
         <service
             android:name=".network.NetworkEventTracker"
+            android:exported="false"/>
+
+        <service
+            android:name=".location.LocationEventTracker"
             android:exported="false"/>
 
         <uses-feature

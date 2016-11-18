@@ -16,6 +16,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import android_network.hetnet.common.trigger_events.UITriggerEvent;
 import android_network.hetnet.policy_engine.PolicyEngine;
 
+import static android_network.hetnet.common.Constants.LOCATION_EVENT_TRACKER;
 import static android_network.hetnet.common.Constants.NETWORK_EVENT_TRACKER;
 import static android_network.hetnet.common.Constants.NETWORK_LIST_FETCHER;
 
@@ -75,7 +76,7 @@ public class MainActivity extends Activity {
 
   @Subscribe(threadMode = ThreadMode.MAIN)
   public void onMessageEvent(UITriggerEvent event) {
-    if (event.getEventOriginator().equals(NETWORK_EVENT_TRACKER)) {
+    if (event.getEventOriginator().equals(NETWORK_EVENT_TRACKER) || event.getEventOriginator().equals(LOCATION_EVENT_TRACKER)) {
       eventList.setText(event.getEventName() + " event received from " + event.getEventOriginator() + " at " + event.getTimeOfEvent());
       networkList.setText("");
     } else if (event.getEventOriginator().equals(NETWORK_LIST_FETCHER)) {
