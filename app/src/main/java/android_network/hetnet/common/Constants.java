@@ -6,4 +6,8 @@ public class Constants {
   public static final String NETWORK_EVENT_TRACKER = "NETWORK_EVENT_TRACKER";
 
   public static final String NETWORK_LIST_FETCHER = "NETWORK_LIST_FETCHER";
+
+  public static final String LOCATION_EVENT_TRACKER = "LOCATION_EVENT_TRACKER";
+
+  public static final String LOCATION_FETCHER = "LOCATION_FETCHER";
 }

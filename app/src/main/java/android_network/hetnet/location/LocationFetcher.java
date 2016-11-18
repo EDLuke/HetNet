@@ -1,86 +1,38 @@
 package android_network.hetnet.location;
 
 import android.Manifest;
+import android.app.IntentService;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.AsyncTask;
-import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 
-public class LocationFetcher extends AsyncTask<Void, Void, Void> {
-  private Context ContextAsync;
-  String LatLgn = "";
-  String Disabled = "False";
-  protected LocationManager locationManager;
-  public AsyncResponse sender = null;
+import org.greenrobot.eventbus.EventBus;
 
-  public interface AsyncResponse {
-    void processFinish(String output);
-  }
+import java.util.Calendar;
 
-  public LocationFetcher(Context context, AsyncResponse sender) {
-    this.ContextAsync = context.getApplicationContext();
-    ;
-    this.sender = sender;
-  }
+import static android_network.hetnet.common.Constants.LOCATION_FETCHER;
 
-  LocationListener listener = new LocationListener() {
-    @Override
-    public void onLocationChanged(Location location) {
-      LatLgn = location.getLatitude() + "," + location.getLongitude();
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-    }
-  };
-
-  @Override
-  protected void onPreExecute() {
-    super.onPreExecute();
-    locationManager = (LocationManager) ContextAsync.getSystemService(ContextAsync.LOCATION_SERVICE);
-    if (ActivityCompat.checkSelfPermission(ContextAsync, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(ContextAsync,
-      Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-      Disabled = "True";
-      return;
-    }
-    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 1000, listener);
-
+public class LocationFetcher extends IntentService {
+  public LocationFetcher() {
+    super("LocationFetcher");
   }
 
   @Override
-  protected void onCancelled() {
-    System.out.println("Cancelled by user!");
-    if (ActivityCompat.checkSelfPermission(ContextAsync, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(ContextAsync,
-      Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-      Disabled = "True";
-      return;
-    }
-    locationManager.removeUpdates(listener);
+  public void onCreate() {
+    super.onCreate();
   }
 
   @Override
-  protected Void doInBackground(Void... params) {
-    while (LatLgn.equals("")) {
+  protected void onHandleIntent(Intent intent) {
+    LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+    Context context = getApplicationContext();
+    if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+      || ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+      Location location = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+      EventBus.getDefault().post(new LocationResponseEvent(LOCATION_FETCHER, location.getLatitude() + ", " + location.getLongitude(), Calendar.getInstance().getTime()));
     }
-    ;
-    return null;
-  }
-
-  @Override
-  protected void onPostExecute(Void result) {
-    super.onPostExecute(result);
-    sender.processFinish(LatLgn);
   }
 }

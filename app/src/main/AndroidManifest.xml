@@ -45,6 +45,10 @@
             android:name=".location.LocationEventTracker"
             android:exported="false"/>
 
+        <service
+            android:name=".location.LocationFetcher"
+            android:exported="false"/>
+
         <uses-feature
             android:name="android.hardware.nfc"
             android:required="true"/>

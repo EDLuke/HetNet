@@ -4,12 +4,12 @@ import java.util.Date;
 
 public class LocationResponseEvent {
   private String eventOriginator;
-  private String listOfNetworks;
+  private String location;
   private Date timeOfEvent;
 
-  public LocationResponseEvent(String eventOriginator, String listOfNetworks, Date timeOfEvent) {
+  public LocationResponseEvent(String eventOriginator, String location, Date timeOfEvent) {
     this.eventOriginator = eventOriginator;
-    this.listOfNetworks = listOfNetworks;
+    this.location = location;
     this.timeOfEvent = timeOfEvent;
   }
 
@@ -21,12 +21,12 @@ public class LocationResponseEvent {
     this.eventOriginator = eventOriginator;
   }
 
-  public String getListOfNetworks() {
-    return listOfNetworks;
+  public String getLocation() {
+    return location;
   }
 
-  public void setListOfNetworks(String listOfNetworks) {
-    this.listOfNetworks = listOfNetworks;
+  public void setLocation(String location) {
+    this.location = location;
   }
 
   public Date getTimeOfEvent() {

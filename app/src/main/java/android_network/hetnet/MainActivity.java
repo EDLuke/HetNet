@@ -18,7 +18,7 @@ import android_network.hetnet.policy_engine.PolicyEngine;
 
 import static android_network.hetnet.common.Constants.LOCATION_EVENT_TRACKER;
 import static android_network.hetnet.common.Constants.NETWORK_EVENT_TRACKER;
-import static android_network.hetnet.common.Constants.NETWORK_LIST_FETCHER;
+import static android_network.hetnet.common.Constants.POLICY_ENGINE;
 
 public class MainActivity extends Activity {
   private static final int REQUEST_READ_PHONE_STATE = 100;
@@ -79,8 +79,8 @@ public class MainActivity extends Activity {
     if (event.getEventOriginator().equals(NETWORK_EVENT_TRACKER) || event.getEventOriginator().equals(LOCATION_EVENT_TRACKER)) {
       eventList.setText(event.getEventName() + " event received from " + event.getEventOriginator() + " at " + event.getTimeOfEvent());
       networkList.setText("");
-    } else if (event.getEventOriginator().equals(NETWORK_LIST_FETCHER)) {
-      eventList.setText("Networks received from " + event.getEventOriginator() + " at " + event.getTimeOfEvent());
+    } else if (event.getEventOriginator().equals(POLICY_ENGINE)) {
+      eventList.setText("Data received from " + event.getEventOriginator() + " at " + event.getTimeOfEvent());
       networkList.setText(event.getEventName());
     }
   }
