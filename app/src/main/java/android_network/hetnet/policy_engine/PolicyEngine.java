@@ -26,6 +26,9 @@ public class PolicyEngine extends Service {
   Intent networkListFetcherService;
   Intent locationFetcherService;
 
+  boolean locationDataReceived = false;
+  boolean networkDataReceived = false;
+
   @Override
   public void onCreate() {
     super.onCreate();
@@ -51,25 +54,36 @@ public class PolicyEngine extends Service {
 
   @Subscribe(threadMode = ThreadMode.ASYNC)
   public void onMessageEvent(TriggerEvent event) {
+    locationDataReceived = networkDataReceived = false;
     data = new StringBuilder();
     EventBus.getDefault().post(new UITriggerEvent(event.getEventOriginator(), event.getEventName(), event.getTimeOfEvent()));
 
     locationFetcherService = new Intent(this, LocationFetcher.class);
     this.startService(locationFetcherService);
-  }
 
-  @Subscribe(threadMode = ThreadMode.ASYNC)
-  public void onMessageEvent(LocationResponseEvent event) {
-    this.stopService(locationFetcherService);
-    data.append(event.getLocation()).append("\n\n");
     networkListFetcherService = new Intent(this, NetworkListFetcher.class);
     this.startService(networkListFetcherService);
   }
 
   @Subscribe(threadMode = ThreadMode.ASYNC)
+  public void onMessageEvent(LocationResponseEvent event) {
+    locationDataReceived = true;
+    this.stopService(locationFetcherService);
+    data.append(event.getLocation()).append("\n\n");
+    checkIfAllDataReceived();
+  }
+
+  @Subscribe(threadMode = ThreadMode.ASYNC)
   public void onMessageEvent(NetworkResponseEvent event) {
+    networkDataReceived = true;
     this.stopService(networkListFetcherService);
     data.append(event.getListOfNetworks()).append("\n\n");
-    EventBus.getDefault().post(new UITriggerEvent(Constants.POLICY_ENGINE, String.valueOf(data), Calendar.getInstance().getTime()));
+    checkIfAllDataReceived();
+  }
+
+  private void checkIfAllDataReceived() {
+    if (networkDataReceived && locationDataReceived) {
+      EventBus.getDefault().post(new UITriggerEvent(Constants.POLICY_ENGINE, String.valueOf(data), Calendar.getInstance().getTime()));
+    }
   }
 }
