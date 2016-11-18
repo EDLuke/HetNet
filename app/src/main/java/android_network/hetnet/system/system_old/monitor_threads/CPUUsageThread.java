@@ -1,4 +1,4 @@
-package android_network.hetnet.system.monitor_threads;
+package android_network.hetnet.system.system_old.monitor_threads;
 
 import android.content.Context;
 
@@ -7,7 +7,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
-import android_network.hetnet.system.event.CPUUsageEvent;
+import android_network.hetnet.system.system_old.event.CPUUsageEvent;
 
 
 /**

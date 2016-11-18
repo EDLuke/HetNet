@@ -20,11 +20,15 @@ import android_network.hetnet.location.LocationResponseEvent;
 import android_network.hetnet.network.NetworkEventTracker;
 import android_network.hetnet.network.NetworkListFetcher;
 import android_network.hetnet.network.NetworkResponseEvent;
+import android_network.hetnet.system.SystemEventTracker;
+import android_network.hetnet.system.SystemListFetcher;
+import android_network.hetnet.system.SystemResponseEvent;
 
 public class PolicyEngine extends Service {
   StringBuilder data;
   Intent networkListFetcherService;
   Intent locationFetcherService;
+  Intent systemListFetcherService;
 
   boolean locationDataReceived = false;
   boolean networkDataReceived = false;
@@ -37,7 +41,10 @@ public class PolicyEngine extends Service {
     Intent networkEventTrackerService = new Intent(this, NetworkEventTracker.class);
     this.startService(networkEventTrackerService);
 
-    Intent locationEventTrackerService = new Intent(this, LocationEventTracker.class);
+    Intent systemEventTrackerService = new Intent(this, SystemEventTracker.class);
+    this.startService(systemEventTrackerService);
+
+	Intent locationEventTrackerService = new Intent(this, LocationEventTracker.class);
     this.startService(locationEventTrackerService);
   }
 
@@ -56,13 +63,17 @@ public class PolicyEngine extends Service {
   public void onMessageEvent(TriggerEvent event) {
     locationDataReceived = networkDataReceived = false;
     data = new StringBuilder();
-    EventBus.getDefault().post(new UITriggerEvent(event.getEventOriginator(), event.getEventName(), event.getTimeOfEvent()));
+    EventBus.getDefault().post(new UITriggerEvent(event.getEventOriginator(), event.getEventName(), null, event.getTimeOfEvent()));
+
 
     locationFetcherService = new Intent(this, LocationFetcher.class);
     this.startService(locationFetcherService);
 
     networkListFetcherService = new Intent(this, NetworkListFetcher.class);
     this.startService(networkListFetcherService);
+
+    systemListFetcherService  = new Intent(this, SystemListFetcher.class);
+    this.startService(systemListFetcherService);
   }
 
   @Subscribe(threadMode = ThreadMode.ASYNC)
@@ -79,11 +90,19 @@ public class PolicyEngine extends Service {
     this.stopService(networkListFetcherService);
     data.append(event.getListOfNetworks()).append("\n\n");
     checkIfAllDataReceived();
+    EventBus.getDefault().post(new UITriggerEvent(event.getEventOriginator(), event.getListOfNetworks(), null, event.getTimeOfEvent()));
   }
+
 
   private void checkIfAllDataReceived() {
     if (networkDataReceived && locationDataReceived) {
-      EventBus.getDefault().post(new UITriggerEvent(Constants.POLICY_ENGINE, String.valueOf(data), Calendar.getInstance().getTime()));
+      EventBus.getDefault().post(new UITriggerEvent(Constants.POLICY_ENGINE, String.valueOf(data), null, Calendar.getInstance().getTime()));
     }
+  }
+
+
+  @Subscribe(threadMode = ThreadMode.ASYNC)
+  public void onMessageEvent(SystemResponseEvent event) {
+    EventBus.getDefault().post(new UITriggerEvent(event.getEventOriginator(), "", event.getSystemList(), event.getTimeOfEvent()));
   }
 }

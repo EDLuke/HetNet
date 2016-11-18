@@ -1,4 +1,4 @@
-package android_network.hetnet.system;
+package android_network.hetnet.system.system_old;
 
 import android.app.Activity;
 import android.app.ActivityManager;

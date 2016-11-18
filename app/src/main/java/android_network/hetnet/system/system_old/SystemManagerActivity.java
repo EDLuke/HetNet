@@ -1,4 +1,4 @@
-package android_network.hetnet.system;
+package android_network.hetnet.system.system_old;
 
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -15,11 +15,11 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.List;
 
 import android_network.hetnet.R;
-import android_network.hetnet.system.adapter.RunningApplicationListAdapter;
-import android_network.hetnet.system.event.ThreadInfoUpdatedEvent;
-import android_network.hetnet.system.monitor_threads.ActivityManagerThread;
-import android_network.hetnet.system.monitor_threads.CPUUsageThread;
-import android_network.hetnet.system.monitor_threads.DevicePowerThread;
+import android_network.hetnet.system.system_old.adapter.RunningApplicationListAdapter;
+import android_network.hetnet.system.system_old.event.ThreadInfoUpdatedEvent;
+import android_network.hetnet.system.system_old.monitor_threads.ActivityManagerThread;
+import android_network.hetnet.system.system_old.monitor_threads.CPUUsageThread;
+import android_network.hetnet.system.system_old.monitor_threads.DevicePowerThread;
 
 public class SystemManagerActivity extends Activity {
   /**
@@ -46,6 +46,7 @@ public class SystemManagerActivity extends Activity {
     monitorManager.insertNewThread(thread_am, "ActivityManagerThread", findViewById(R.id.listview_ps));
     monitorManager.insertNewThread(powerThread, "DevicePowerThread", findViewById(R.id.textview_devicepower));
     monitorManager.insertNewThread(cpuThread, "CPU_USAGE_THREAD", findViewById(R.id.cpu_usage));
+
     monitorManager.startMonitor();
   }
 

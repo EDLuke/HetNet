@@ -1,4 +1,4 @@
-package android_network.hetnet.system;
+package android_network.hetnet.system.system_old;
 
 import android.util.Log;
 import android.view.View;
@@ -10,13 +10,10 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import android_network.hetnet.common.trigger_events.TriggerEvent;
-import android_network.hetnet.system.event.ActivityManagerInfoEvent;
-import android_network.hetnet.system.event.CPUUsageEvent;
-import android_network.hetnet.system.event.DevicePowerTriggerEvent;
-import android_network.hetnet.system.event.ThreadInfoUpdatedEvent;
+import android_network.hetnet.system.system_old.event.ThreadInfoEvent;
+import android_network.hetnet.system.system_old.event.ThreadInfoUpdatedEvent;
 
-public class MonitorManager {
+public class MonitorManager{
   /**
    * Log Tag
    */
@@ -65,26 +62,27 @@ public class MonitorManager {
 
 
   @Subscribe
-  public void onMessageEvent(TriggerEvent event) {
-    String threadName = event.getEventOriginator();
-    String message = event.getEventName();
-    View ui_element = m_thread_ui_map.get(threadName);
-    Object extraMsg = null;
+  public void onMessageEvent(ThreadInfoEvent event){
 
-    switch (threadName) {
-      case "ActivityManagerThread":
-        extraMsg = ((ActivityManagerInfoEvent) event).m_runningAppProcessInfos;
-        break;
-      case "DevicePowerThread":
-        extraMsg = ((DevicePowerTriggerEvent) event).m_batteryPct;
-        break;
-      case "CPU_USAGE_THREAD":
-        extraMsg = ((CPUUsageEvent) event).getCpuUsage();
-        Log.d("CPU_DEBUG", String.valueOf(extraMsg));
-        break;
-      default:
-        Log.e(TAG, "Incorrect thread name received in Monitor Manager");
-    }
+    String threadName = event.m_thread_name;
+    String message    = event.m_message;
+    View   ui_element = m_thread_ui_map.get(threadName);
+    Object extraMsg   = null;
+
+//    switch (threadName){
+//      case "ActivityManagerThread":
+//        extraMsg = ((ActivityManagerInfoEvent)event).m_runningAppProcessInfos;
+//        break;
+//      case "DevicePowerThread":
+//        extraMsg = ((DevicePowerThreadInfoEvent)event).m_batteryPct;
+//        break;
+//      case "CPU_USAGE_THREAD":
+//        extraMsg = ((CPUUsageEvent)event).getCpuUsage();
+//        Log.d("CPU_DEBUG", String.valueOf(extraMsg));
+//        break;
+//      default:
+//        Log.e(TAG, "Incorrect thread name received in Monitor Manager");
+//    }
 
     EventBus.getDefault().post(new ThreadInfoUpdatedEvent(threadName, message, ui_element, extraMsg));
 

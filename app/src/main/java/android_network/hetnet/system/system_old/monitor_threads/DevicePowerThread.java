@@ -1,4 +1,4 @@
-package android_network.hetnet.system.monitor_threads;
+package android_network.hetnet.system.system_old.monitor_threads;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,7 +7,7 @@ import android.os.BatteryManager;
 
 import org.greenrobot.eventbus.EventBus;
 
-import android_network.hetnet.system.event.DevicePowerTriggerEvent;
+import android_network.hetnet.system.system_old.event.DevicePowerTriggerEvent;
 
 /**
  * Device Power Thread

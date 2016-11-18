@@ -26,8 +26,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".system.SystemManagerActivity"/>
-        <activity android:name=".system.ProcessDetailActivity"/>
+        <activity android:name=".system.system_old.SystemManagerActivity"/>
+        <!--<activity android:name=".location.LocationManagerActivity"/>-->
+        <activity android:name=".system.system_old.ProcessDetailActivity"/>
 
         <service
             android:name=".policy_engine.PolicyEngine"
@@ -42,8 +43,16 @@
             android:exported="false"/>
 
         <service
-            android:name=".location.LocationEventTracker"
-            android:exported="false"/>
+            android:name=".system.SystemListFetcher"
+            android:exported="false" />
+
+        <service
+            android:name=".system.SystemEventTracker"
+            android:exported="false" />
+
+        <!--<service-->
+            <!--android:name=".location.LocationEventTracker"-->
+            <!--android:exported="false"/>-->
 
         <service
             android:name=".location.LocationFetcher"

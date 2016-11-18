@@ -1,11 +1,11 @@
-package android_network.hetnet.system.monitor_threads;
+package android_network.hetnet.system.system_old.monitor_threads;
 
 import android.app.ActivityManager;
 import android.content.Context;
 
 import org.greenrobot.eventbus.EventBus;
 
-import android_network.hetnet.system.event.ActivityManagerInfoEvent;
+import android_network.hetnet.system.system_old.event.ActivityManagerInfoEvent;
 
 
 /**

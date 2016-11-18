@@ -1,4 +1,4 @@
-package android_network.hetnet.system.adapter;
+package android_network.hetnet.system.system_old.adapter;
 
 import android.app.ActivityManager;
 import android.content.Context;
@@ -14,7 +14,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import android_network.hetnet.R;
-import android_network.hetnet.system.ProcessDetailActivity;
+import android_network.hetnet.system.system_old.ProcessDetailActivity;
 
 /**
  * RunningApplicationListAdapter
