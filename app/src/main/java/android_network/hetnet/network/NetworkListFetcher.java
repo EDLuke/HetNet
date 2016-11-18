@@ -1,51 +1,39 @@
 package android_network.hetnet.network;
 
-import android.app.Service;
+import android.app.IntentService;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
-import android.os.IBinder;
-import android.support.annotation.Nullable;
 import android.telephony.CellInfo;
 import android.telephony.CellInfoLte;
 import android.telephony.TelephonyManager;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Calendar;
 import java.util.List;
 
 import static android_network.hetnet.common.Constants.NETWORK_LIST_FETCHER;
 
-public class NetworkListFetcher extends Service {
+public class NetworkListFetcher extends IntentService {
   WifiManager wifiManager;
   StringBuilder mainText;
   TelephonyManager telephonyManager;
 
+  public NetworkListFetcher() {
+    super("NetworkListFetcher");
+  }
+
   @Override
   public void onCreate() {
     super.onCreate();
-    EventBus.getDefault().register(this);
   }
 
   @Override
-  public int onStartCommand(Intent intent, int flags, int startId) {
-    return START_STICKY;
-  }
-
-  @Nullable
-  @Override
-  public IBinder onBind(Intent intent) {
-    return null;
-  }
-
-  @Subscribe(threadMode = ThreadMode.ASYNC)
-  protected void onMessageEvent(NetworkRequestEvent event) {
+  protected void onHandleIntent(Intent intent) {
     getWifiInfo();
     getLTEInfo();
     EventBus.getDefault().post(new NetworkResponseEvent(NETWORK_LIST_FETCHER, String.valueOf(mainText), Calendar.getInstance().getTime()));
@@ -86,6 +74,7 @@ public class NetworkListFetcher extends Service {
     for (CellInfo cellInfo : cellInfoList) {
       if (cellInfo instanceof CellInfoLte) {
         mainText.append(cellInfo.toString());
+        mainText.append("\n\n");
       }
     }
   }
@@ -113,7 +102,6 @@ public class NetworkListFetcher extends Service {
     public void onReceive(Context context, Intent intent) {
       List<ScanResult> wifiList = wifiManager.getScanResults();
       mainText.append("\nNumber Of WiFi connections: ").append(wifiList.size()).append("\n\n");
-      System.out.println("Number of WiFi connections changed to: " + wifiList.size());
       for (int i = 0; i < wifiList.size(); i++) {
         mainText.append(Integer.valueOf(i + 1).toString()).append(". ");
         mainText.append((wifiList.get(i)).toString());

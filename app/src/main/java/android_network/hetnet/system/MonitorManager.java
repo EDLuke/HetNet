@@ -66,8 +66,8 @@ public class MonitorManager {
 
   @Subscribe
   public void onMessageEvent(TriggerEvent event) {
-    String threadName = event.eventOriginator;
-    String message = event.eventName;
+    String threadName = event.getEventOriginator();
+    String message = event.getEventName();
     View ui_element = m_thread_ui_map.get(threadName);
     Object extraMsg = null;
 

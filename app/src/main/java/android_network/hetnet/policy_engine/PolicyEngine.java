@@ -13,10 +13,7 @@ import android_network.hetnet.common.trigger_events.TriggerEvent;
 import android_network.hetnet.common.trigger_events.UITriggerEvent;
 import android_network.hetnet.network.NetworkEventTracker;
 import android_network.hetnet.network.NetworkListFetcher;
-import android_network.hetnet.network.NetworkRequestEvent;
 import android_network.hetnet.network.NetworkResponseEvent;
-
-import static android_network.hetnet.common.Constants.POLICY_ENGINE;
 
 public class PolicyEngine extends Service {
   @Override
@@ -26,9 +23,6 @@ public class PolicyEngine extends Service {
 
     Intent networkEventTrackerService = new Intent(this, NetworkEventTracker.class);
     this.startService(networkEventTrackerService);
-
-    Intent networkListFetcherService = new Intent(this, NetworkListFetcher.class);
-    this.startService(networkListFetcherService);
   }
 
   @Override
@@ -44,8 +38,9 @@ public class PolicyEngine extends Service {
 
   @Subscribe(threadMode = ThreadMode.ASYNC)
   public void onMessageEvent(TriggerEvent event) {
-    EventBus.getDefault().post(new UITriggerEvent(event.eventOriginator, event.eventName, event.timeOfEvent));
-    EventBus.getDefault().post(new NetworkRequestEvent(POLICY_ENGINE));
+    EventBus.getDefault().post(new UITriggerEvent(event.getEventOriginator(), event.getEventName(), event.getTimeOfEvent()));
+    Intent networkListFetcherService = new Intent(this, NetworkListFetcher.class);
+    this.startService(networkListFetcherService);
   }
 
   @Subscribe(threadMode = ThreadMode.ASYNC)

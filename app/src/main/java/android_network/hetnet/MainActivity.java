@@ -75,12 +75,12 @@ public class MainActivity extends Activity {
 
   @Subscribe(threadMode = ThreadMode.MAIN)
   public void onMessageEvent(UITriggerEvent event) {
-    if (event.eventOriginator.equals(NETWORK_EVENT_TRACKER)) {
-      eventList.setText("Event received: " + event.eventOriginator + " " + event.eventName + " " + event.timeOfEvent);
+    if (event.getEventOriginator().equals(NETWORK_EVENT_TRACKER)) {
+      eventList.setText(event.getEventName() + " event received from " + event.getEventOriginator() + " at " + event.getTimeOfEvent());
       networkList.setText("");
-    } else if (event.eventOriginator.equals(NETWORK_LIST_FETCHER)) {
-      eventList.setText("Event received: " + event.eventOriginator + " " + event.timeOfEvent);
-      networkList.setText(event.eventName);
+    } else if (event.getEventOriginator().equals(NETWORK_LIST_FETCHER)) {
+      eventList.setText("Networks received from " + event.getEventOriginator() + " at " + event.getTimeOfEvent());
+      networkList.setText(event.getEventName());
     }
   }
 }
