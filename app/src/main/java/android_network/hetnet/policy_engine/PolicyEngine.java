@@ -44,7 +44,7 @@ public class PolicyEngine extends Service {
     Intent systemEventTrackerService = new Intent(this, SystemEventTracker.class);
     this.startService(systemEventTrackerService);
 
-	Intent locationEventTrackerService = new Intent(this, LocationEventTracker.class);
+    Intent locationEventTrackerService = new Intent(this, LocationEventTracker.class);
     this.startService(locationEventTrackerService);
   }
 
@@ -63,8 +63,6 @@ public class PolicyEngine extends Service {
   public void onMessageEvent(TriggerEvent event) {
     locationDataReceived = networkDataReceived = false;
     data = new StringBuilder();
-    EventBus.getDefault().post(new UITriggerEvent(event.getEventOriginator(), event.getEventName(), null, event.getTimeOfEvent()));
-
 
     locationFetcherService = new Intent(this, LocationFetcher.class);
     this.startService(locationFetcherService);
@@ -81,28 +79,35 @@ public class PolicyEngine extends Service {
     locationDataReceived = true;
     this.stopService(locationFetcherService);
     data.append(event.getLocation()).append("\n\n");
-    checkIfAllDataReceived();
+
+//    if(checkIfAllDataReceived()){
+//      EventBus.getDefault()
+//    }
   }
 
   @Subscribe(threadMode = ThreadMode.ASYNC)
   public void onMessageEvent(NetworkResponseEvent event) {
     networkDataReceived = true;
     this.stopService(networkListFetcherService);
-    data.append(event.getListOfNetworks()).append("\n\n");
-    checkIfAllDataReceived();
-    EventBus.getDefault().post(new UITriggerEvent(event.getEventOriginator(), event.getListOfNetworks(), null, event.getTimeOfEvent()));
+    data.append(event.getNetworkList()).append("\n\n");
+
+    if(checkIfAllDataReceived())
+      EventBus.getDefault().post(new UITriggerEvent(event.getEventOriginator(), event.getNetworkList(), event.getTimeOfEvent()));
   }
 
 
-  private void checkIfAllDataReceived() {
-    if (networkDataReceived && locationDataReceived) {
-      EventBus.getDefault().post(new UITriggerEvent(Constants.POLICY_ENGINE, String.valueOf(data), null, Calendar.getInstance().getTime()));
-    }
+  private boolean checkIfAllDataReceived() {
+
+    return networkDataReceived && locationDataReceived;
+
+//    if (networkDataReceived && locationDataReceived) {
+//      EventBus.getDefault().post(new UITriggerEvent(Constants.POLICY_ENGINE, String.valueOf(data), Calendar.getInstance().getTime()));
+//    }
   }
 
 
   @Subscribe(threadMode = ThreadMode.ASYNC)
   public void onMessageEvent(SystemResponseEvent event) {
-    EventBus.getDefault().post(new UITriggerEvent(event.getEventOriginator(), "", event.getSystemList(), event.getTimeOfEvent()));
+    EventBus.getDefault().post(new UITriggerEvent(event.getEventOriginator(), event.getSystemList(), event.getTimeOfEvent()));
   }
 }

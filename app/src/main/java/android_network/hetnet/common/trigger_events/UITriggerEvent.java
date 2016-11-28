@@ -2,19 +2,19 @@ package android_network.hetnet.common.trigger_events;
 
 import java.util.Date;
 
+import android_network.hetnet.common.EventList;
 import android_network.hetnet.system.SystemList;
 
 public class UITriggerEvent {
   private String eventOriginator;
-  private String eventName;
-  private SystemList eventSystemList;
+  private EventList eventList;
   private Date timeOfEvent;
 
-  public UITriggerEvent(String eventOriginator, String eventName, SystemList eventSystemList, Date timeOfEvent) {
+  public UITriggerEvent(String eventOriginator, EventList eventList, Date timeOfEvent) {
     this.eventOriginator = eventOriginator;
-    this.eventName = eventName;
+
     this.timeOfEvent = timeOfEvent;
-    this.setEventSystemList(eventSystemList);
+    this.setEventList(eventList);
   }
 
   public String getEventOriginator() {
@@ -25,14 +25,6 @@ public class UITriggerEvent {
     this.eventOriginator = eventOriginator;
   }
 
-  public String getEventName() {
-    return eventName;
-  }
-
-  public void setEventName(String eventName) {
-    this.eventName = eventName;
-  }
-
   public Date getTimeOfEvent() {
     return timeOfEvent;
   }
@@ -41,11 +33,16 @@ public class UITriggerEvent {
     this.timeOfEvent = timeOfEvent;
   }
 
-  public SystemList getEventSystemList() {
-    return eventSystemList;
+  public EventList getEventList() {
+    return eventList;
   }
 
-  public void setEventSystemList(SystemList eventSystemList) {
-    this.eventSystemList = eventSystemList;
+  public void setEventList(EventList eventSystemList) {
+    this.eventList = eventSystemList;
+  }
+
+  @Override
+  public String toString(){
+    return eventOriginator + "\t" + eventList.toString() + timeOfEvent.toString();
   }
 }

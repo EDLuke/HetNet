@@ -8,47 +8,100 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
+import android.view.MenuItem;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import android_network.hetnet.common.trigger_events.TriggerEvent;
 import android_network.hetnet.common.trigger_events.UITriggerEvent;
+import android_network.hetnet.location.LocationManagerFragment;
+import android_network.hetnet.network.NetworkList;
+import android_network.hetnet.network.NetworkManagerFragment;
 import android_network.hetnet.policy_engine.PolicyEngine;
+import android_network.hetnet.policy_engine.PolicyEngineFragment;
+import android_network.hetnet.system.SystemList;
+import android_network.hetnet.system.SystemManagerFragment;
 
-//import static android_network.hetnet.common.Constants.LOCATION_EVENT_TRACKER;
-import static android_network.hetnet.common.Constants.NETWORK_EVENT_TRACKER;
-import static android_network.hetnet.common.Constants.POLICY_ENGINE;
-import static android_network.hetnet.common.Constants.SYSTEM_EVENT_TRACKER;
+import static android_network.hetnet.common.Constants.LOCATION_LIST_FETCHER;
+import static android_network.hetnet.common.Constants.NETWORK_LIST_FETCHER;
 import static android_network.hetnet.common.Constants.SYSTEM_LIST_FETCHER;
 
 public class MainActivity extends Activity {
+  private static final String LOG_TAG = "MainActivity";
+
   private static final int REQUEST_READ_PHONE_STATE = 100;
   private static final int REQUEST_ACCESS_COARSE_LOCATION = 101;
   private static final int REQUEST_ACCESS_NETWORK_STATE = 102;
 
-  TextView eventList;
-  TextView networkList;
+  private String m_event_log;
+  private SystemList m_system_list;
+  /*TODO: Create NetworkList and LocationList*/
+  private NetworkList m_network_list;
+  /*private LocationList m_location_list;*/
+
+  DrawerLayout        drawerLayout;
+  NavigationView      navigationView;
+  FragmentManager     fragmentManager;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    eventList = (TextView) findViewById(R.id.event_list);
-    networkList = (TextView) findViewById(R.id.network_list);
+    drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+    navigationView = (NavigationView) findViewById(R.id.navigation_view);
 
+    fragmentManager = getFragmentManager();
+    FragmentTransaction firstTransaction = fragmentManager.beginTransaction();
+    firstTransaction.replace(R.id.containerView, new PolicyEngineFragment()).commit();
+
+    /* Setup onclick event for Navigation View Items */
+    navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener(){
+      @Override
+      public boolean onNavigationItemSelected(MenuItem menuItem){
+        drawerLayout.closeDrawers();
+        FragmentTransaction fragmentTransaction;
+        fragmentTransaction = fragmentManager.beginTransaction();
+
+        switch (menuItem.getItemId()){
+          case R.id.nav_item_policy:
+            fragmentTransaction.replace(R.id.containerView, PolicyEngineFragment.newInstance(m_event_log)).commit();
+            break;
+          case R.id.nav_item_system:
+            fragmentTransaction.replace(R.id.containerView, new SystemManagerFragment()).commit();
+            break;
+          case R.id.nav_item_network:
+            fragmentTransaction.replace(R.id.containerView, NetworkManagerFragment.newInstance(m_network_list)).commit();
+            break;
+          case R.id.nav_item_location:
+            fragmentTransaction.replace(R.id.containerView, new LocationManagerFragment()).commit();
+            break;
+          default:
+            Log.e(LOG_TAG, "Wrong navigation menu item id: " + menuItem.getItemId());
+        }
+        return false;
+      }
+    });
     int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
 
     if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
       ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, REQUEST_READ_PHONE_STATE);
     }
 
+    //register to event bus
     EventBus.getDefault().register(this);
 
     Intent policyEngineService = new Intent(this, PolicyEngine.class);
@@ -82,41 +135,23 @@ public class MainActivity extends Activity {
   }
 
   @Subscribe(threadMode = ThreadMode.MAIN)
-  public void onMessageEvent(UITriggerEvent event) {
-    if (event.getEventOriginator().equals(NETWORK_EVENT_TRACKER) /*|| event.getEventOriginator().equals(LOCATION_EVENT_TRACKER)*/) {
-      eventList.setText(event.getEventName() + " event received from " + event.getEventOriginator() + " at " + event.getTimeOfEvent());
-      networkList.setText("");
-    } else if (event.getEventOriginator().equals(POLICY_ENGINE)) {
-      eventList.setText("Data received from " + event.getEventOriginator() + " at " + event.getTimeOfEvent());
-      networkList.setText(event.getEventName());
-    } else if (event.getEventOriginator().equals(SYSTEM_LIST_FETCHER) || event.getEventOriginator().equals(SYSTEM_EVENT_TRACKER)) {
-      NotificationCompat.Builder mBuilder =
-              new NotificationCompat.Builder(this)
-                    /*.setSmallIcon(R.drawable.notification_icon)*/
-                      .setContentTitle("My notification")
-                      .setContentText("Hello World!");
-      // Creates an explicit intent for an Activity in your app
-      Intent resultIntent = new Intent(this, MainActivity.class);
+  public void onMessageEvent(TriggerEvent event) {
+    m_event_log += (event.toString() + "\t");
+  }
 
-      // The stack builder object will contain an artificial back stack for the
-      // started Activity.
-      // This ensures that navigating backward from the Activity leads out of
-      // your application to the Home screen.
-      TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-      // Adds the back stack for the Intent (but not the Intent itself)
-      stackBuilder.addParentStack(MainActivity.class);
-      // Adds the Intent that starts the Activity to the top of the stack
-      stackBuilder.addNextIntent(resultIntent);
-      PendingIntent resultPendingIntent =
-              stackBuilder.getPendingIntent(
-                      0,
-                      PendingIntent.FLAG_UPDATE_CURRENT
-              );
-      mBuilder.setContentIntent(resultPendingIntent);
-      NotificationManager mNotificationManager =
-              (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-      // mId allows you to update the notification later on.
-      mNotificationManager.notify(0, mBuilder.build());
+  @Subscribe(threadMode = ThreadMode.MAIN)
+  public void onMessageEvent(UITriggerEvent event) {
+    switch (event.getEventOriginator()){
+      case NETWORK_LIST_FETCHER:
+        m_network_list = (NetworkList)(event.getEventList());
+        break;
+      case SYSTEM_LIST_FETCHER:
+        m_system_list = (SystemList)(event.getEventList());
+        break;
+      case LOCATION_LIST_FETCHER:
+        break;
+      default:
+        Log.e(LOG_TAG, "Wrong event from: " + event.getEventOriginator());
     }
   }
 }

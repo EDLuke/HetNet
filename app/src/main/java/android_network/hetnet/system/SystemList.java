@@ -4,12 +4,14 @@ import android.app.ActivityManager;
 
 import java.util.List;
 
+import android_network.hetnet.common.EventList;
+
 /**
  * SystemList
  * All system related info used for Policy Engine to make the decision
  */
 
-public class SystemList {
+public class SystemList extends EventList {
     //Running Application Info
     private List<ActivityManager.RunningAppProcessInfo> m_runningAppProcessInfos;
 
@@ -41,5 +43,10 @@ public class SystemList {
 
     public void setBatteryPct(float m_batteryPct) {
         this.m_batteryPct = m_batteryPct;
+    }
+
+    @Override
+    public String toString(){
+        return m_cpuUsage + "\t" + m_batteryPct;
     }
 }

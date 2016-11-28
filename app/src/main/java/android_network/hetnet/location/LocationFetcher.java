@@ -13,7 +13,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.Calendar;
 
-import static android_network.hetnet.common.Constants.LOCATION_FETCHER;
+import static android_network.hetnet.common.Constants.LOCATION_LIST_FETCHER;
 
 public class LocationFetcher extends IntentService {
   public LocationFetcher() {
@@ -32,7 +32,7 @@ public class LocationFetcher extends IntentService {
     if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
       || ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
       Location location = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-      EventBus.getDefault().post(new LocationResponseEvent(LOCATION_FETCHER, location.getLatitude() + ", " + location.getLongitude(), Calendar.getInstance().getTime()));
+      EventBus.getDefault().post(new LocationResponseEvent(LOCATION_LIST_FETCHER, location.getLatitude() + ", " + location.getLongitude(), Calendar.getInstance().getTime()));
     }
   }
 }

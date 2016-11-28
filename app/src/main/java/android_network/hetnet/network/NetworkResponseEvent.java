@@ -4,12 +4,13 @@ import java.util.Date;
 
 public class NetworkResponseEvent {
   private String eventOriginator;
-  private String listOfNetworks;
+  private NetworkList listOfNetworks;
   private Date timeOfEvent;
 
   public NetworkResponseEvent(String eventOriginator, String listOfNetworks, Date timeOfEvent) {
     this.eventOriginator = eventOriginator;
-    this.listOfNetworks = listOfNetworks;
+    this.listOfNetworks = new NetworkList();
+    this.listOfNetworks.setListOfNetworks(listOfNetworks);
     this.timeOfEvent = timeOfEvent;
   }
 
@@ -21,12 +22,12 @@ public class NetworkResponseEvent {
     this.eventOriginator = eventOriginator;
   }
 
-  public String getListOfNetworks() {
+  public NetworkList getNetworkList() {
     return listOfNetworks;
   }
 
   public void setListOfNetworks(String listOfNetworks) {
-    this.listOfNetworks = listOfNetworks;
+    this.listOfNetworks.setListOfNetworks(listOfNetworks);
   }
 
   public Date getTimeOfEvent() {

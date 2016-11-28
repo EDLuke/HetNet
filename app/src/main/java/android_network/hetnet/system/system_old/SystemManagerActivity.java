@@ -25,7 +25,7 @@ public class SystemManagerActivity extends Activity {
   /**
    * Log Tag
    */
-  private static final String TAG = "SystemManager";
+  private static final String TAG = "SystemManagerFragment";
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
