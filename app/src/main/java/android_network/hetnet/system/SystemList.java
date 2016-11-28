@@ -2,6 +2,7 @@ package android_network.hetnet.system;
 
 import android.app.ActivityManager;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -15,6 +16,11 @@ public class SystemList {
 
     //CPU Usage
     private float m_cpuUsage;
+
+    //CPU Usage per application
+    //processName / CPU usage
+    //TODO:improve this part
+    private HashMap<String, Integer> m_cpuUsage_app;
 
     //Battery Percentage
     private float m_batteryPct;
@@ -42,4 +48,12 @@ public class SystemList {
     public void setBatteryPct(float m_batteryPct) {
         this.m_batteryPct = m_batteryPct;
     }
+
+  public HashMap<String, Integer> getCpuUsage_app() {
+    return m_cpuUsage_app;
+  }
+
+  public void setCpuUsage_app(HashMap<String, Integer> m_cpuUsage_app) {
+    this.m_cpuUsage_app = m_cpuUsage_app;
+  }
 }
