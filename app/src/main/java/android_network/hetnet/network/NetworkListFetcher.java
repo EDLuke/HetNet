@@ -15,6 +15,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import static android_network.hetnet.common.Constants.NETWORK_LIST_FETCHER;
 
@@ -30,6 +31,7 @@ public class NetworkListFetcher extends IntentService {
   @Override
   public void onCreate() {
     super.onCreate();
+
   }
 
   @Override
@@ -42,7 +44,7 @@ public class NetworkListFetcher extends IntentService {
   private void getLTEInfo() {
     // Getting telephony manager for LTE
     telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-
+    
     // Trial for carrier cost - DON'T DELETE!!!
     String carrierName = telephonyManager.getNetworkOperatorName();
     String cost = "$0";
@@ -102,10 +104,58 @@ public class NetworkListFetcher extends IntentService {
     public void onReceive(Context context, Intent intent) {
       List<ScanResult> wifiList = wifiManager.getScanResults();
       mainText.append("\nNumber Of WiFi connections: ").append(wifiList.size()).append("\n\n");
+
+      // Column Headings
+      mainText.append("\nNetwork Name  |" + "\t\tSecurity  |" + "\t\tSignal Level  |" + "\t\tFrequency \n\n\n");
+
       for (int i = 0; i < wifiList.size(); i++) {
-        mainText.append(Integer.valueOf(i + 1).toString()).append(". ");
-        mainText.append((wifiList.get(i)).toString());
+        //mainText.append(Integer.valueOf(i + 1).toString()).append(". "); removed ranking
+
+        // workaround solution for table view => needs improvement
+        String list = wifiList.get(i).toString();
+
+        // seperate each column
+        StringTokenizer tokens = new StringTokenizer(list, ",");
+
+        //SSID
+        String SSID = tokens.nextToken();
+
+        //BSSID
+        String BSSID = tokens.nextToken();
+
+        //Capabilities
+        String sec = tokens.nextToken();
+
+        //Level
+        String lev = tokens.nextToken();
+
+        //freq
+        String freq = tokens.nextToken();
+
+
+        StringTokenizer m = new StringTokenizer(SSID, ":");
+        String lab1 = m.nextToken();
+        String dat1 = m.nextToken();
+        mainText.append(dat1 +"\t\t");
+
+        StringTokenizer n = new StringTokenizer(sec, ":");
+        String lab2 = n.nextToken();
+        String dat2 = n.nextToken();
+        mainText.append(dat2 +"\t\t");
+
+        StringTokenizer o = new StringTokenizer(lev, ":");
+        String lab3 = o.nextToken();
+        String dat3 = o.nextToken();
+        mainText.append(dat3 +"\t\t");
+
+        StringTokenizer p = new StringTokenizer(freq, ":");
+        String lab4 = p.nextToken();
+        String dat4 = p.nextToken();
+        mainText.append(dat4 +"\n");
+
         mainText.append("\n\n");
+
+
       }
     }
   };

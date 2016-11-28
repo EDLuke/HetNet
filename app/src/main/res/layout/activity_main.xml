@@ -29,7 +29,9 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/event_list">
+        android:layout_below="@+id/event_list"
+        android:fillViewport="false"
+        android:clipToPadding="false">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -41,6 +43,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text=""/>
+
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>
