@@ -117,7 +117,7 @@ public class SystemEventTracker extends Service {
 
         //Fire the event and show in log
         if(!(newName.equals(m_currentName)) && !(newName.equals(""))) {
-            EventBus.getDefault().post(new SystemTriggerEvent(SYSTEM_EVENT_TRACKER, "Foreground Activity Changed", Calendar.getInstance().getTime()));
+            EventBus.getDefault().post(new SystemTriggerEvent(SYSTEM_EVENT_TRACKER, newName, Calendar.getInstance().getTime()));
             m_currentName = new String(newName);
 
             Log.v(LOG_TAG, "Foreground application has been switched to " + newName);
