@@ -1,0 +1,21 @@
+{
+  "name": "meanstock",
+  "version": "1.0.0",
+  "description": "This is an Stock tracking application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Qing Lan, Jianpu Ma",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "helmet": "^3.1.0",
+    "lodash": "^4.16.4",
+    "method-override": "^2.3.6",
+    "mongoose": "^4.6.5",
+    "node-restful": "^0.2.5",
+    "resourcejs": "^1.4.1"
+  }
+}
