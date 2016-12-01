@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 // create Stock schema
-var StockSchema = new mongoose.Schema({
+var SystemSchema = new mongoose.Schema({
     Symbol:{
         type: String,
         required : true
@@ -25,4 +25,4 @@ var StockSchema = new mongoose.Schema({
 });
 
 // Export the model schema
-module.exports = StockSchema;
+module.exports = SystemSchema;

@@ -3,7 +3,7 @@ var restful = require('node-restful'); //convert mongo object to rest-api
 module.exports = function(app,route){
     //Setup for RESt.
     var rest =restful.model(
-    'user',
+    'policy',
     app.models.user
     ).methods(['get','post','put','delete']).before('get', function(req,res,next){
         var obj = req.query

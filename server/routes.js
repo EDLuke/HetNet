@@ -1,4 +1,4 @@
 module.exports = {
-    '/stock' : require('./controllers/StockController'),
-    '/user' : require('./controllers/UserController')
+    '/system' : require('./controllers/SystemController'),
+    '/policy' : require('./controllers/PolicyController')
 };

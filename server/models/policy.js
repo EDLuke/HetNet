@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 // create Stock schema
-var UserSchema = new mongoose.Schema({
+var PolicySchema = new mongoose.Schema({
     name:{
         type: String,
         required : true
@@ -17,4 +17,4 @@ var UserSchema = new mongoose.Schema({
 })
 
 // Export the model schema
-module.exports = UserSchema;
+module.exports = PolicySchema;
