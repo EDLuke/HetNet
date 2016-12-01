@@ -103,6 +103,8 @@ public class NetworkListFetcher extends IntentService {
     // This method is called when number of WiFi connections changed
     public void onReceive(Context context, Intent intent) {
       List<ScanResult> wifiList = wifiManager.getScanResults();
+
+      /*
       mainText.append("\nNumber Of WiFi connections: ").append(wifiList.size()).append("\n\n");
 
       // Column Headings
@@ -155,8 +157,8 @@ public class NetworkListFetcher extends IntentService {
 
         mainText.append("\n\n");
 
+      }*/
 
-      }
     }
   };
 }
