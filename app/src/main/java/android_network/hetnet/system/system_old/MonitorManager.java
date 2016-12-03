@@ -13,7 +13,7 @@ import java.util.Queue;
 import android_network.hetnet.system.system_old.event.ThreadInfoEvent;
 import android_network.hetnet.system.system_old.event.ThreadInfoUpdatedEvent;
 
-public class MonitorManager{
+public class MonitorManager {
   /**
    * Log Tag
    */
@@ -62,12 +62,12 @@ public class MonitorManager{
 
 
   @Subscribe
-  public void onMessageEvent(ThreadInfoEvent event){
+  public void onMessageEvent(ThreadInfoEvent event) {
 
     String threadName = event.m_thread_name;
-    String message    = event.m_message;
-    View   ui_element = m_thread_ui_map.get(threadName);
-    Object extraMsg   = null;
+    String message = event.m_message;
+    View ui_element = m_thread_ui_map.get(threadName);
+    Object extraMsg = null;
 
 //    switch (threadName){
 //      case "ActivityManagerThread":

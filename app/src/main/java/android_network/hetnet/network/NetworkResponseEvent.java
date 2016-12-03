@@ -1,13 +1,16 @@
 package android_network.hetnet.network;
 
 import java.util.Date;
+import java.util.List;
+
+import android_network.hetnet.data.Network;
 
 public class NetworkResponseEvent {
   private String eventOriginator;
-  private String listOfNetworks;
+  private List<Network> listOfNetworks;
   private Date timeOfEvent;
 
-  public NetworkResponseEvent(String eventOriginator, String listOfNetworks, Date timeOfEvent) {
+  public NetworkResponseEvent(String eventOriginator, List<Network> listOfNetworks, Date timeOfEvent) {
     this.eventOriginator = eventOriginator;
     this.listOfNetworks = listOfNetworks;
     this.timeOfEvent = timeOfEvent;
@@ -21,11 +24,11 @@ public class NetworkResponseEvent {
     this.eventOriginator = eventOriginator;
   }
 
-  public String getListOfNetworks() {
+  public List<Network> getListOfNetworks() {
     return listOfNetworks;
   }
 
-  public void setListOfNetworks(String listOfNetworks) {
+  public void setListOfNetworks(List<Network> listOfNetworks) {
     this.listOfNetworks = listOfNetworks;
   }
 

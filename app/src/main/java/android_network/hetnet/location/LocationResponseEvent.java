@@ -1,13 +1,15 @@
 package android_network.hetnet.location;
 
+import android.location.Location;
+
 import java.util.Date;
 
 public class LocationResponseEvent {
   private String eventOriginator;
-  private String location;
+  private Location location;
   private Date timeOfEvent;
 
-  public LocationResponseEvent(String eventOriginator, String location, Date timeOfEvent) {
+  public LocationResponseEvent(String eventOriginator, Location location, Date timeOfEvent) {
     this.eventOriginator = eventOriginator;
     this.location = location;
     this.timeOfEvent = timeOfEvent;
@@ -21,11 +23,11 @@ public class LocationResponseEvent {
     this.eventOriginator = eventOriginator;
   }
 
-  public String getLocation() {
+  public Location getLocation() {
     return location;
   }
 
-  public void setLocation(String location) {
+  public void setLocation(Location location) {
     this.location = location;
   }
 

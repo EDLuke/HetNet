@@ -25,7 +25,6 @@ public class LocationEventTracker extends Service {
   LocationListener listener = new LocationListener() {
     @Override
     public void onLocationChanged(Location location) {
-      System.out.println("Inside onLocationChanged");
       EventBus.getDefault().post(new LocationTriggerEvent(LOCATION_EVENT_TRACKER, "Location Changed", Calendar.getInstance().getTime()));
     }
 
@@ -52,9 +51,7 @@ public class LocationEventTracker extends Service {
   public int onStartCommand(Intent intent, int flags, int startId) {
     if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
       || ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-      System.out.println("Location Service Started");
-      locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 10, listener);
-      locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 10, listener);
+      locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 1000, listener);
     }
     return START_STICKY;
   }

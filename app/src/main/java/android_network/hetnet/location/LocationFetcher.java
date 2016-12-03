@@ -32,9 +32,7 @@ public class LocationFetcher extends IntentService {
     if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
       || ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
       Location location = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-
-      if(location != null)
-        EventBus.getDefault().post(new LocationResponseEvent(LOCATION_FETCHER, location.getLatitude() + ", " + location.getLongitude(), Calendar.getInstance().getTime()));
+      EventBus.getDefault().post(new LocationResponseEvent(LOCATION_FETCHER, location, Calendar.getInstance().getTime()));
     }
   }
 }

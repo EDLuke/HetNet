@@ -35,7 +35,6 @@ public class NetworkEventTracker extends Service {
   private BroadcastReceiver networkStateReceiver = new BroadcastReceiver() {
     @Override
     public void onReceive(Context context, Intent intent) {
-      System.out.println("Connection switched");
       ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
       NetworkInfo ni = manager.getActiveNetworkInfo();
       EventBus.getDefault().post(new NetworkTriggerEvent(NETWORK_EVENT_TRACKER, "Connection Changed", Calendar.getInstance().getTime()));
@@ -45,7 +44,6 @@ public class NetworkEventTracker extends Service {
   private BroadcastReceiver wifiReceiver = new BroadcastReceiver() {
     // This method is called when number of WiFi connections changed
     public void onReceive(Context context, Intent intent) {
-      System.out.println("Number of WiFi connections changed");
       EventBus.getDefault().post(new NetworkTriggerEvent(NETWORK_EVENT_TRACKER, "Networks Changed", Calendar.getInstance().getTime()));
     }
   };
