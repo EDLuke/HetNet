@@ -7,15 +7,17 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.RelativeLayout;
@@ -34,12 +36,14 @@ import android_network.hetnet.policy_engine.PolicyEngine;
 import android_network.hetnet.policy_engine.PolicyEngineFragment;
 import android_network.hetnet.system.SystemList;
 import android_network.hetnet.system.SystemManagerFragment;
+import android_network.hetnet.ui.TabFragment.OnFragmentInteractionListener;
+import android_network.hetnet.ui.TabFragment.TabFragment;
 
 import static android_network.hetnet.common.Constants.LOCATION_LIST_FETCHER;
 import static android_network.hetnet.common.Constants.NETWORK_LIST_FETCHER;
 import static android_network.hetnet.common.Constants.SYSTEM_LIST_FETCHER;
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity implements OnFragmentInteractionListener {
   private static final String LOG_TAG = "MainActivity";
 
   private static final int REQUEST_READ_PHONE_STATE = 100;
@@ -47,13 +51,7 @@ public class MainActivity extends Activity {
   private static final int REQUEST_ACCESS_NETWORK_STATE = 102;
 
   private String m_event_log;
-  private SystemList m_system_list;
-  /*TODO: Create NetworkList and LocationList*/
-  private NetworkList m_network_list;
-  /*private LocationList m_location_list;*/
 
-  DrawerLayout        drawerLayout;
-  NavigationView      navigationView;
   FragmentManager     fragmentManager;
 
   @Override
@@ -61,40 +59,10 @@ public class MainActivity extends Activity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
-    navigationView = (NavigationView) findViewById(R.id.navigation_view);
-
-    fragmentManager = getFragmentManager();
+    fragmentManager = getSupportFragmentManager();
     FragmentTransaction firstTransaction = fragmentManager.beginTransaction();
-    firstTransaction.replace(R.id.containerView, new PolicyEngineFragment()).commit();
+    firstTransaction.replace(R.id.containerView, new TabFragment()).commit();
 
-    /* Setup onclick event for Navigation View Items */
-    navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener(){
-      @Override
-      public boolean onNavigationItemSelected(MenuItem menuItem){
-        drawerLayout.closeDrawers();
-        FragmentTransaction fragmentTransaction;
-        fragmentTransaction = fragmentManager.beginTransaction();
-
-        switch (menuItem.getItemId()){
-          case R.id.nav_item_policy:
-            fragmentTransaction.replace(R.id.containerView, PolicyEngineFragment.newInstance(m_event_log)).commit();
-            break;
-          case R.id.nav_item_system:
-            fragmentTransaction.replace(R.id.containerView, new SystemManagerFragment()).commit();
-            break;
-          case R.id.nav_item_network:
-            fragmentTransaction.replace(R.id.containerView, NetworkManagerFragment.newInstance(m_network_list)).commit();
-            break;
-          case R.id.nav_item_location:
-            fragmentTransaction.replace(R.id.containerView, new LocationManagerFragment()).commit();
-            break;
-          default:
-            Log.e(LOG_TAG, "Wrong navigation menu item id: " + menuItem.getItemId());
-        }
-        return false;
-      }
-    });
     int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
 
     if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
@@ -143,15 +111,17 @@ public class MainActivity extends Activity {
   public void onMessageEvent(UITriggerEvent event) {
     switch (event.getEventOriginator()){
       case NETWORK_LIST_FETCHER:
-        m_network_list = (NetworkList)(event.getEventList());
         break;
       case SYSTEM_LIST_FETCHER:
-        m_system_list = (SystemList)(event.getEventList());
         break;
       case LOCATION_LIST_FETCHER:
         break;
       default:
         Log.e(LOG_TAG, "Wrong event from: " + event.getEventOriginator());
     }
+  }
+
+  @Override
+  public void onFragmentInteraction(Uri uri){
   }
 }
