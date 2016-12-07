@@ -4,7 +4,7 @@ module.exports = function(app,route){
     //Setup for RESt.
     var rest =restful.model(
     'policy',
-    app.models.user
+    app.models.policy
     ).methods(['get','post','put','delete']).before('get', function(req,res,next){
         var obj = req.query
         if(obj['email']== undefined || obj['password'] == undefined )
