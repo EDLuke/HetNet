@@ -2,17 +2,37 @@ var mongoose = require('mongoose');
 
 // create Stock schema
 var PolicySchema = new mongoose.Schema({
-    name:{
+    applicationId:{
         type: String,
-        required : true
+        required : false
     },
-    password:{
+    Location:{
         type: String,
-        required : true
+        required : false
     },
-    email:{
+    networkSSID:{
         type: String,
-        required : true
+        required : false
+    },
+    bandwidth:{
+        type: Number,
+        required: false
+    },
+    signalStrength:{
+        type: Number,
+        required: false
+    },
+    signalFrequency:{
+        type: Number,
+        required: false
+    },
+    timeToConnect:{
+        type: Number,
+        required:false
+    },
+    cost:{
+        type: Number,
+        required:false
     }
 })
 
