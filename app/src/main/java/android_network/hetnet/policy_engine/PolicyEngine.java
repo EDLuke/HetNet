@@ -21,6 +21,7 @@ import android_network.hetnet.location.LocationEventTracker;
 import android_network.hetnet.location.LocationFetcher;
 import android_network.hetnet.location.LocationResponseEvent;
 import android_network.hetnet.network.NetworkEventTracker;
+import android_network.hetnet.network.NetworkList;
 import android_network.hetnet.network.NetworkListFetcher;
 import android_network.hetnet.network.NetworkResponseEvent;
 import android_network.hetnet.system.SystemEventTracker;
@@ -30,6 +31,8 @@ import android_network.hetnet.system.SystemResponseEvent;
 
 public class PolicyEngine extends Service {
   private static final String LOG_TAG = "PolicyEngine";
+
+  NetworkList m_networkList;
 
   StringBuilder data;
   Intent networkListFetcherService;
@@ -56,6 +59,8 @@ public class PolicyEngine extends Service {
 
     Intent locationEventTrackerService = new Intent(this, LocationEventTracker.class);
     this.startService(locationEventTrackerService);
+
+    m_networkList = new NetworkList();
   }
 
   @Override
@@ -73,7 +78,7 @@ public class PolicyEngine extends Service {
   public void onMessageEvent(TriggerEvent event) {
     locationDataReceived = networkDataReceived = systemDataReceived = false;
     data = new StringBuilder();
-    EventBus.getDefault().post(new UITriggerEvent(event.getEventOriginator(), event.getEventName(), null, event.getTimeOfEvent()));
+//    EventBus.getDefault().post(new UITriggerEvent(event.getEventOriginator(), event.getEventName(), event.getTimeOfEvent()));
 
     ruleVector = new PolicyRuleVector();
     currentStateVector = new PolicyRuleVector();
@@ -106,6 +111,7 @@ public class PolicyEngine extends Service {
     List<Network> networkList = event.getListOfNetworks();
     data.append(networkList).append("\n\n");
     networkList = getRankedNetworkList(networkList);
+    m_networkList.setListOfNetworks(networkList);
 
     for (Network network : networkList) {
       if (network.isCurrentNetwork()) {
@@ -119,7 +125,9 @@ public class PolicyEngine extends Service {
       }
     }
 
-    checkIfAllDataReceived();
+    if(checkIfAllDataReceived())
+      EventBus.getDefault().post(new UITriggerEvent(Constants.NETWORK_LIST_FETCHER, String.valueOf(data), m_networkList, Calendar.getInstance().getTime()));
+
   }
 
   @Subscribe(threadMode = ThreadMode.ASYNC)
@@ -129,10 +137,10 @@ public class PolicyEngine extends Service {
     currentStateVector.setApplicationId(SystemList.makeDecisionSystem(event.getSystemList()));
   }
 
-  private void checkIfAllDataReceived() {
-    if (networkDataReceived && locationDataReceived) {
-      EventBus.getDefault().post(new UITriggerEvent(Constants.POLICY_ENGINE, String.valueOf(data), null, Calendar.getInstance().getTime()));
-    }
+  private boolean checkIfAllDataReceived() {
+    return networkDataReceived && locationDataReceived;
+
+
   }
 
   private List<Network> getRankedNetworkList(List<Network> networkList) {

@@ -36,4 +36,9 @@ public class TriggerEvent {
   public void setTimeOfEvent(Date timeOfEvent) {
     this.timeOfEvent = timeOfEvent;
   }
+
+  @Override
+  public String toString(){
+    return eventName + "\t" + eventOriginator + "\t" + timeOfEvent.toString();
+  }
 }

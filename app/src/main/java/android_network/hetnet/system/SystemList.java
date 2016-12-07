@@ -8,6 +8,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
+import android_network.hetnet.common.EventList;
 import android_network.hetnet.common.trigger_events.UITriggerEvent;
 
 import static android_network.hetnet.common.Constants.SYSTEM_EVENT_TRACKER;
@@ -17,7 +18,7 @@ import static android_network.hetnet.common.Constants.SYSTEM_EVENT_TRACKER;
  * All system related info used for Policy Engine to make the decision
  */
 
-public class SystemList {
+public class SystemList extends EventList {
   //Running Application Info
   private List<ActivityManager.RunningAppProcessInfo> m_runningAppProcessInfos;
 
@@ -81,5 +82,11 @@ public class SystemList {
     EventBus.getDefault().post(new UITriggerEvent(SYSTEM_EVENT_TRACKER, "Send " + maxEntry.getKey(), null, Calendar.getInstance().getTime()));
 
     return maxEntry.getKey();
+  }
+
+  @Override
+  public String toString(){
+    //TODO: finish toString()
+    return "";
   }
 }
