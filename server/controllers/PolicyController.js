@@ -5,21 +5,10 @@ module.exports = function(app,route){
     var rest =restful.model(
     'policy',
     app.models.policy
-    ).methods(['get','post','put','delete']).before('get', function(req,res,next){
-        var obj = req.query
-        if(obj['email']== undefined || obj['password'] == undefined )
-        {
-            console.log(req.query);
-            res.status(500).jsonp({ error: 'Bad Input' });
-        }
-        else
-        {
-            next();
-        }
-        });
+    ).methods(['get','put','post','delete']);
     // Register this end with the app
     rest.register(app, route);
-
+    
     //Return middleware
     return function(req,res,next){
         next();
