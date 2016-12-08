@@ -3,6 +3,7 @@ package android_network.hetnet.policy_engine;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 
 import org.greenrobot.eventbus.EventBus;
@@ -12,6 +13,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.Calendar;
 import java.util.List;
 
+import android_network.hetnet.cloud.sendCloud;
 import android_network.hetnet.common.Constants;
 import android_network.hetnet.common.trigger_events.TriggerEvent;
 import android_network.hetnet.common.trigger_events.UITriggerEvent;
@@ -131,6 +133,9 @@ public class PolicyEngine extends Service {
 
   private void checkIfAllDataReceived() {
     if (networkDataReceived && locationDataReceived) {
+      // TODO: Call the cloud storage intentService (pass the CurrentStateVector)
+      Intent cloudService = new Intent(this, sendCloud.class);
+      cloudService.putExtra("currentDate", (Parcelable) currentStateVector);
       EventBus.getDefault().post(new UITriggerEvent(Constants.POLICY_ENGINE, String.valueOf(data), null, Calendar.getInstance().getTime()));
     }
   }
