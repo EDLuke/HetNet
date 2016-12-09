@@ -1,6 +1,8 @@
 package android_network.hetnet.data;
 
-public class Network {
+import java.io.Serializable;
+
+public class Network implements Serializable {
   private String networkSSID;
   private double bandwidth;
   private double signalStrength;

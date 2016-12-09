@@ -1,34 +1,60 @@
 package android_network.hetnet.data;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import java.io.Serializable;
+import java.util.List;
 
-/**
- * Created by lanking on 06/12/2016.
- */
+public class DataStoreObject implements Serializable {
+  private String applicationID;
+  private String applicationType;
+  private double latitude;
+  private double longitude;
+  private List<Network> listOfNetworks;
 
-public class DataStoreObject implements Parcelable {
-    protected DataStoreObject(Parcel in) {
-    }
+  public DataStoreObject(String applicationID, String applicationType, double latitude, double longitude, List<Network> listOfNetworks) {
+    this.applicationID = applicationID;
+    this.applicationType = applicationType;
+    this.latitude = latitude;
+    this.longitude = longitude;
+    this.listOfNetworks = listOfNetworks;
+  }
 
-    public static final Creator<DataStoreObject> CREATOR = new Creator<DataStoreObject>() {
-        @Override
-        public DataStoreObject createFromParcel(Parcel in) {
-            return new DataStoreObject(in);
-        }
+  public String getApplicationID() {
+    return applicationID;
+  }
 
-        @Override
-        public DataStoreObject[] newArray(int size) {
-            return new DataStoreObject[size];
-        }
-    };
+  public void setApplicationID(String applicationID) {
+    this.applicationID = applicationID;
+  }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
+  public String getApplicationType() {
+    return applicationType;
+  }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-    }
+  public void setApplicationType(String applicationType) {
+    this.applicationType = applicationType;
+  }
+
+  public double getLatitude() {
+    return latitude;
+  }
+
+  public void setLatitude(double latitude) {
+    this.latitude = latitude;
+  }
+
+  public double getLongitude() {
+    return longitude;
+  }
+
+  public void setLongitude(double longitude) {
+    this.longitude = longitude;
+  }
+
+  public List<Network> getListOfNetworks() {
+    return listOfNetworks;
+  }
+
+  public void setListOfNetworks(List<Network> listOfNetworks) {
+    this.listOfNetworks = listOfNetworks;
+  }
 }
