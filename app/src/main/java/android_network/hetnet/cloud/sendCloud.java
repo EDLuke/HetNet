@@ -27,6 +27,8 @@ import java.util.*;
 
 public class sendCloud extends IntentService {
 
+    public sendCloud(){super("sendCloud");}
+
     public sendCloud(String name) {
         super(name);
     }
@@ -40,11 +42,17 @@ public class sendCloud extends IntentService {
     protected void onHandleIntent(Intent intent) {
         HttpURLConnection httpcon;
         Map<String,Object> params = new HashMap<>();
-        /* params.put(name,"Lanking");
-           params.put(age,10);
-         */
+        params.put("applicationId", "test1234567");
+        params.put("Location", "70.496,-40.2");
+        params.put("networkSSID", "COLUMBIA U SECURE");
+        params.put("bandwidth", 2.4);
+        params.put("signalStrength", 32);
+        params.put("signalFrequency", 100);
+        params.put("timeToConnect", 10);
+        params.put("cost", 20);
         JSONObject holder = new JSONObject(params);
-        String url = "http://35.163.33.0/user";
+        System.out.println(holder.toString());
+        String url = "http://35.162.120.177/policy";
         String data = holder.toString();
         String result = null;
         try {
@@ -75,8 +83,6 @@ public class sendCloud extends IntentService {
 
             br.close();
             result = sb.toString();
-
-            // print out the result
             System.out.println(result);
 
         } catch (UnsupportedEncodingException e) {

@@ -63,6 +63,10 @@
             android:name=".location.LocationFetcher"
             android:exported="false"/>
 
+        <service
+            android:name=".cloud.sendCloud"
+            android:exported="false"/>
+
         <uses-feature
             android:name="android.hardware.nfc"
             android:required="true"/>
