@@ -85,7 +85,7 @@ public class Network {
 
   @Override
   public String toString() {
-    return "Network{" +
+    return "\n\nNetwork{" +
       "networkSSID='" + networkSSID + '\'' +
       ", bandwidth=" + bandwidth +
       ", signalStrength=" + signalStrength +
@@ -95,6 +95,7 @@ public class Network {
       ", timeToConnect=" + timeToConnect +
       ", cost=" + cost +
       ", currentNetwork=" + currentNetwork +
-      "}" + "\n\n";
+      "}" + "\n";
   }
+
 }

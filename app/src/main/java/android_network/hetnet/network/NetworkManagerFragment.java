@@ -97,6 +97,8 @@ public class NetworkManagerFragment extends Fragment {
   public void onMessageEvent(UITriggerEvent event) {
     if (event.getEventOriginator().equals(NETWORK_LIST_FETCHER)) {
       NetworkList list = (NetworkList)(event.getEventList());
+
+      // make UI changes
       networkList.setText(list.getListOfNetworks().toString());
     }
   }

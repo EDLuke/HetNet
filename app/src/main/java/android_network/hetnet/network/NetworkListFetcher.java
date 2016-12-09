@@ -17,13 +17,15 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.StringTokenizer;
+import android.util.Log;
 
 import android_network.hetnet.data.Network;
 
 import static android_network.hetnet.common.Constants.NETWORK_LIST_FETCHER;
 
 public class NetworkListFetcher extends IntentService {
+  private final String LOG_TAG = "NETWORK_LIST_FETCHER";
+
   WifiManager wifiManager;
   TelephonyManager telephonyManager;
   List<Network> networkList = new ArrayList<>();
@@ -51,21 +53,44 @@ public class NetworkListFetcher extends IntentService {
     String carrierName = telephonyManager.getNetworkOperatorName();
 
     List<CellInfo> cellInfoList = telephonyManager.getAllCellInfo();
+
+    int speed_mob = telephonyManager.getNetworkType();
+
     int i = 1;
-    for (CellInfo cellInfo : cellInfoList) {
+    for (CellInfo cellInfo : cellInfoList)
+    {
       Network network = new Network();
-      if (cellInfo instanceof CellInfoLte) {
-        if (cellInfo.isRegistered()) {
+
+      if (cellInfo instanceof CellInfoLte)
+      {
+        if (cellInfo.isRegistered())
+        {
           network.setNetworkSSID(carrierName);
-        } else {
+        } else
+        {
           network.setNetworkSSID("Other");
         }
-        network.setSignalStrength(((CellInfoLte) cellInfo).getCellSignalStrength().getLevel());
-        NetworkBandwidthCalculator.getNetworkBandwidth(network);
+
+        network.setSignalStrength( ((CellInfoLte) cellInfo).getCellSignalStrength().getLevel() );
+
+        // TEST THIS
+        network.setBandwidth(speed_mob);
+
+        // need to calculate
+       // NetworkBandwidthCalculator.getNetworkBandwidth(network);
+
+        // need to calculate
         SecurityManager.checkNetworkConnectivity(network);
+
+        // need to calculate
         NetworkBandwidthCalculator.getTimeToConnect(network);
+
+        // already calculated - check if it gets printed
         network.setCost(getCarrierCost(carrierName));
+
+        // hardcoded LTE is not selected
         network.setCurrentNetwork(false);
+
         networkList.add(network);
       }
     }
@@ -107,30 +132,75 @@ public class NetworkListFetcher extends IntentService {
       ;
     }
 
-    unregisterReceiver(wifiReceiver);
+    try {
+
+      unregisterReceiver(wifiReceiver);
+    }
+
+    catch (IllegalArgumentException e) {
+
+      Log.e(LOG_TAG, "Error unregistering receiver in getWifiInfo");
+
+
+    }
   }
+
+
 
   private BroadcastReceiver wifiReceiver = new BroadcastReceiver() {
     // This method is called when number of WiFi connections changed
     public void onReceive(Context context, Intent intent) {
       List<ScanResult> wifiList = wifiManager.getScanResults();
-      wifiDataReceived = true;
+
+      // gets maximum network speed
+      double speed = wifiManager.getConnectionInfo().getLinkSpeed();
+
+      wifiManager.getConnectionInfo().getSupplicantState();
+
       int i = 0;
-      for (ScanResult result : wifiList) {
+      for (ScanResult result : wifiList)
+      {
         Network network = new Network();
+
+        network.setBandwidth(speed);
+
+        //name
         network.setNetworkSSID(result.SSID);
+
+        //WPA
         network.setSecurityProtocol(result.capabilities);
+
+        //dB
         network.setSignalStrength(result.level);
+
+        //Hz not useful
         network.setSignalFrequency(result.frequency);
-        NetworkBandwidthCalculator.getNetworkBandwidth(network);
+
+        //NetworkBandwidthCalculator.getNetworkBandwidth(network);
+
+
         SecurityManager.checkNetworkConnectivity(network);
         NetworkBandwidthCalculator.getTimeToConnect(network);
+
         network.setCost(0.0);
-        if (i == 0) network.setCurrentNetwork(true);
-        else network.setCurrentNetwork(false);
+
+        if (i == 0) {
+          network.setCurrentNetwork(true);
+        }
+        else {
+          network.setCurrentNetwork(false);
+        }
+
         networkList.add(network);
         i++;
       }
+
+      wifiDataReceived = true;
+
     }
   };
-}
+
+
+
+
+  }
