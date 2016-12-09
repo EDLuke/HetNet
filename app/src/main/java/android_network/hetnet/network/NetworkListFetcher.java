@@ -11,13 +11,13 @@ import android.support.annotation.NonNull;
 import android.telephony.CellInfo;
 import android.telephony.CellInfoLte;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import android.util.Log;
 
 import android_network.hetnet.data.Network;
 
@@ -54,30 +54,26 @@ public class NetworkListFetcher extends IntentService {
 
     List<CellInfo> cellInfoList = telephonyManager.getAllCellInfo();
 
-    int speed_mob = telephonyManager.getNetworkType();
+    int speedMobile = telephonyManager.getNetworkType();
 
     int i = 1;
-    for (CellInfo cellInfo : cellInfoList)
-    {
+    for (CellInfo cellInfo : cellInfoList) {
       Network network = new Network();
 
-      if (cellInfo instanceof CellInfoLte)
-      {
-        if (cellInfo.isRegistered())
-        {
+      if (cellInfo instanceof CellInfoLte) {
+        if (cellInfo.isRegistered()) {
           network.setNetworkSSID(carrierName);
-        } else
-        {
+        } else {
           network.setNetworkSSID("Other");
         }
 
-        network.setSignalStrength( ((CellInfoLte) cellInfo).getCellSignalStrength().getLevel() );
+        network.setSignalStrength(((CellInfoLte) cellInfo).getCellSignalStrength().getLevel());
 
         // TEST THIS
-        network.setBandwidth(speed_mob);
+        network.setBandwidth(speedMobile);
 
         // need to calculate
-       // NetworkBandwidthCalculator.getNetworkBandwidth(network);
+        // NetworkBandwidthCalculator.getNetworkBandwidth(network);
 
         // need to calculate
         SecurityManager.checkNetworkConnectivity(network);
@@ -121,6 +117,8 @@ public class NetworkListFetcher extends IntentService {
   }
 
   private void getWifiInfo() {
+    wifiDataReceived = false;
+
     // Getting the WiFi Manager
     wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 
@@ -133,19 +131,11 @@ public class NetworkListFetcher extends IntentService {
     }
 
     try {
-
       unregisterReceiver(wifiReceiver);
-    }
-
-    catch (IllegalArgumentException e) {
-
+    } catch (IllegalArgumentException e) {
       Log.e(LOG_TAG, "Error unregistering receiver in getWifiInfo");
-
-
     }
   }
-
-
 
   private BroadcastReceiver wifiReceiver = new BroadcastReceiver() {
     // This method is called when number of WiFi connections changed
@@ -158,8 +148,7 @@ public class NetworkListFetcher extends IntentService {
       wifiManager.getConnectionInfo().getSupplicantState();
 
       int i = 0;
-      for (ScanResult result : wifiList)
-      {
+      for (ScanResult result : wifiList) {
         Network network = new Network();
 
         network.setBandwidth(speed);
@@ -178,7 +167,6 @@ public class NetworkListFetcher extends IntentService {
 
         //NetworkBandwidthCalculator.getNetworkBandwidth(network);
 
-
         SecurityManager.checkNetworkConnectivity(network);
         NetworkBandwidthCalculator.getTimeToConnect(network);
 
@@ -186,8 +174,7 @@ public class NetworkListFetcher extends IntentService {
 
         if (i == 0) {
           network.setCurrentNetwork(true);
-        }
-        else {
+        } else {
           network.setCurrentNetwork(false);
         }
 
@@ -196,11 +183,6 @@ public class NetworkListFetcher extends IntentService {
       }
 
       wifiDataReceived = true;
-
     }
   };
-
-
-
-
-  }
+}

@@ -1,9 +1,9 @@
-package android_network.hetnet.policy_engine;
+package android_network.hetnet;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +13,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import android_network.hetnet.R;
 import android_network.hetnet.common.trigger_events.TriggerEvent;
-import android_network.hetnet.common.trigger_events.UITriggerEvent;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -88,7 +86,7 @@ public class PolicyEngineFragment extends Fragment {
       mListener = (OnFragmentInteractionListener) context;
     } else {
       throw new RuntimeException(context.toString()
-              + " must implement OnFragmentInteractionListener");
+        + " must implement OnFragmentInteractionListener");
     }
   }
 

@@ -64,7 +64,7 @@
             android:exported="false"/>
 
         <service
-            android:name=".cloud.sendCloud"
+            android:name=".cloud.SendCloud"
             android:exported="false"/>
 
         <uses-feature

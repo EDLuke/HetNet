@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -17,7 +18,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import android_network.hetnet.common.trigger_events.TriggerEvent;
 import android_network.hetnet.common.trigger_events.UITriggerEvent;
 import android_network.hetnet.policy_engine.PolicyEngine;
-
 import android_network.hetnet.ui.TabFragment.OnFragmentInteractionListener;
 import android_network.hetnet.ui.TabFragment.TabFragment;
 
@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
 
   private String m_event_log;
 
-  FragmentManager     fragmentManager;
+  FragmentManager fragmentManager;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -124,6 +124,6 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
   }
 
   @Override
-  public void onFragmentInteraction(Uri uri){
+  public void onFragmentInteraction(Uri uri) {
   }
 }

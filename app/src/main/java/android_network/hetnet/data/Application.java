@@ -1,14 +1,19 @@
 package android_network.hetnet.data;
 
 public class Application {
-  private double applicationID;
+  private String applicationID;
   private String applicationType;
 
-  public double getApplicationID() {
+  public Application(String applicationID, String applicationType) {
+    this.applicationID = applicationID;
+    this.applicationType = applicationType;
+  }
+
+  public String getApplicationID() {
     return applicationID;
   }
 
-  public void setApplicationID(double applicationID) {
+  public void setApplicationID(String applicationID) {
     this.applicationID = applicationID;
   }
 

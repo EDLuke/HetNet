@@ -8,17 +8,12 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
-import android_network.hetnet.common.EventList;
 import android_network.hetnet.common.trigger_events.UITriggerEvent;
+import android_network.hetnet.data.Application;
 
 import static android_network.hetnet.common.Constants.SYSTEM_EVENT_TRACKER;
 
-/**
- * SystemList
- * All system related info used for Policy Engine to make the decision
- */
-
-public class SystemList extends EventList {
+public class SystemList {
   //Running Application Info
   private List<ActivityManager.RunningAppProcessInfo> m_runningAppProcessInfos;
 
@@ -66,7 +61,7 @@ public class SystemList extends EventList {
   }
 
   //Current decision: send second largest CPU usage application to the cloud
-  public static String makeDecisionSystem(SystemList systemList) {
+  public static Application getForegroundApplication(SystemList systemList) {
     List<ActivityManager.RunningAppProcessInfo> runningAppProcessInfos = systemList.getRunningAppProcessInfos();
     HashMap<String, Integer> cpuUsageApplication = systemList.getCpuUsage_app();
 
@@ -79,14 +74,9 @@ public class SystemList extends EventList {
       }
     }
 
-    EventBus.getDefault().post(new UITriggerEvent(SYSTEM_EVENT_TRACKER, "Send " + maxEntry.getKey(), null, Calendar.getInstance().getTime()));
+    EventBus.getDefault().post(new UITriggerEvent(SYSTEM_EVENT_TRACKER, "Send " + maxEntry.getKey(), Calendar.getInstance().getTime()));
 
-    return maxEntry.getKey();
-  }
-
-  @Override
-  public String toString(){
-    //TODO: finish toString()
-    return "";
+    Application foregroundApplication = new Application(maxEntry.getKey(), "Generic");
+    return foregroundApplication;
   }
 }

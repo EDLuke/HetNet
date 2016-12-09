@@ -1,4 +1,4 @@
-package android_network.hetnet.system;
+package android_network.hetnet;
 
 import android.content.Context;
 import android.net.Uri;
@@ -7,21 +7,26 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import android_network.hetnet.R;
 import android_network.hetnet.common.trigger_events.UITriggerEvent;
 import android_network.hetnet.ui.TabFragment.OnFragmentInteractionListener;
 
-import static android_network.hetnet.common.Constants.SYSTEM_LIST_FETCHER;
+import static android_network.hetnet.common.Constants.NETWORK_LIST_FETCHER;
 
-public class SystemManagerFragment extends Fragment {
+public class NetworkManagerFragment extends Fragment {
+  TextView networkList;
+
+  // TODO: Rename and change types of parameters
+  private String m_network_list;
+
   private OnFragmentInteractionListener mListener;
 
-  public SystemManagerFragment() {
+  public NetworkManagerFragment() {
     // Required empty public constructor
   }
 
@@ -29,11 +34,11 @@ public class SystemManagerFragment extends Fragment {
    * Use this factory method to create a new instance of
    * this fragment using the provided parameters.
    *
-   * @return A new instance of fragment SystemManagerFragment.
+   * @return A new instance of fragment NetworkManagerFragment.
    */
   // TODO: Rename and change types and number of parameters
-  public static SystemManagerFragment newInstance() {
-    SystemManagerFragment fragment = new SystemManagerFragment();
+  public static NetworkManagerFragment newInstance() {
+    NetworkManagerFragment fragment = new NetworkManagerFragment();
     return fragment;
   }
 
@@ -46,11 +51,19 @@ public class SystemManagerFragment extends Fragment {
   }
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                           Bundle savedInstanceState) {
+  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     // Inflate the layout for this fragment
-    View view = inflater.inflate(R.layout.fragment_system_manager, container, false);
+    View view = inflater.inflate(R.layout.fragment_network_manager, container, false);
+    networkList = (TextView) view.findViewById(R.id.network_list);
+
     return view;
+  }
+
+  @Override
+  public void onStop() {
+    //Unregister from the event bus
+    EventBus.getDefault().unregister(this);
+    super.onStop();
   }
 
   // TODO: Figure out what does this do
@@ -67,7 +80,7 @@ public class SystemManagerFragment extends Fragment {
       mListener = (OnFragmentInteractionListener) context;
     } else {
       throw new RuntimeException(context.toString()
-              + " must implement OnFragmentInteractionListener");
+        + " must implement OnFragmentInteractionListener");
     }
   }
 
@@ -79,10 +92,10 @@ public class SystemManagerFragment extends Fragment {
 
   @Subscribe(threadMode = ThreadMode.MAIN)
   public void onMessageEvent(UITriggerEvent event) {
-    if (event.getEventOriginator().equals(SYSTEM_LIST_FETCHER)) {
-      SystemList list = (SystemList)(event.getEventList());
-      //TODO: parse SystemList
+    if (event.getEventOriginator().equals(NETWORK_LIST_FETCHER)) {
+      // make UI changes
+      //NetworkList list = (NetworkList) (event.getEventList());
+      //networkList.setText(list.getListOfNetworks().toString());
     }
   }
-
 }

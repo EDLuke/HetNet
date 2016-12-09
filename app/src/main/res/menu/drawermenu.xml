@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:title="Policy Engine"
-          android:id="@+id/nav_item_policy"/>
+    <item
+        android:title="Policy Engine"
+        android:id="@+id/nav_item_policy"/>
 
-    <item android:title="Location Manager"
-          android:id="@+id/nav_item_location"/>
+    <item
+        android:title="Location Manager"
+        android:id="@+id/nav_item_location"/>
 
-    <item android:title="Network Manager"
-          android:id="@+id/nav_item_network"/>
+    <item
+        android:title="Network Manager"
+        android:id="@+id/nav_item_network"/>
 
-    <item android:title="System Manager"
-          android:id="@+id/nav_item_system"/>
+    <item
+        android:title="System Manager"
+        android:id="@+id/nav_item_system"/>
 
 </menu>

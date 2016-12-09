@@ -1,16 +1,36 @@
 package android_network.hetnet.data;
 
-import android.location.Location;
-
-public class PolicyRuleVector {
+public class PolicyVector {
   private String applicationId;
-  private Location location;
+  private String applicationType;
+  private double latitude;
+  private double longitude;
   private String networkSSID;
   private double bandwidth;
   private double signalStrength;
   private double signalFrequency;
   private double timeToConnect;
   private double cost;
+
+  public PolicyVector() {
+    super();
+  }
+
+  ;
+
+  public PolicyVector(String applicationId, String applicationType, double latitude, double longitude, String networkSSID,
+                      double bandwidth, double signalStrength, double signalFrequency, double timeToConnect, double cost) {
+    this.applicationId = applicationId;
+    this.applicationType = applicationType;
+    this.latitude = latitude;
+    this.longitude = longitude;
+    this.networkSSID = networkSSID;
+    this.bandwidth = bandwidth;
+    this.signalStrength = signalStrength;
+    this.signalFrequency = signalFrequency;
+    this.timeToConnect = timeToConnect;
+    this.cost = cost;
+  }
 
   public String getApplicationId() {
     return applicationId;
@@ -20,12 +40,28 @@ public class PolicyRuleVector {
     this.applicationId = applicationId;
   }
 
-  public Location getLocation() {
-    return location;
+  public String getApplicationType() {
+    return applicationType;
   }
 
-  public void setLocation(Location location) {
-    this.location = location;
+  public void setApplicationType(String applicationType) {
+    this.applicationType = applicationType;
+  }
+
+  public double getLatitude() {
+    return latitude;
+  }
+
+  public void setLatitude(double latitude) {
+    this.latitude = latitude;
+  }
+
+  public double getLongitude() {
+    return longitude;
+  }
+
+  public void setLongitude(double longitude) {
+    this.longitude = longitude;
   }
 
   public String getNetworkSSID() {

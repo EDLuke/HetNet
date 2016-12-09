@@ -10,9 +10,9 @@ public class NetworkBandwidthCalculator {
 
   //public static double getNetworkBandwidth(Network network) {
 
-    //int BW = wifiManager.getConnectionInfo().getLinkSpeed();
+  //int BW = wifiManager.getConnectionInfo().getLinkSpeed();
 
-    //return BW;
+  //return BW;
   //}
 
   public static double getTimeToConnect(Network network) {

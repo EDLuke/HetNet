@@ -38,7 +38,7 @@ public class TriggerEvent {
   }
 
   @Override
-  public String toString(){
+  public String toString() {
     return eventName + "\t" + eventOriginator + "\t" + timeOfEvent.toString();
   }
 }
