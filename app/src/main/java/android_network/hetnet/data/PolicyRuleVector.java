@@ -2,77 +2,116 @@ package android_network.hetnet.data;
 
 import android.location.Location;
 
-public class PolicyRuleVector {
-  private String applicationId;
-  private Location location;
-  private String networkSSID;
-  private double bandwidth;
-  private double signalStrength;
-  private double signalFrequency;
-  private double timeToConnect;
-  private double cost;
+import java.util.Comparator;
 
-  public String getApplicationId() {
-    return applicationId;
-  }
+public class PolicyRuleVector implements Comparator<PolicyRuleVector> {
+    private String applicationId;
+    private Location location;
+    private String networkSSID;
+    private double bandwidth;
+    private double signalStrength;
+    private double signalFrequency;
+    private double timeToConnect;
+    private double cost;
 
-  public void setApplicationId(String applicationId) {
-    this.applicationId = applicationId;
-  }
 
-  public Location getLocation() {
-    return location;
-  }
+    public PolicyRuleVector(String applicationId, Location location, String networkSSID, double bandwidth, double signalStrength, double signalFrequency, double timeToConnect, double cost) {
+        this.applicationId = applicationId;
+        this.location = location;
+        this.networkSSID = networkSSID;
+        this.bandwidth = bandwidth;
+        this.signalStrength = signalStrength;
+        this.signalFrequency = signalFrequency;
+        this.timeToConnect = timeToConnect;
+        this.cost = cost;
+    }
 
-  public void setLocation(Location location) {
-    this.location = location;
-  }
+    public PolicyRuleVector() {
 
-  public String getNetworkSSID() {
-    return networkSSID;
-  }
+    }
 
-  public void setNetworkSSID(String networkSSID) {
-    this.networkSSID = networkSSID;
-  }
+    public String getApplicationId() {
+        return applicationId;
+    }
 
-  public double getBandwidth() {
-    return bandwidth;
-  }
+    public void setApplicationId(String applicationId) {
+        this.applicationId = applicationId;
+    }
 
-  public void setBandwidth(double bandwidth) {
-    this.bandwidth = bandwidth;
-  }
+    public Location getLocation() {
+        return location;
+    }
 
-  public double getSignalStrength() {
-    return signalStrength;
-  }
+    public void setLocation(Location location) {
+        this.location = location;
+    }
 
-  public void setSignalStrength(double signalStrength) {
-    this.signalStrength = signalStrength;
-  }
+    public String getNetworkSSID() {
+        return networkSSID;
+    }
 
-  public double getSignalFrequency() {
-    return signalFrequency;
-  }
+    public void setNetworkSSID(String networkSSID) {
+        this.networkSSID = networkSSID;
+    }
 
-  public void setSignalFrequency(double signalFrequency) {
-    this.signalFrequency = signalFrequency;
-  }
+    public double getBandwidth() {
+        return bandwidth;
+    }
 
-  public double getTimeToConnect() {
-    return timeToConnect;
-  }
+    public void setBandwidth(double bandwidth) {
+        this.bandwidth = bandwidth;
+    }
 
-  public void setTimeToConnect(double timeToConnect) {
-    this.timeToConnect = timeToConnect;
-  }
+    public double getSignalStrength() {
+        return signalStrength;
+    }
 
-  public double getCost() {
-    return cost;
-  }
+    public void setSignalStrength(double signalStrength) {
+        this.signalStrength = signalStrength;
+    }
 
-  public void setCost(double cost) {
-    this.cost = cost;
-  }
+    public double getSignalFrequency() {
+        return signalFrequency;
+    }
+
+    public void setSignalFrequency(double signalFrequency) {
+        this.signalFrequency = signalFrequency;
+    }
+
+    public double getTimeToConnect() {
+        return timeToConnect;
+    }
+
+    public void setTimeToConnect(double timeToConnect) {
+        this.timeToConnect = timeToConnect;
+    }
+
+    public double getCost() {
+        return cost;
+    }
+
+    public void setCost(double cost) {
+        this.cost = cost;
+    }
+
+
+    @Override
+    public int compare(PolicyRuleVector vector, PolicyRuleVector t1) {
+        //TODO:Compare logic for decision
+        return 0;
+    }
+
+    @Override
+    public String toString() {
+        return "PolicyRuleVector{" +
+                "applicationId='" + applicationId + '\'' +
+                ", location=" + location +
+                ", networkSSID='" + networkSSID + '\'' +
+                ", bandwidth=" + bandwidth +
+                ", signalStrength=" + signalStrength +
+                ", signalFrequency=" + signalFrequency +
+                ", timeToConnect=" + timeToConnect +
+                ", cost=" + cost +
+                '}';
+    }
 }
