@@ -22,6 +22,7 @@ import android_network.hetnet.common.trigger_events.UITriggerEvent;
 import android_network.hetnet.data.Application;
 import android_network.hetnet.data.DataStoreObject;
 import android_network.hetnet.data.Network;
+import android_network.hetnet.data.PolicyEngineData;
 import android_network.hetnet.data.PolicyVector;
 import android_network.hetnet.location.LocationEventTracker;
 import android_network.hetnet.location.LocationFetcher;
@@ -81,6 +82,8 @@ public class PolicyEngine extends Service {
   @Subscribe(threadMode = ThreadMode.ASYNC)
   public void onMessageEvent(TriggerEvent event) {
     locationDataReceived = networkDataReceived = systemDataReceived = false;
+
+    EventBus.getDefault().post(new UITriggerEvent(event.getEventOriginator(), event.getEventName(), event.getTimeOfEvent()));
 
     currentStateVector = new PolicyVector();
 
@@ -144,7 +147,9 @@ public class PolicyEngine extends Service {
       DataStoreObject dataStoreObject = new DataStoreObject(application.getApplicationID(), application.getApplicationType(), location.getLatitude(),
         location.getLongitude(), networkList);
       sendDataToCloud(dataStoreObject);
-      EventBus.getDefault().post(new UITriggerEvent(Constants.POLICY_ENGINE, dataStoreObject, Calendar.getInstance().getTime()));
+
+      PolicyEngineData data = new PolicyEngineData(ruleVector, currentStateVector, dataStoreObject);
+      EventBus.getDefault().post(new UITriggerEvent(Constants.POLICY_ENGINE, data, Calendar.getInstance().getTime()));
     }
   }
 
