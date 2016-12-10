@@ -16,8 +16,6 @@ public class PolicyVector {
     super();
   }
 
-  ;
-
   public PolicyVector(String applicationId, String applicationType, double latitude, double longitude, String networkSSID,
                       double bandwidth, double signalStrength, double signalFrequency, double timeToConnect, double cost) {
     this.applicationId = applicationId;
