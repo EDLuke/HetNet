@@ -14,9 +14,12 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import android_network.hetnet.common.trigger_events.UITriggerEvent;
+import android_network.hetnet.data.DataStoreObject;
+import android_network.hetnet.data.PolicyEngineData;
 import android_network.hetnet.ui.TabFragment.OnFragmentInteractionListener;
 
 import static android_network.hetnet.common.Constants.NETWORK_LIST_FETCHER;
+import static android_network.hetnet.common.Constants.POLICY_ENGINE;
 
 public class NetworkManagerFragment extends Fragment {
   TextView networkList;
@@ -92,10 +95,9 @@ public class NetworkManagerFragment extends Fragment {
 
   @Subscribe(threadMode = ThreadMode.MAIN)
   public void onMessageEvent(UITriggerEvent event) {
-    if (event.getEventOriginator().equals(NETWORK_LIST_FETCHER)) {
-      // make UI changes
-      //NetworkList list = (NetworkList) (event.getEventList());
-      //networkList.setText(list.getListOfNetworks().toString());
+    if(event.getEventOriginator().equals(POLICY_ENGINE)) {
+      DataStoreObject data = ((PolicyEngineData) (event.getEvent())).getDataStoreObject();
+      networkList.setText(data.getListOfNetworks().toString());
     }
   }
 }

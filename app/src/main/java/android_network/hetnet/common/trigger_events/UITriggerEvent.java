@@ -4,12 +4,12 @@ import java.util.Date;
 
 public class UITriggerEvent {
   private String eventOriginator;
-  private Object eventName;
+  private Object event;
   private Date timeOfEvent;
 
-  public UITriggerEvent(String eventOriginator, Object eventName, Date timeOfEvent) {
+  public UITriggerEvent(String eventOriginator, Object event, Date timeOfEvent) {
     this.eventOriginator = eventOriginator;
-    this.eventName = eventName;
+    this.event = event;
     this.timeOfEvent = timeOfEvent;
   }
 
@@ -29,11 +29,11 @@ public class UITriggerEvent {
     this.timeOfEvent = timeOfEvent;
   }
 
-  public Object getEventName() {
-    return eventName;
+  public Object getEvent() {
+    return event;
   }
 
-  public void setEventName(Object eventName) {
-    this.eventName = eventName;
+  public void setEvent(Object event) {
+    this.event = event;
   }
 }

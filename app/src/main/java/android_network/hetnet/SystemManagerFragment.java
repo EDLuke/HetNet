@@ -7,18 +7,25 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import android_network.hetnet.common.trigger_events.UITriggerEvent;
+import android_network.hetnet.data.DataStoreObject;
+import android_network.hetnet.data.PolicyEngineData;
 import android_network.hetnet.ui.TabFragment.OnFragmentInteractionListener;
 
-import static android_network.hetnet.common.Constants.SYSTEM_LIST_FETCHER;
+import static android_network.hetnet.common.Constants.POLICY_ENGINE;
 
 public class SystemManagerFragment extends Fragment {
+  static final String SYSTEM_FRAGMENT_LOG = "system_log";
+
   private OnFragmentInteractionListener mListener;
+
+  TextView m_systemLogs;
 
   public SystemManagerFragment() {
     // Required empty public constructor
@@ -40,6 +47,7 @@ public class SystemManagerFragment extends Fragment {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
+
     //register to event bus
     EventBus.getDefault().register(this);
   }
@@ -47,16 +55,18 @@ public class SystemManagerFragment extends Fragment {
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
+
     // Inflate the layout for this fragment
     View view = inflater.inflate(R.layout.fragment_system_manager, container, false);
-    return view;
-  }
 
-  // TODO: Figure out what does this do
-  public void onButtonPressed(Uri uri) {
-    if (mListener != null) {
-      mListener.onFragmentInteraction(uri);
+    //Hoop up with UI
+    m_systemLogs = (TextView)(view.findViewById(R.id.system_logs));
+
+    if(savedInstanceState != null){
+      m_systemLogs.setText(savedInstanceState.getString(SYSTEM_FRAGMENT_LOG));
     }
+
+    return view;
   }
 
   @Override
@@ -78,9 +88,11 @@ public class SystemManagerFragment extends Fragment {
 
   @Subscribe(threadMode = ThreadMode.MAIN)
   public void onMessageEvent(UITriggerEvent event) {
-    if (event.getEventOriginator().equals(SYSTEM_LIST_FETCHER)) {
-      //SystemList list = (SystemList) (event.getEventList());
-      //TODO: parse SystemList
+    if(event.getEventOriginator().equals(POLICY_ENGINE)) {
+      DataStoreObject data = ((PolicyEngineData) (event.getEvent())).getDataStoreObject();
+
+      String dataString = String.format("%s\t%s\t%s\n", data.getApplicationID(), data.getApplicationType(), event.getTimeOfEvent().toString());
+      m_systemLogs.append(dataString);
     }
   }
 

@@ -1,7 +1,7 @@
 package android_network.hetnet.data;
 
 public class PolicyVector {
-    private String applicationId;
+    private String applicationID;
     private String applicationType;
     private double latitude;
     private double longitude;
@@ -16,9 +16,11 @@ public class PolicyVector {
         super();
     }
 
-    public PolicyVector(String applicationId, String applicationType, double latitude, double longitude, String networkSSID,
+
+
+    public PolicyVector(String applicationID, String applicationType, double latitude, double longitude, String networkSSID,
                         double bandwidth, double signalStrength, double signalFrequency, double timeToConnect, double cost) {
-        this.applicationId = applicationId;
+        this.applicationID = applicationID;
         this.applicationType = applicationType;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -30,12 +32,12 @@ public class PolicyVector {
         this.cost = cost;
     }
 
-    public String getApplicationId() {
-        return applicationId;
+    public String getApplicationID() {
+        return applicationID;
     }
 
-    public void setApplicationId(String applicationId) {
-        this.applicationId = applicationId;
+    public void setApplicationID(String applicationID) {
+        this.applicationID = applicationID;
     }
 
     public String getApplicationType() {
@@ -108,21 +110,5 @@ public class PolicyVector {
 
     public void setCost(double cost) {
         this.cost = cost;
-    }
-
-    @Override
-    public String toString() {
-        return "PolicyVector{" +
-                "applicationId='" + applicationId + '\'' +
-                ", applicationType='" + applicationType + '\'' +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
-                ", networkSSID='" + networkSSID + '\'' +
-                ", bandwidth=" + bandwidth +
-                ", signalStrength=" + signalStrength +
-                ", signalFrequency=" + signalFrequency +
-                ", timeToConnect=" + timeToConnect +
-                ", cost=" + cost +
-                '}';
     }
 }

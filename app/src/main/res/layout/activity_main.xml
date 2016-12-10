@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -7,12 +7,42 @@
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="@dimen/activity_vertical_margin"
-                tools:context="android_network.hetnet.MainActivity">
+              	tools:context="android_network.hetnet.MainActivity"
+              	android:orientation="vertical">
+    <TextView
+        android:text="Event :"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/event_list"
+        />
+
+    <TextView
+        android:text="policy rule vector:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/policy_rule_vector"
+        android:layout_below="@id/event_list"/>
+
+    <TextView
+        android:text="current state vector:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/current_state_vector"
+        android:layout_below="@id/policy_rule_vector"/>
 
     <RelativeLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/containerView">
+        android:id="@+id/containerView"
+        android:layout_below="@id/current_state_vector">
     </RelativeLayout>
-</RelativeLayout>
+
+
+</LinearLayout>

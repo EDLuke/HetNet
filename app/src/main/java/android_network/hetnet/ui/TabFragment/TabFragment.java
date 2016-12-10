@@ -7,9 +7,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.ArrayList;
 
 import android_network.hetnet.LocationManagerFragment;
 import android_network.hetnet.NetworkManagerFragment;
@@ -17,10 +20,12 @@ import android_network.hetnet.R;
 import android_network.hetnet.SystemManagerFragment;
 
 public class TabFragment extends Fragment {
+  private static final String LOG_TAG = "TabFragment";
 
-  public static TabLayout tabLayout;
-  public static ViewPager viewPager;
-  public static int int_items = 3;
+  public static TabLayout m_tabLayout;
+  public static ViewPager m_viewPager;
+
+  private TabFragmentAdapter m_fragmentAdapter;
 
   @Nullable
   @Override
@@ -29,48 +34,54 @@ public class TabFragment extends Fragment {
      *Inflate tab_layout and setup Views.
      */
     View x = inflater.inflate(R.layout.tab_layout, null);
-    tabLayout = (TabLayout) x.findViewById(R.id.tabs);
-    viewPager = (ViewPager) x.findViewById(R.id.viewpager);
+    m_tabLayout = (TabLayout) x.findViewById(R.id.tabs);
+    m_viewPager = (ViewPager) x.findViewById(R.id.viewpager);
+    m_fragmentAdapter = new TabFragmentAdapter(getChildFragmentManager());
+    m_fragmentAdapter.add(new SystemManagerFragment());
+    m_fragmentAdapter.add(new NetworkManagerFragment());
+    m_fragmentAdapter.add(new LocationManagerFragment());
 
     /**
      *Set an Apater for the View Pager
      */
-    viewPager.setAdapter(new MyAdapter(getChildFragmentManager()));
+    m_viewPager.setAdapter(m_fragmentAdapter);
 
     /**
      * Now , this is a workaround ,
      * The setupWithViewPager dose't works without the runnable .
      * Maybe a Support Library Bug .
      */
-    tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+    m_tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
       @Override
       public void onTabSelected(TabLayout.Tab tab) {
-        TabLayout.Tab temp = tab;
-        boolean f = false;
       }
 
       @Override
       public void onTabUnselected(TabLayout.Tab tab) {
-        TabLayout.Tab temp = tab;
-        boolean f = false;
       }
 
       @Override
       public void onTabReselected(TabLayout.Tab tab) {
-        TabLayout.Tab temp = tab;
-        boolean f = false;
       }
     });
 
-    tabLayout.setupWithViewPager(viewPager);
+    m_tabLayout.setupWithViewPager(m_viewPager);
     return x;
 
   }
 
-  class MyAdapter extends FragmentPagerAdapter {
+  class TabFragmentAdapter extends FragmentPagerAdapter {
 
-    public MyAdapter(FragmentManager fm) {
+    private ArrayList<Fragment> m_fragment;
+
+    public TabFragmentAdapter(FragmentManager fm) {
       super(fm);
+
+      m_fragment = new ArrayList<Fragment>();
+    }
+
+    public void add(Fragment fragment){
+      this.m_fragment.add(fragment);
     }
 
     /**
@@ -79,21 +90,13 @@ public class TabFragment extends Fragment {
 
     @Override
     public Fragment getItem(int position) {
-      switch (position) {
-        case 0:
-          return new SystemManagerFragment();
-        case 1:
-          return new NetworkManagerFragment();
-        case 2:
-          return new LocationManagerFragment();
-      }
-      return null;
+      return m_fragment.get(position);
     }
 
     @Override
     public int getCount() {
 
-      return int_items;
+      return m_fragment.size();
 
     }
 
@@ -104,15 +107,17 @@ public class TabFragment extends Fragment {
     @Override
     public CharSequence getPageTitle(int position) {
 
-      switch (position) {
-        case 0:
+      switch(m_fragment.get(position).getClass().toString()){
+        case "class android_network.hetnet.SystemManagerFragment":
           return "System";
-        case 1:
+        case "class android_network.hetnet.NetworkManagerFragment":
           return "Network";
-        case 2:
+        case "class android_network.hetnet.LocationManagerFragment":
           return "Location";
+        default:
+          Log.e(LOG_TAG, "Invalid page title");
+          return null;
       }
-      return null;
     }
   }
 

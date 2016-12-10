@@ -75,7 +75,7 @@ public class PolicyVectorStoreHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
-        values.put(this.COLUMN_APP_ID, v.getApplicationId());
+        values.put(this.COLUMN_APP_ID, v.getApplicationID());
         values.put(this.COLUMN_LAT, v.getLatitude());
         values.put(this.COLUMN_LON, v.getLongitude());
         values.put(this.COLUMN_SSID, v.getNetworkSSID());
