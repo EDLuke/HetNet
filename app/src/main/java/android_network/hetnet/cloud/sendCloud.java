@@ -19,10 +19,6 @@ import org.json.*;
 import android_network.hetnet.data.DataStoreObject;
 import android_network.hetnet.data.Network;
 
-/**
- * Created by lanking on 06/12/2016.
- */
-
 public class SendCloud extends IntentService {
 
   public SendCloud() {
@@ -42,7 +38,6 @@ public class SendCloud extends IntentService {
   protected void onHandleIntent(Intent intent) {
     ArrayList<DataStoreObject> dataStoreObjectList = (ArrayList) intent.getSerializableExtra("currentData");
     DataStoreObject tempdata = dataStoreObjectList.get(0);
-    System.out.println(dataStoreObjectList);
 
     HttpURLConnection httpcon;
     Map<String, Object> params = new HashMap<>();
@@ -68,7 +63,7 @@ public class SendCloud extends IntentService {
     } catch (JSONException e) {
       e.printStackTrace();
     }
-    System.out.println(holder.toString());
+    //System.out.println(holder.toString());
     /*
     String url = "http://35.162.120.177/policy";
     String data = holder.toString();

@@ -2,7 +2,7 @@ package android_network.hetnet.data;
 
 import java.io.Serializable;
 
-public class Network implements Serializable {
+public class Network implements Serializable, Cloneable {
   private String networkSSID;
   private double bandwidth;
   private double signalStrength;
@@ -100,4 +100,12 @@ public class Network implements Serializable {
       "}" + "\n";
   }
 
+  public Network getCopy() throws CloneNotSupportedException {
+    return (Network) this.clone();
+  }
+
+  @Override
+  protected Object clone() throws CloneNotSupportedException {
+    return super.clone();
+  }
 }

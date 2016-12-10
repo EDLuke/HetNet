@@ -13,10 +13,16 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import android_network.hetnet.cloud.DummyMachineLearningEngine;
 import android_network.hetnet.cloud.SendCloud;
 import android_network.hetnet.common.Constants;
+import android_network.hetnet.common.comparators.BandwidthComparator;
+import android_network.hetnet.common.comparators.ConnectionTimeComparator;
+import android_network.hetnet.common.comparators.CostComparator;
+import android_network.hetnet.common.comparators.SignalStrengthComparator;
 import android_network.hetnet.common.trigger_events.TriggerEvent;
 import android_network.hetnet.common.trigger_events.UITriggerEvent;
 import android_network.hetnet.data.Application;
@@ -114,9 +120,8 @@ public class PolicyEngine extends Service {
     networkDataReceived = true;
     this.stopService(networkListFetcherService);
     networkList = event.getListOfNetworks();
-    networkList = getRankedNetworkList(networkList);
 
-    for (Network network : networkList) {
+    for (Network network : getRankedNetworkList(networkList)) {
       if (network.isCurrentNetwork()) {
         currentStateVector.setNetworkSSID(network.getNetworkSSID());
         currentStateVector.setBandwidth(network.getBandwidth());
@@ -167,6 +172,51 @@ public class PolicyEngine extends Service {
   }
 
   private List<Network> getRankedNetworkList(List<Network> networkList) {
-    return networkList;
+    Set<Network> bandwidthRankSet = new TreeSet<Network>(new BandwidthComparator());
+    Set<Network> signalStrengthRankSet = new TreeSet<Network>(new SignalStrengthComparator());
+    Set<Network> connectionTimeRankSet = new TreeSet<Network>(new ConnectionTimeComparator());
+    Set<Network> costRankSet = new TreeSet<Network>(new CostComparator());
+
+    List<Network> rankedNetworkList = new ArrayList<>();
+
+    for (Network network : networkList) {
+      Network networkCopy = null;
+      try {
+        networkCopy = network.getCopy();
+      } catch (CloneNotSupportedException e) {
+        e.printStackTrace();
+      }
+
+      rankedNetworkList.add(networkCopy);
+    }
+
+    for (Network network : rankedNetworkList) {
+      bandwidthRankSet.add(network);
+      signalStrengthRankSet.add(network);
+      connectionTimeRankSet.add(network);
+      costRankSet.add(network);
+    }
+
+    int i = 1;
+    for (Network network : bandwidthRankSet) {
+      network.setBandwidth(i++);
+    }
+
+    i = 1;
+    for (Network network : signalStrengthRankSet) {
+      network.setSignalStrength(i++);
+    }
+
+    i = 1;
+    for (Network network : connectionTimeRankSet) {
+      network.setTimeToConnect(i++);
+    }
+
+    i = 1;
+    for (Network network : costRankSet) {
+      network.setCost(i++);
+    }
+
+    return rankedNetworkList;
   }
 }
