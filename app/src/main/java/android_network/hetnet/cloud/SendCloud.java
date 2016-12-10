@@ -56,14 +56,14 @@ public class SendCloud extends IntentService {
       temp.put("SignalFrequency",network.getSignalFrequency());
       temp.put("TimeToConnect",network.getTimeToConnect());
       temp.put("SignalStrength",network.getSignalStrength());
-      networks.put(temp);
+      networks.put(new JSONObject(temp));
     }
     try {
       holder.put("Networks",networks);
     } catch (JSONException e) {
       e.printStackTrace();
     }
-    //System.out.println(holder.toString());
+    System.out.println(holder.toString());
     /*
     String url = "http://35.162.120.177/policy";
     String data = holder.toString();
