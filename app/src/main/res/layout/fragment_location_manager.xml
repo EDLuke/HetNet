@@ -3,7 +3,9 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent"
              android:orientation="vertical"
-             tools:context="android_network.hetnet.LocationManagerFragment">
+             tools:context="android_network.hetnet.LocationManagerFragment"
+    android:weightSum="1"
+    android:baselineAligned="false">
 
     <TextView
         android:layout_width="match_parent"
@@ -11,5 +13,35 @@
         android:text=""
         android:freezesText="true"
         android:id="@+id/location_logs"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="248dp"
+        android:layout_weight="0.51">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/LocationNetworks">
+
+            </TableLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <Spinner
+        android:layout_width="142dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/rangeselector" />
+
+    <Button
+        android:text="Submit"
+        android:layout_width="99dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/submitLocationNetworks" />
 
 </LinearLayout>
