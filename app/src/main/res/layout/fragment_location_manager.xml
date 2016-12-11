@@ -7,22 +7,21 @@
     android:weightSum="1"
     android:baselineAligned="false">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:freezesText="true"
-        android:id="@+id/location_logs"/>
-
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="248dp"
-        android:layout_weight="0.51">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:freezesText="true"
+                android:id="@+id/location_logs"/>
 
             <TableLayout
                 android:layout_width="match_parent"
@@ -30,18 +29,33 @@
                 android:id="@+id/LocationNetworks">
 
             </TableLayout>
+
+            <TextView
+                android:text="Please choose a range"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/status"
+                android:layout_marginTop="21dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true" />
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/rangeselector"
+                android:layout_below="@+id/status"
+                android:layout_marginTop="11dp" />
+
+            <Button
+                android:text="Submit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/submitLocationNetworks"
+                android:layout_below="@+id/rangeselector"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="15dp"
+                android:layout_marginTop="33dp" />
         </LinearLayout>
     </ScrollView>
-
-    <Spinner
-        android:layout_width="142dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/rangeselector" />
-
-    <Button
-        android:text="Submit"
-        android:layout_width="99dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/submitLocationNetworks" />
 
 </LinearLayout>
