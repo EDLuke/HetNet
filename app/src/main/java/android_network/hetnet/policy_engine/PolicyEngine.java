@@ -47,6 +47,7 @@ public class PolicyEngine extends Service {
 
   Location location;
   Application application;
+  SystemList  systemList;
   List<Network> networkList;
 
   boolean locationDataReceived = false;
@@ -134,8 +135,11 @@ public class PolicyEngine extends Service {
   @Subscribe(threadMode = ThreadMode.ASYNC)
   public void onMessageEvent(SystemResponseEvent event) {
     systemDataReceived = true;
-    this.stopService(systemListFetcherService);
     application = SystemList.getForegroundApplication(event.getSystemList());
+    systemList  = event.getSystemList();
+
+    this.stopService(systemListFetcherService);
+
     currentStateVector.setApplicationID(application.getApplicationID());
     currentStateVector.setApplicationType(application.getApplicationType());
     checkDataAndSendData();
@@ -147,6 +151,8 @@ public class PolicyEngine extends Service {
       DataStoreObject dataStoreObject = new DataStoreObject(application.getApplicationID(), application.getApplicationType(), location.getLatitude(),
         location.getLongitude(), networkList);
       sendDataToCloud(dataStoreObject);
+
+      dataStoreObject.setSystemList(systemList);
 
       PolicyEngineData data = new PolicyEngineData(ruleVector, currentStateVector, dataStoreObject);
       EventBus.getDefault().post(new UITriggerEvent(Constants.POLICY_ENGINE, data, Calendar.getInstance().getTime()));

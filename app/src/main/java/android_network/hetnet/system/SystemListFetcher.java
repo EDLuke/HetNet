@@ -3,6 +3,7 @@ package android_network.hetnet.system;
 import android.app.ActivityManager;
 import android.app.IntentService;
 import android.content.Intent;
+import android.net.TrafficStats;
 import android.util.Log;
 
 import org.greenrobot.eventbus.EventBus;
@@ -15,6 +16,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
+import android_network.hetnet.data.Application;
+
 import static android_network.hetnet.common.Constants.SYSTEM_LIST_FETCHER;
 
 /**
@@ -23,10 +26,28 @@ import static android_network.hetnet.common.Constants.SYSTEM_LIST_FETCHER;
  */
 
 public class SystemListFetcher extends IntentService {
+
   private static final String LOG_TAG = "SystemListFetcher";
+
+  //Current snapshot of all the running application processes
+  List<ActivityManager.RunningAppProcessInfo> m_runningAppProcessInfos;
 
   private SystemList m_systemList;
   private ActivityManager m_activityManager;
+
+  private static long lastTotalRxBytes;
+  private static long lastTotalTxBytes;
+  private static long lastTotalRxPackets;
+  private static long lastTotalTxPackets;
+
+  private long currentTotalRxBytes;
+  private long currentTotalTxBytes;
+  private long currentTotalRxPackets;
+  private long currentTotalTxPackets;
+
+  //UID / Application List
+  private static HashMap<Integer, ApplicationList> m_last_applicationListMap;
+  private HashMap<Integer, ApplicationList> m_applicationListMap;
 
   public SystemListFetcher() {
     super("SystemListFetcher");
@@ -35,40 +56,127 @@ public class SystemListFetcher extends IntentService {
   @Override
   public void onCreate() {
     super.onCreate();
+
+    m_activityManager = (ActivityManager) (getSystemService(ACTIVITY_SERVICE));
+    m_runningAppProcessInfos  = m_activityManager.getRunningAppProcesses();
+
+    if(m_last_applicationListMap == null)
+      m_last_applicationListMap = new HashMap<>();
+
+    m_applicationListMap      = new HashMap<>();
   }
 
   @Override
   protected void onHandleIntent(Intent intent) {
-    m_activityManager = (ActivityManager) (getSystemService(ACTIVITY_SERVICE));
+    //Initialize a new SystemList
     m_systemList = new SystemList();
 
-    getRunningProcess();
+    //First update the snapshot of all running application processes
+    m_runningAppProcessInfos = m_activityManager.getRunningAppProcesses();
+
+    initializeApplicationList();
+
     getCpuUsage();
-    getCpuUsageApplication();
-    getDevicePower();
+    getTrafficStats();
+    //getDevicePower();
+
+    m_systemList.setApplicationList(m_applicationListMap);
     EventBus.getDefault().post(new SystemResponseEvent(SYSTEM_LIST_FETCHER, m_systemList, Calendar.getInstance().getTime()));
   }
 
-  private void getRunningProcess() {
-    m_systemList.setRunningAppProcessInfos(m_activityManager.getRunningAppProcesses());
+  private void initializeApplicationList() {
+    for (ActivityManager.RunningAppProcessInfo processInfo : m_runningAppProcessInfos) {
+      m_applicationListMap.put(processInfo.uid, new ApplicationList());
+
+      if(m_last_applicationListMap.get(processInfo.uid) == null)
+        m_last_applicationListMap.put(processInfo.uid, new ApplicationList());
+    }
+  }
+
+  //Source:
+  //http://stackoverflow.com/questions/12765562/how-to-get-the-correct-number-of-bytes-sent-and-received-in-trafficstats
+  private void getTrafficStats(){
+    long rxBytes = TrafficStats.getTotalRxBytes();
+    long txBytes = TrafficStats.getTotalTxBytes();
+    long rxPackets = TrafficStats.getTotalRxPackets();
+    long txPackets = TrafficStats.getTotalTxPackets();
+
+    if(rxBytes == TrafficStats.UNSUPPORTED || txBytes == TrafficStats.UNSUPPORTED) {
+      Log.e(LOG_TAG, "Your device does not support traffic stat monitoring");
+      return;
+    }
+
+    //Total
+    currentTotalRxBytes = rxBytes - lastTotalRxBytes;
+    currentTotalTxBytes = txBytes - lastTotalTxBytes;
+    currentTotalRxPackets = rxPackets - lastTotalRxPackets;
+    currentTotalTxPackets = txPackets - lastTotalTxPackets;
+
+    lastTotalRxBytes = rxBytes;
+    lastTotalTxBytes = txBytes;
+    lastTotalRxPackets = rxPackets;
+    lastTotalTxPackets = txPackets;
+
+    //Application wise
+    for (ActivityManager.RunningAppProcessInfo processInfo : m_runningAppProcessInfos) {
+
+      getTrafficStats(processInfo.uid);
+    }
+  }
+
+  private void getTrafficStats(int uid){
+
+    if(m_applicationListMap.containsKey(uid) && m_last_applicationListMap.containsKey(uid)) {
+
+      //Already checked if supported in getTrafficStats(TRACK_STATE state)
+      long rxBytes = TrafficStats.getUidRxBytes(uid);
+      long txBytes = TrafficStats.getUidTxBytes(uid);
+      long rxPackets = TrafficStats.getUidRxPackets(uid);
+      long txPackets = TrafficStats.getUidTxPackets(uid);
+      m_applicationListMap.get(uid).setRxBytes(rxBytes - m_last_applicationListMap.get(uid).getRxBytes());
+      m_applicationListMap.get(uid).setTxBytes(txBytes - m_last_applicationListMap.get(uid).getTxBytes());
+      m_applicationListMap.get(uid).setRxPackets(rxPackets - m_last_applicationListMap.get(uid).getRxPackets());
+      m_applicationListMap.get(uid).setTxPackets(txPackets - m_last_applicationListMap.get(uid).getTxPackets());
+
+      m_last_applicationListMap.get(uid).setRxBytes(rxBytes);
+      m_last_applicationListMap.get(uid).setTxBytes(txBytes);
+      m_last_applicationListMap.get(uid).setRxPackets(rxPackets);
+      m_last_applicationListMap.get(uid).setRxPackets(txPackets);
+
+    }
   }
 
   private void getCpuUsage() {
+    //Total
     m_systemList.setCpuUsage(cpuUsage());
+
+    //Application-wise
+    getCpuUsageApplication();
   }
 
   //TODO:this is some late night hack, please change this
   private void getCpuUsageApplication() {
-    List<ActivityManager.RunningAppProcessInfo> runningAppProcessInfos = m_systemList.getRunningAppProcessInfos();
-    HashMap<String, Integer> cpuUsage_app = new HashMap<>();
-    HashMap<String, Integer> cpuUsage_app_temp = cpuUsageApplication();
+    //Parse cpu usage from 'top -n 1'
+    HashMap<String, Integer> cpuUsage_app = cpuUsageApplication();
 
-    for (ActivityManager.RunningAppProcessInfo processInfo : runningAppProcessInfos) {
-      int percent = cpuUsage_app_temp.containsKey(processInfo.processName) ? cpuUsage_app_temp.get(processInfo.processName) : 0;
-      cpuUsage_app.put(processInfo.processName, percent);
+    for (ActivityManager.RunningAppProcessInfo processInfo : m_runningAppProcessInfos) {
+      int percent = cpuUsage_app.containsKey(processInfo.processName) ? cpuUsage_app.get(processInfo.processName) : -1;
+
+      if(m_applicationListMap.containsKey(processInfo.uid)) {
+        m_applicationListMap.get(processInfo.uid).setCpuUsage(percent);
+
+        //Also set the name here
+        m_applicationListMap.get(processInfo.uid).setProcessName(processInfo.processName);
+      }
+      else {
+        ApplicationList list = new ApplicationList();
+        list.setCpuUsage(percent);
+        list.setProcessName(processInfo.processName);
+
+        m_applicationListMap.put(processInfo.uid, list);
+      }
     }
 
-    m_systemList.setCpuUsage_app(cpuUsage_app);
   }
 
   private HashMap<String, Integer> cpuUsageApplication() {
