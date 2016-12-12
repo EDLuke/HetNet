@@ -3,8 +3,10 @@ package android_network.hetnet.system;
 import android.app.ActivityManager;
 import android.app.IntentService;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.TrafficStats;
 import android.util.Log;
+import android.os.Debug.MemoryInfo;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -32,6 +34,7 @@ public class SystemListFetcher extends IntentService {
 
   private SystemList m_systemList;
   private ActivityManager m_activityManager;
+  private PackageManager  m_packageManager;
 
   private static long lastTotalRxBytes;
   private static long lastTotalTxBytes;
@@ -56,6 +59,7 @@ public class SystemListFetcher extends IntentService {
     super.onCreate();
 
     m_activityManager = (ActivityManager) (getSystemService(ACTIVITY_SERVICE));
+    m_packageManager  = getPackageManager();
     m_runningAppProcessInfos = m_activityManager.getRunningAppProcesses();
 
     if (m_last_applicationListMap == null)
@@ -75,8 +79,9 @@ public class SystemListFetcher extends IntentService {
     initializeApplicationList();
 
     getCpuUsage();
+    //getBatteryStats(); //TODO:Finish deciphering batterystats
+    getMemoryStats();
     getTrafficStats();
-    //getDevicePower();
 
     m_systemList.setApplicationList(m_applicationListMap);
     EventBus.getDefault().post(new SystemResponseEvent(SYSTEM_LIST_FETCHER, m_systemList, Calendar.getInstance().getTime()));
@@ -88,6 +93,32 @@ public class SystemListFetcher extends IntentService {
 
       if (m_last_applicationListMap.get(processInfo.uid) == null)
         m_last_applicationListMap.put(processInfo.uid, new ApplicationList());
+    }
+  }
+
+  private void getBatteryStats(){
+    //TODO:Multi-thread battery info
+    Process p;
+    try {
+      String[] cmd = {
+              "sh",
+              "-c",
+              "dumpsys batterystats --checkin"};
+      p = Runtime.getRuntime().exec(cmd);
+      BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+      String line;
+
+      while ((line = reader.readLine()) != null && !line.equals("")) {
+        String lineOutput[] = line.trim().split(",");
+
+        if (lineOutput[3].equals("br")){
+          int debug = 1;
+        }
+
+      }
+
+    } catch (IOException e) {
+      Log.e(LOG_TAG, "Error reading process\n" + e.toString());
     }
   }
 
@@ -105,10 +136,16 @@ public class SystemListFetcher extends IntentService {
     }
 
     //Total
-    currentTotalRxBytes = rxBytes - lastTotalRxBytes;
-    currentTotalTxBytes = txBytes - lastTotalTxBytes;
-    currentTotalRxPackets = rxPackets - lastTotalRxPackets;
-    currentTotalTxPackets = txPackets - lastTotalTxPackets;
+    //Use lastTotals for now TODO: either store lastTotals and monitor or change to service
+//    currentTotalRxBytes = rxBytes - lastTotalRxBytes;
+//    currentTotalTxBytes = txBytes - lastTotalTxBytes;
+//    currentTotalRxPackets = rxPackets - lastTotalRxPackets;
+//    currentTotalTxPackets = txPackets - lastTotalTxPackets;
+
+    currentTotalRxBytes = rxBytes;
+    currentTotalTxBytes = txBytes;
+    currentTotalRxPackets = rxPackets;
+    currentTotalTxPackets = txPackets;
 
     lastTotalRxBytes = rxBytes;
     lastTotalTxBytes = txBytes;
@@ -117,9 +154,42 @@ public class SystemListFetcher extends IntentService {
 
     //Application wise
     for (ActivityManager.RunningAppProcessInfo processInfo : m_runningAppProcessInfos) {
-
       getTrafficStats(processInfo.uid);
     }
+  }
+
+
+  private void getMemoryStats() {
+    for (ActivityManager.RunningAppProcessInfo processInfo : m_runningAppProcessInfos) {
+      int[] memoryStats = getMemoryStats(processInfo.pid);
+
+      m_applicationListMap.get(processInfo.uid).setPrivateClean(memoryStats[0]);
+      m_applicationListMap.get(processInfo.uid).setPrivateDirty(memoryStats[1]);
+      m_applicationListMap.get(processInfo.uid).setPss(memoryStats[2]);
+      m_applicationListMap.get(processInfo.uid).setUss(memoryStats[3]);
+    }
+  }
+
+  /**
+   * @param pid Process id
+   * @return int[]
+   *    TotalPrivateClean
+   *    TotalPrivateDirty
+   *    TotalPss (Proportional Set Size)
+   *    TotalUss (Unique Set Size)
+   */
+  private int[] getMemoryStats(int pid){
+    int pids[] = new int[1];
+    pids[0] = pid;
+    MemoryInfo[] memoryInfo = m_activityManager.getProcessMemoryInfo(pids);
+
+    int[] ret = new int[4];
+    ret[0] = memoryInfo[0].getTotalPrivateClean();
+    ret[1] = memoryInfo[0].getTotalPrivateDirty();
+    ret[2] = memoryInfo[0].getTotalPss();
+    ret[3] = memoryInfo[0].getTotalUss();
+
+    return ret;
   }
 
   private void getTrafficStats(int uid) {
@@ -131,10 +201,13 @@ public class SystemListFetcher extends IntentService {
       long txBytes = TrafficStats.getUidTxBytes(uid);
       long rxPackets = TrafficStats.getUidRxPackets(uid);
       long txPackets = TrafficStats.getUidTxPackets(uid);
-      m_applicationListMap.get(uid).setRxBytes(rxBytes - m_last_applicationListMap.get(uid).getRxBytes());
-      m_applicationListMap.get(uid).setTxBytes(txBytes - m_last_applicationListMap.get(uid).getTxBytes());
-      m_applicationListMap.get(uid).setRxPackets(rxPackets - m_last_applicationListMap.get(uid).getRxPackets());
-      m_applicationListMap.get(uid).setTxPackets(txPackets - m_last_applicationListMap.get(uid).getTxPackets());
+
+      //Total
+      //Use lastTotals for now TODO: either store lastTotals and monitor or change to service
+      m_applicationListMap.get(uid).setRxBytes(rxBytes /*- m_last_applicationListMap.get(uid).getRxBytes()*/);
+      m_applicationListMap.get(uid).setTxBytes(txBytes /*- m_last_applicationListMap.get(uid).getTxBytes()*/);
+      m_applicationListMap.get(uid).setRxPackets(rxPackets /*- m_last_applicationListMap.get(uid).getRxPackets()*/);
+      m_applicationListMap.get(uid).setTxPackets(txPackets /*- m_last_applicationListMap.get(uid).getTxPackets()*/);
 
       m_last_applicationListMap.get(uid).setRxBytes(rxBytes);
       m_last_applicationListMap.get(uid).setTxBytes(txBytes);
@@ -161,10 +234,20 @@ public class SystemListFetcher extends IntentService {
       int percent = cpuUsage_app.containsKey(processInfo.processName) ? cpuUsage_app.get(processInfo.processName) : -1;
 
       if (m_applicationListMap.containsKey(processInfo.uid)) {
-        m_applicationListMap.get(processInfo.uid).setCpuUsage(percent);
+        /*Only retain the maximum cpu usage*/
+        int currentPercent = m_applicationListMap.get(processInfo.uid).getCpuUsage();
+        if(percent >= currentPercent)
+          m_applicationListMap.get(processInfo.uid).setCpuUsage(percent);
 
         //Also set the name here
-        m_applicationListMap.get(processInfo.uid).setProcessName(processInfo.processName);
+        String app_name = "";
+        try{
+          app_name = m_packageManager.getApplicationLabel(m_packageManager.getApplicationInfo(m_packageManager.getNameForUid(processInfo.uid), 0)).toString();
+        }catch (PackageManager.NameNotFoundException e){
+          app_name = processInfo.processName;
+        }
+
+        m_applicationListMap.get(processInfo.uid).setProcessName(app_name);
       } else {
         ApplicationList list = new ApplicationList();
         list.setCpuUsage(percent);
@@ -210,11 +293,6 @@ public class SystemListFetcher extends IntentService {
     }
 
     return ret;
-  }
-
-  private void getDevicePower() {
-    //TODO: finish migrating this from DevicePowerThread
-    m_systemList.setBatteryPct(0);
   }
 
   //AU: Gabe

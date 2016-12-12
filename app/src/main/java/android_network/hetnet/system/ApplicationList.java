@@ -2,10 +2,19 @@ package android_network.hetnet.system;
 
 public class ApplicationList {
   private String processName = "";
+
+  /*TrafficStats*/
   private long rxBytes = -1;
   private long rxPackets = -1;
   private long txBytes = -1;
   private long txPackets = -1;
+
+  /*Memory Info*/
+  private int privateClean = -1;
+  private int privateDirty = -1;
+  private int pss = -1;
+  private int uss = -1;
+
   private int cpuUsage = -1;
 
   public long getRxBytes() {
@@ -78,5 +87,37 @@ public class ApplicationList {
 
   public void setProcessName(String processName) {
     this.processName = processName;
+  }
+
+  public int getPrivateClean() {
+    return privateClean;
+  }
+
+  public void setPrivateClean(int privateClean) {
+    this.privateClean = privateClean;
+  }
+
+  public int getPrivateDirty() {
+    return privateDirty;
+  }
+
+  public void setPrivateDirty(int privateDirty) {
+    this.privateDirty = privateDirty;
+  }
+
+  public int getPss() {
+    return pss;
+  }
+
+  public void setPss(int pss) {
+    this.pss = pss;
+  }
+
+  public int getUss() {
+    return uss;
+  }
+
+  public void setUss(int uss) {
+    this.uss = uss;
   }
 }

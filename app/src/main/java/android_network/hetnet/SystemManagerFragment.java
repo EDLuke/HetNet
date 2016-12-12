@@ -16,6 +16,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -119,11 +120,17 @@ public class SystemManagerFragment extends Fragment {
         applicationData.add("Trasmitted bytes: " + applicationList.getTxBytes());
         applicationData.add("Received packets: " + applicationList.getRxPackets());
         applicationData.add("Transmitted packets: " + applicationList.getTxPackets());
+        applicationData.add("Private Clean: " + applicationList.getPrivateClean());
+        applicationData.add("Private Dirty: " + applicationList.getPrivateDirty());
+        applicationData.add("PSS: " + applicationList.getPss());
+        applicationData.add("USS: " + applicationList.getUss());
 
         listDataChild.put(applicationList.getProcessName(), applicationData);
 
         currentAppList_it.remove();
       }
+
+      Collections.sort(listDataHeader);
 
       m_systemLogsAdapter = new SystemExpandableListAdapter(getContext(), listDataHeader, listDataChild);
       m_systemLogs.setAdapter(m_systemLogsAdapter);

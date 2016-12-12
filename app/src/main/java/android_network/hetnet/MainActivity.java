@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
   private static final int REQUEST_READ_PHONE_STATE = 100;
   private static final int REQUEST_ACCESS_COARSE_LOCATION = 101;
   private static final int REQUEST_ACCESS_NETWORK_STATE = 102;
+  private static final int REQUEST_DUMP = 103;
 
   private String m_event_log;
 
@@ -69,6 +70,12 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
 
     if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
       ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, REQUEST_READ_PHONE_STATE);
+    }
+
+    permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.DUMP);
+
+    if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+      ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.DUMP}, REQUEST_DUMP);
     }
 
     //register to event bus
@@ -99,6 +106,13 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
           if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_NETWORK_STATE}, REQUEST_ACCESS_NETWORK_STATE);
           }
+        }
+      }
+
+      case REQUEST_DUMP: {
+        // If request is cancelled, the result arrays are empty.
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+          //Request granted
         }
       }
     }
