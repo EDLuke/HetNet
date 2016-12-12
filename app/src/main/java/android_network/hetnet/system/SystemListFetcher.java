@@ -237,8 +237,7 @@ public class SystemListFetcher extends IntentService {
       if (m_applicationListMap.containsKey(processInfo.uid)) {
         /*Only retain the maximum cpu usage*/
         int currentPercent = m_applicationListMap.get(processInfo.uid).getCpuUsage();
-        if(percent >= currentPercent)
-          m_applicationListMap.get(processInfo.uid).setCpuUsage(percent);
+        m_applicationListMap.get(processInfo.uid).setCpuUsage(currentPercent + percent);
 
         //Also set the name here
         String app_name = "";
