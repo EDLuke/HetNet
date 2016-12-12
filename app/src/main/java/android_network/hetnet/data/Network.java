@@ -62,11 +62,10 @@ public class Network implements Serializable, Cloneable {
     this.possibleToConnect = possibleToConnect;
   }
 
-  public double getTimeToConnect() {
-    return timeToConnect;
-  }
+  public double getTimeToConnect() {return timeToConnect;}
 
-  public void setTimeToConnect(double timeToConnect) {
+  // time data not available -> timeToConnect = -1
+  public void setTimeToConnect(long timeToConnect) {
     this.timeToConnect = timeToConnect;
   }
 
