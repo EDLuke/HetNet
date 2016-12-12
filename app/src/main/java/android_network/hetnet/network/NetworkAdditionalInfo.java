@@ -36,25 +36,11 @@ public class NetworkAdditionalInfo extends Activity {
 
   }
 
-  public static double getNetworkSpeed(Network network) {
+  public static String getNetworkSpeed(Network network) {
 
-    double rate;
+    String speed = "N/A";
 
-    if (network.isPossibleToConnect()) {
-      //ConnectionClassManager cq = ConnectionClassManager.getInstance();
-      //rate = cq.getDownloadKBitsPerSecond();
-
-      long mStartRX = TrafficStats.getTotalRxBytes();
-      long mStartTX = TrafficStats.getTotalTxBytes();
-
-      rate = mStartTX - mStartTX;
-
-
-    } else {
-      rate = 1;
-    }
-
-    return rate;
+    return speed;
 
 
   }

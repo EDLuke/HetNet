@@ -68,6 +68,7 @@ public class NetworkListFetcher extends IntentService {
 
     List<CellInfo> cellInfoList = telephonyManager.getAllCellInfo();
 
+    // hypothetical value/connection type ie. 3G -> 1Gbps
     int speedMobile = telephonyManager.getNetworkType();
 
     int i = 1;
@@ -81,21 +82,18 @@ public class NetworkListFetcher extends IntentService {
           network.setNetworkSSID("Other");
         }
 
+        // signal strength
         network.setSignalStrength(((CellInfoLte) cellInfo).getCellSignalStrength().getLevel());
 
-        // TEST THIS
+        // display max value
         network.setBandwidth(speedMobile);
 
-        // need to calculate
-        // NetworkBandwidthCalculator.getNetworkBandwidth(network);
-
-        // need to calculate
+        // TBD
         SecurityManager.checkNetworkConnectivity(network);
 
-        // need to calculate
-        NetworkAdditionalInfo.getTimeToConnect(network);
+        // hardcoded lTE connection immediate
+        network.setTimeToConnect(0);
 
-        // already calculated - check if it gets printed
         network.setCost(getCarrierCost(carrierName));
 
         // hardcoded LTE is not selected
@@ -187,7 +185,8 @@ public class NetworkListFetcher extends IntentService {
         SecurityManager.checkNetworkConnectivity(network);
 
 
-        NetworkAdditionalInfo.getTimeToConnect(network);
+        // this class not used atm can be removed
+        //NetworkAdditionalInfo.getTimeToConnect(network);
 
 
         network.setCost(0.0);
@@ -210,10 +209,8 @@ public class NetworkListFetcher extends IntentService {
         // check if network requires password
         password(network);
 
-
-        double speed = NetworkAdditionalInfo.getNetworkSpeed(network);
-
-        network.setSpeed(speed);
+        // separate app for speed calculation so N/A right now
+        network.setSpeed(NetworkAdditionalInfo.getNetworkSpeed(network));
 
         networkList.add(network);
 
@@ -236,7 +233,7 @@ public class NetworkListFetcher extends IntentService {
     {
       NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
 
-      System.out.println(activeNetwork);
+      //System.out.println(activeNetwork);
 
       // format: "current_SSID"
       current_SSID = activeNetwork.getExtraInfo();
@@ -273,6 +270,7 @@ public class NetworkListFetcher extends IntentService {
 
   public static long getTimeToConnect(Network network)
   {
+    // used when more than one network is available for connection
     long time = 0;
 
     WifiInfo w = wifiManager.getConnectionInfo();
