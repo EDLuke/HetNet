@@ -3,9 +3,14 @@ package android_network.hetnet.data;
 import java.io.Serializable;
 import java.util.List;
 
+import android_network.hetnet.system.SystemList;
+
 public class DataStoreObject implements Serializable {
+  /*System Manager*/
   private String applicationID;
   private String applicationType;
+  private SystemList systemList;
+
   private double latitude;
   private double longitude;
   private List<Network> listOfNetworks;
@@ -56,5 +61,13 @@ public class DataStoreObject implements Serializable {
 
   public void setListOfNetworks(List<Network> listOfNetworks) {
     this.listOfNetworks = listOfNetworks;
+  }
+
+  public SystemList getSystemList() {
+    return systemList;
+  }
+
+  public void setSystemList(SystemList systemList) {
+    this.systemList = systemList;
   }
 }
