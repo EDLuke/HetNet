@@ -1,40 +1,36 @@
 package android_network.hetnet;
 
 import android.content.Context;
-<<<<<<< HEAD
 import android.graphics.Typeface;
-=======
 import android.net.Uri;
->>>>>>> parent of ff2bf1e... Added TrafficStats to SystemManager and improved the UI to use expandable list
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-<<<<<<< HEAD
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
-=======
->>>>>>> parent of ff2bf1e... Added TrafficStats to SystemManager and improved the UI to use expandable list
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-<<<<<<< HEAD
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
-=======
->>>>>>> parent of ff2bf1e... Added TrafficStats to SystemManager and improved the UI to use expandable list
 import android_network.hetnet.common.trigger_events.UITriggerEvent;
 import android_network.hetnet.data.DataStoreObject;
 import android_network.hetnet.data.PolicyEngineData;
+import android_network.hetnet.system.ApplicationList;
+import android_network.hetnet.system.SystemList;
 import android_network.hetnet.ui.TabFragment.OnFragmentInteractionListener;
 
 import static android_network.hetnet.common.Constants.POLICY_ENGINE;
@@ -44,12 +40,8 @@ public class SystemManagerFragment extends Fragment {
 
   private OnFragmentInteractionListener mListener;
 
-<<<<<<< HEAD
-  ExpandableListView m_systemLogs;
+  ExpandableListView    m_systemLogs;
   SystemExpandableListAdapter m_systemLogsAdapter;
-=======
-  TextView m_systemLogs;
->>>>>>> parent of ff2bf1e... Added TrafficStats to SystemManager and improved the UI to use expandable list
 
   public SystemManagerFragment() {
     // Required empty public constructor
@@ -71,7 +63,6 @@ public class SystemManagerFragment extends Fragment {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-
     //register to event bus
     EventBus.getDefault().register(this);
   }
@@ -84,15 +75,7 @@ public class SystemManagerFragment extends Fragment {
     View view = inflater.inflate(R.layout.fragment_system_manager, container, false);
 
     //Hoop up with UI
-<<<<<<< HEAD
-    m_systemLogs = (ExpandableListView) (view.findViewById(R.id.system_logs));
-=======
-    m_systemLogs = (TextView)(view.findViewById(R.id.system_logs));
-
-    if(savedInstanceState != null){
-      m_systemLogs.setText(savedInstanceState.getString(SYSTEM_FRAGMENT_LOG));
-    }
->>>>>>> parent of ff2bf1e... Added TrafficStats to SystemManager and improved the UI to use expandable list
+    m_systemLogs = (ExpandableListView)(view.findViewById(R.id.system_logs));
 
     return view;
   }
@@ -114,21 +97,22 @@ public class SystemManagerFragment extends Fragment {
     mListener = null;
   }
 
+  //Source:
+  //http://www.androidhive.info/2013/07/android-expandable-list-view-tutorial/
   @Subscribe(threadMode = ThreadMode.MAIN)
   public void onMessageEvent(UITriggerEvent event) {
-    if (event.getEventOriginator().equals(POLICY_ENGINE)) {
+    if(event.getEventOriginator().equals(POLICY_ENGINE)) {
       DataStoreObject data = ((PolicyEngineData) (event.getEvent())).getDataStoreObject();
 
-<<<<<<< HEAD
       SystemList currentList = data.getSystemList();
       HashMap<Integer, ApplicationList> currentAppList = currentList.getApplicationList();
 
-      List<String> listDataHeader = new ArrayList<>();
+      List<String> listDataHeader                 = new ArrayList<>();
       HashMap<String, List<String>> listDataChild = new HashMap<>();
 
       Iterator<Map.Entry<Integer, ApplicationList>> currentAppList_it = currentAppList.entrySet().iterator();
 
-      while (currentAppList_it.hasNext()) {
+      while(currentAppList_it.hasNext()){
         Map.Entry<Integer, ApplicationList> pair = currentAppList_it.next();
         ApplicationList applicationList = pair.getValue();
 
@@ -140,17 +124,11 @@ public class SystemManagerFragment extends Fragment {
         applicationData.add("Trasmitted bytes: " + applicationList.getTxBytes());
         applicationData.add("Received packets: " + applicationList.getRxPackets());
         applicationData.add("Transmitted packets: " + applicationList.getTxPackets());
-        applicationData.add("Private Clean: " + applicationList.getPrivateClean());
-        applicationData.add("Private Dirty: " + applicationList.getPrivateDirty());
-        applicationData.add("PSS: " + applicationList.getPss());
-        applicationData.add("USS: " + applicationList.getUss());
 
         listDataChild.put(applicationList.getProcessName(), applicationData);
 
         currentAppList_it.remove();
       }
-
-      Collections.sort(listDataHeader);
 
       m_systemLogsAdapter = new SystemExpandableListAdapter(getContext(), listDataHeader, listDataChild);
       m_systemLogs.setAdapter(m_systemLogsAdapter);
@@ -165,7 +143,7 @@ public class SystemManagerFragment extends Fragment {
     private HashMap<String, List<String>> _listDataChild;
 
     public SystemExpandableListAdapter(Context context, List<String> listDataHeader,
-                                       HashMap<String, List<String>> listChildData) {
+                                 HashMap<String, List<String>> listChildData) {
       this._context = context;
       this._listDataHeader = listDataHeader;
       this._listDataChild = listChildData;
@@ -174,7 +152,7 @@ public class SystemManagerFragment extends Fragment {
     @Override
     public Object getChild(int groupPosition, int childPosititon) {
       return this._listDataChild.get(this._listDataHeader.get(groupPosition))
-        .get(childPosititon);
+              .get(childPosititon);
     }
 
     @Override
@@ -190,12 +168,12 @@ public class SystemManagerFragment extends Fragment {
 
       if (convertView == null) {
         LayoutInflater infalInflater = (LayoutInflater) this._context
-          .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         convertView = infalInflater.inflate(R.layout.fragment_system_list_item, null);
       }
 
       TextView txtListChild = (TextView) convertView
-        .findViewById(R.id.system_logs_item);
+              .findViewById(R.id.system_logs_item);
 
       txtListChild.setText(childText);
       return convertView;
@@ -204,7 +182,7 @@ public class SystemManagerFragment extends Fragment {
     @Override
     public int getChildrenCount(int groupPosition) {
       return this._listDataChild.get(this._listDataHeader.get(groupPosition))
-        .size();
+              .size();
     }
 
     @Override
@@ -228,12 +206,12 @@ public class SystemManagerFragment extends Fragment {
       String headerTitle = (String) getGroup(groupPosition);
       if (convertView == null) {
         LayoutInflater infalInflater = (LayoutInflater) this._context
-          .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         convertView = infalInflater.inflate(R.layout.fragment_system_list_header, null);
       }
 
       TextView lblListHeader = (TextView) convertView
-        .findViewById(R.id.system_logs_header);
+              .findViewById(R.id.system_logs_header);
       lblListHeader.setTypeface(null, Typeface.BOLD);
       lblListHeader.setText(headerTitle);
 
@@ -248,10 +226,6 @@ public class SystemManagerFragment extends Fragment {
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
       return true;
-=======
-      String dataString = String.format("%s\t%s\t%s\n", data.getApplicationID(), data.getApplicationType(), event.getTimeOfEvent().toString());
-      m_systemLogs.append(dataString);
->>>>>>> parent of ff2bf1e... Added TrafficStats to SystemManager and improved the UI to use expandable list
     }
   }
 

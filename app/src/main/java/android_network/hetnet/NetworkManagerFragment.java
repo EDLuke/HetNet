@@ -18,6 +18,7 @@ import android_network.hetnet.data.DataStoreObject;
 import android_network.hetnet.data.PolicyEngineData;
 import android_network.hetnet.ui.TabFragment.OnFragmentInteractionListener;
 
+import static android_network.hetnet.common.Constants.NETWORK_LIST_FETCHER;
 import static android_network.hetnet.common.Constants.POLICY_ENGINE;
 
 public class NetworkManagerFragment extends Fragment {
@@ -94,7 +95,7 @@ public class NetworkManagerFragment extends Fragment {
 
   @Subscribe(threadMode = ThreadMode.MAIN)
   public void onMessageEvent(UITriggerEvent event) {
-    if (event.getEventOriginator().equals(POLICY_ENGINE)) {
+    if(event.getEventOriginator().equals(POLICY_ENGINE)) {
       DataStoreObject data = ((PolicyEngineData) (event.getEvent())).getDataStoreObject();
       networkList.setText(data.getListOfNetworks().toString());
     }
