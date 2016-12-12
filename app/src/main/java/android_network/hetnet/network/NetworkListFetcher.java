@@ -5,6 +5,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.support.annotation.NonNull;
@@ -15,12 +17,17 @@ import android.util.Log;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import android_network.hetnet.data.Network;
 
+import static android.R.attr.max;
+import static android.R.attr.name;
 import static android_network.hetnet.common.Constants.NETWORK_LIST_FETCHER;
 
 public class NetworkListFetcher extends IntentService {
@@ -79,7 +86,7 @@ public class NetworkListFetcher extends IntentService {
         SecurityManager.checkNetworkConnectivity(network);
 
         // need to calculate
-        NetworkBandwidthCalculator.getTimeToConnect(network);
+        NetworkAdditionalInfo.getTimeToConnect(network);
 
         // already calculated - check if it gets printed
         network.setCost(getCarrierCost(carrierName));
@@ -143,15 +150,14 @@ public class NetworkListFetcher extends IntentService {
       List<ScanResult> wifiList = wifiManager.getScanResults();
 
       // gets maximum network speed
-      double speed = wifiManager.getConnectionInfo().getLinkSpeed();
-
-      wifiManager.getConnectionInfo().getSupplicantState();
+      double max_speed = wifiManager.getConnectionInfo().getLinkSpeed();
 
       int i = 0;
       for (ScanResult result : wifiList) {
         Network network = new Network();
 
-        network.setBandwidth(speed);
+        //hypothetical value
+        network.setBandwidth(max_speed);
 
         //name
         network.setNetworkSSID(result.SSID);
@@ -165,18 +171,31 @@ public class NetworkListFetcher extends IntentService {
         //Hz not useful
         network.setSignalFrequency(result.frequency);
 
-        //NetworkBandwidthCalculator.getNetworkBandwidth(network);
-
+        // TBD
         SecurityManager.checkNetworkConnectivity(network);
-        NetworkBandwidthCalculator.getTimeToConnect(network);
+
+
+        NetworkAdditionalInfo.getTimeToConnect(network);
+
 
         network.setCost(0.0);
 
-        if (i == 0) {
+        /*if (i == 0) {
           network.setCurrentNetwork(true);
+          network.setPossibleToConnect(true);
         } else {
           network.setCurrentNetwork(false);
-        }
+          network.setPossibleToConnect(false);
+        }*/
+
+        // check if this is current connected network
+        isCurrentNet(context, network);
+
+
+
+        double speed = NetworkAdditionalInfo.getNetworkSpeed(network);
+
+        network.setSpeed(speed);
 
         networkList.add(network);
         i++;
@@ -185,4 +204,29 @@ public class NetworkListFetcher extends IntentService {
       wifiDataReceived = true;
     }
   };
+
+  public static void isCurrentNet(Context context, Network network) {
+
+    // get current connected network
+    ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+    NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+
+    // format: "current_SSID"
+    String current_SSID = activeNetwork.getExtraInfo();
+
+    // check if network name matches current_SSID
+    if (current_SSID.contains(network.getNetworkSSID()))
+    {
+      network.setCurrentNetwork(true);
+    }
+    else
+    {
+      network.setCurrentNetwork(false);
+    }
+
+
+
+
+  }
+
 }
