@@ -85,10 +85,12 @@ public class Network implements Serializable, Cloneable {
     this.currentNetwork = currentNetwork;
   }
 
-  public double getSpeed(double speed) { return speed;
+  public double getSpeed(double speed) {
+    return speed;
   }
 
-  public double setSpeed(double speed) { return this.speed = speed;
+  public double setSpeed(double speed) {
+    return this.speed = speed;
   }
 
   @Override

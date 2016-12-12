@@ -14,4 +14,8 @@ public class Constants {
   public static final String LOCATION_EVENT_TRACKER = "LOCATION_EVENT_TRACKER";
 
   public static final String LOCATION_LIST_FETCHER = "LOCATION_LIST_FETCHER";
+
+  public static final String POLICY_VECTOR = "POLICY_VECTOR";
+
+  public static final String STATE_VECTOR = "STATE_VECTOR";
 }
