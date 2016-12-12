@@ -129,23 +129,9 @@ public class Network implements Serializable, Cloneable {
       "\n\t\t\t\tCost: $"+ cost +
       "\n\t\t\t\tCurrent Network: "+ cn +
       "\n\t\t\t\tSignal Frequency: "+ signalFrequency ;
-
-
+    
     return list;
 
-
-
-      /*"networkSSID='" + networkSSID + '\'' +
-      ", bandwidth=" + bandwidth +
-      ", signalStrength=" + signalStrength +
-      ", speed=" + speed +
-      ", signalFrequency=" + signalFrequency +
-      ", securityProtocol='" + securityProtocol + '\'' +
-      ", possibleToConnect=" + possibleToConnect +
-      ", timeToConnect=" + timeToConnect +
-      ", cost=" + cost +
-      ", currentNetwork=" + currentNetwork +
-      "}" + "\n";*/
   }
 
   public Network getCopy() throws CloneNotSupportedException {
