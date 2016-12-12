@@ -15,6 +15,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -115,15 +116,15 @@ public class SystemManagerFragment extends Fragment {
         listDataHeader.add(applicationList.getProcessName());
 
         List<String> applicationData = new ArrayList<String>();
-        applicationData.add("CPU Usage: " + applicationList.getCpuUsage());
-        applicationData.add("Received bytes: " + applicationList.getRxBytes());
-        applicationData.add("Trasmitted bytes: " + applicationList.getTxBytes());
-        applicationData.add("Received packets: " + applicationList.getRxPackets());
-        applicationData.add("Transmitted packets: " + applicationList.getTxPackets());
-        applicationData.add("Private Clean: " + applicationList.getPrivateClean());
-        applicationData.add("Private Dirty: " + applicationList.getPrivateDirty());
-        applicationData.add("PSS: " + applicationList.getPss());
-        applicationData.add("USS: " + applicationList.getUss());
+        applicationData.add("CPU Usage: " + applicationList.getCpuUsage() + "%");
+        applicationData.add("Received bytes: " + getFileSize(applicationList.getRxBytes()));
+        applicationData.add("Trasmitted bytes: " + getFileSize(applicationList.getTxBytes()));
+        applicationData.add("Received packets: " + getFileSize(applicationList.getRxPackets()));
+        applicationData.add("Transmitted packets: " + getFileSize(applicationList.getTxPackets()));
+        applicationData.add("Private Clean: " + getFileSize(applicationList.getPrivateClean()));
+        applicationData.add("Private Dirty: " + getFileSize(applicationList.getPrivateDirty()));
+        applicationData.add("PSS: " + getFileSize(applicationList.getPss()));
+        applicationData.add("USS: " + getFileSize(applicationList.getUss()));
 
         listDataChild.put(applicationList.getProcessName(), applicationData);
 
@@ -135,6 +136,16 @@ public class SystemManagerFragment extends Fragment {
       m_systemLogsAdapter = new SystemExpandableListAdapter(getContext(), listDataHeader, listDataChild);
       m_systemLogs.setAdapter(m_systemLogsAdapter);
     }
+  }
+
+  //Source:
+  //http://stackoverflow.com/questions/18099710/format-string-into-kb-mb-and-gb
+  public static String getFileSize(long size){
+    if (size <= 0)
+      return "0";
+    final String[] units = new String[] { "B", "KB", "MB", "GB", "TB" };
+    int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
+    return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
   }
 
   public class SystemExpandableListAdapter extends BaseExpandableListAdapter {
