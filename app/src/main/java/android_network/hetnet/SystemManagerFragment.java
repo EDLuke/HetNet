@@ -2,15 +2,12 @@ package android_network.hetnet;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
@@ -19,11 +16,10 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 
 import android_network.hetnet.common.trigger_events.UITriggerEvent;
@@ -40,7 +36,7 @@ public class SystemManagerFragment extends Fragment {
 
   private OnFragmentInteractionListener mListener;
 
-  ExpandableListView    m_systemLogs;
+  ExpandableListView m_systemLogs;
   SystemExpandableListAdapter m_systemLogsAdapter;
 
   public SystemManagerFragment() {
@@ -75,7 +71,7 @@ public class SystemManagerFragment extends Fragment {
     View view = inflater.inflate(R.layout.fragment_system_manager, container, false);
 
     //Hoop up with UI
-    m_systemLogs = (ExpandableListView)(view.findViewById(R.id.system_logs));
+    m_systemLogs = (ExpandableListView) (view.findViewById(R.id.system_logs));
 
     return view;
   }
@@ -87,7 +83,7 @@ public class SystemManagerFragment extends Fragment {
       mListener = (OnFragmentInteractionListener) context;
     } else {
       throw new RuntimeException(context.toString()
-        + " must implement OnFragmentInteractionListener");
+              + " must implement OnFragmentInteractionListener");
     }
   }
 
@@ -101,18 +97,18 @@ public class SystemManagerFragment extends Fragment {
   //http://www.androidhive.info/2013/07/android-expandable-list-view-tutorial/
   @Subscribe(threadMode = ThreadMode.MAIN)
   public void onMessageEvent(UITriggerEvent event) {
-    if(event.getEventOriginator().equals(POLICY_ENGINE)) {
+    if (event.getEventOriginator().equals(POLICY_ENGINE)) {
       DataStoreObject data = ((PolicyEngineData) (event.getEvent())).getDataStoreObject();
 
       SystemList currentList = data.getSystemList();
       HashMap<Integer, ApplicationList> currentAppList = currentList.getApplicationList();
 
-      List<String> listDataHeader                 = new ArrayList<>();
+      List<String> listDataHeader = new ArrayList<>();
       HashMap<String, List<String>> listDataChild = new HashMap<>();
 
       Iterator<Map.Entry<Integer, ApplicationList>> currentAppList_it = currentAppList.entrySet().iterator();
 
-      while(currentAppList_it.hasNext()){
+      while (currentAppList_it.hasNext()) {
         Map.Entry<Integer, ApplicationList> pair = currentAppList_it.next();
         ApplicationList applicationList = pair.getValue();
 
@@ -124,11 +120,17 @@ public class SystemManagerFragment extends Fragment {
         applicationData.add("Trasmitted bytes: " + applicationList.getTxBytes());
         applicationData.add("Received packets: " + applicationList.getRxPackets());
         applicationData.add("Transmitted packets: " + applicationList.getTxPackets());
+        applicationData.add("Private Clean: " + applicationList.getPrivateClean());
+        applicationData.add("Private Dirty: " + applicationList.getPrivateDirty());
+        applicationData.add("PSS: " + applicationList.getPss());
+        applicationData.add("USS: " + applicationList.getUss());
 
         listDataChild.put(applicationList.getProcessName(), applicationData);
 
         currentAppList_it.remove();
       }
+
+      Collections.sort(listDataHeader);
 
       m_systemLogsAdapter = new SystemExpandableListAdapter(getContext(), listDataHeader, listDataChild);
       m_systemLogs.setAdapter(m_systemLogsAdapter);
@@ -143,7 +145,7 @@ public class SystemManagerFragment extends Fragment {
     private HashMap<String, List<String>> _listDataChild;
 
     public SystemExpandableListAdapter(Context context, List<String> listDataHeader,
-                                 HashMap<String, List<String>> listChildData) {
+                                       HashMap<String, List<String>> listChildData) {
       this._context = context;
       this._listDataHeader = listDataHeader;
       this._listDataChild = listChildData;
