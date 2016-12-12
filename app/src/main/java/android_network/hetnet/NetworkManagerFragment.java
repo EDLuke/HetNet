@@ -97,7 +97,15 @@ public class NetworkManagerFragment extends Fragment {
   public void onMessageEvent(UITriggerEvent event) {
     if(event.getEventOriginator().equals(POLICY_ENGINE)) {
       DataStoreObject data = ((PolicyEngineData) (event.getEvent())).getDataStoreObject();
-      networkList.setText(data.getListOfNetworks().toString());
+
+
+      // Formatting for display
+      String listDisp = data.getListOfNetworks().toString().replace("[", "");
+      String listDisp2 = listDisp.replaceAll(",", "\n");
+      String listDisp3 = listDisp2.replace("]", "");
+
+
+      networkList.setText(listDisp3);
     }
   }
 }

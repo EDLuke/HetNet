@@ -265,6 +265,7 @@ public class NetworkListFetcher extends IntentService {
     if (protocol.contains("[WPA2]") || protocol.contains("[WEP]"))
     {
       network.setPossibleToConnect(true);
+
     }
   }
 

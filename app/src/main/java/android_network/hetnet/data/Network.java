@@ -2,6 +2,8 @@ package android_network.hetnet.data;
 
 import java.io.Serializable;
 
+import static android.R.id.list;
+
 public class Network implements Serializable, Cloneable {
   private String networkSSID;
   private double bandwidth;
@@ -93,8 +95,47 @@ public class Network implements Serializable, Cloneable {
 
   @Override
   public String toString() {
-    return "\n\nNetwork{" +
-      "networkSSID='" + networkSSID + '\'' +
+
+    String cp = "";
+
+    if (possibleToConnect == true)
+    {
+      cp = "Yes";
+    }
+    else
+    {
+      cp = "No";
+    }
+
+    String cn ="";
+
+    if (currentNetwork == true)
+    {
+      cn = "Yes";
+    }
+    else
+    {
+      cn = "No";
+    }
+
+
+    String list = "\n" + networkSSID +
+      "\n\t\t\t\tSignal Strength: "+ signalStrength + " dB" +
+      "\n\t\t\t\tConnection Possible: "+ cp +
+      "\n\t\t\t\tConnection Time: "+ timeToConnect +" ns" +
+      "\n\t\t\t\tBandwidth: "+ bandwidth +" Mbps" +
+      "\n\t\t\t\tSpeed: "+ speed +
+      "\n\t\t\t\tSecurity Protocol: "+ securityProtocol +
+      "\n\t\t\t\tCost: $"+ cost +
+      "\n\t\t\t\tCurrent Network: "+ cn +
+      "\n\t\t\t\tSignal Frequency: "+ signalFrequency ;
+
+
+    return list;
+
+
+
+      /*"networkSSID='" + networkSSID + '\'' +
       ", bandwidth=" + bandwidth +
       ", signalStrength=" + signalStrength +
       ", speed=" + speed +
@@ -104,7 +145,7 @@ public class Network implements Serializable, Cloneable {
       ", timeToConnect=" + timeToConnect +
       ", cost=" + cost +
       ", currentNetwork=" + currentNetwork +
-      "}" + "\n";
+      "}" + "\n";*/
   }
 
   public Network getCopy() throws CloneNotSupportedException {
