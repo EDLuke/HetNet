@@ -1,9 +1,6 @@
 package android_network.hetnet.system;
 
-import android.app.ActivityManager;
-
 import java.util.HashMap;
-import java.util.List;
 
 import android_network.hetnet.data.Application;
 
@@ -44,6 +41,7 @@ public class SystemList {
   public void setApplicationList(HashMap<Integer, ApplicationList> m_applicationList) {
     this.m_applicationList = m_applicationList;
   }
+
   //Current decision: send second largest CPU usage application to the cloud
   public static Application getForegroundApplication(SystemList systemList) {
     return new Application("Test", "Generic");

@@ -22,7 +22,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import android_network.hetnet.common.trigger_events.TriggerEvent;
 import android_network.hetnet.common.trigger_events.UITriggerEvent;
-import android_network.hetnet.data.DataStoreObject;
 import android_network.hetnet.data.PolicyEngineData;
 import android_network.hetnet.data.PolicyVector;
 import android_network.hetnet.policy_engine.PolicyEngine;
@@ -32,6 +31,8 @@ import android_network.hetnet.ui.TabFragment.TabFragment;
 import static android_network.hetnet.common.Constants.LOCATION_EVENT_TRACKER;
 import static android_network.hetnet.common.Constants.NETWORK_EVENT_TRACKER;
 import static android_network.hetnet.common.Constants.POLICY_ENGINE;
+import static android_network.hetnet.common.Constants.POLICY_VECTOR;
+import static android_network.hetnet.common.Constants.STATE_VECTOR;
 import static android_network.hetnet.common.Constants.SYSTEM_EVENT_TRACKER;
 
 
@@ -56,9 +57,9 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    m_eventList = (TextView)findViewById(R.id.event_list);
-    m_policyRuleVector = (TextView)findViewById(R.id.policy_rule_vector);
-    m_currentStateVector = (TextView)findViewById(R.id.current_state_vector);
+    m_eventList = (TextView) findViewById(R.id.event_list);
+    m_policyRuleVector = (TextView) findViewById(R.id.policy_rule_vector);
+    m_currentStateVector = (TextView) findViewById(R.id.current_state_vector);
 
     fragmentManager = getSupportFragmentManager();
     FragmentTransaction firstTransaction = fragmentManager.beginTransaction();
@@ -117,20 +118,20 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
         m_eventList.setText(event.getEvent() + " event received from " + event.getEventOriginator() + " at " + event.getTimeOfEvent());
         break;
       case POLICY_ENGINE:
-        PolicyVector ruleVector         = ((PolicyEngineData)(event.getEvent())).getRuleVector();
-        PolicyVector currentStateVector = ((PolicyEngineData)(event.getEvent())).getCurrentStateVector();
-        String ruleVectorString         = getRuleVectorToString(ruleVector);
-        String currentStateVectorString = getCurrentVectorToString(currentStateVector);
+        PolicyVector ruleVector = ((PolicyEngineData) (event.getEvent())).getRuleVector();
+        PolicyVector currentStateVector = ((PolicyEngineData) (event.getEvent())).getCurrentStateVector();
+        String ruleVectorString = getVectorAsString(ruleVector, POLICY_VECTOR);
+        String currentStateVectorString = getVectorAsString(currentStateVector, STATE_VECTOR);
 
         m_policyRuleVector.setText(ruleVectorString);
         m_currentStateVector.setText(currentStateVectorString);
         break;
       case SYSTEM_EVENT_TRACKER:
         NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.ic_icon)
-                        .setContentTitle("HetNet")
-                        .setContentText(event.getEvent().toString());
+          new NotificationCompat.Builder(this)
+            .setSmallIcon(R.drawable.ic_icon)
+            .setContentTitle("HetNet")
+            .setContentText(event.getEvent().toString());
 
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         // mId allows you to update the notification later on.
@@ -141,31 +142,36 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
     }
   }
 
-  private String getRuleVectorToString(PolicyVector data){
-    StringBuilder builder_rule = new StringBuilder();
-    builder_rule.append("policy rule vector: <");
-    builder_rule.append(data.getApplicationID()).append(" , ");
-    builder_rule.append(data.getApplicationType()).append(" , ");
-    builder_rule.append(data.getLatitude()).append(" , ");
-    builder_rule.append(data.getLongitude());
-    builder_rule.append(">");
+  private String getVectorAsString(PolicyVector data, String format) {
+    StringBuilder sb = new StringBuilder();
+    if (POLICY_VECTOR.equals(format)) {
+      sb.append("\nPolicy Rule Vector: <");
+    } else {
+      sb.append("\nCurrent State Vector: <");
+    }
 
-    return String.valueOf(builder_rule);
+    sb.append("App ID: ").append(data.getApplicationID()).append(", ");
+    sb.append("App Type: ").append(data.getApplicationType()).append(", ");
+    sb.append("Latitude: ").append(data.getLatitude()).append(", ");
+    sb.append("Longitude: ").append(data.getLongitude()).append(", ");
+    sb.append("Network ID: ").append(data.getNetworkSSID()).append(", ");
+
+    if (POLICY_VECTOR.equals(format)) {
+      sb.append("Bandwidth Preference: ").append(data.getBandwidth()).append(", ");
+      sb.append("Signal Strength Preference: ").append(data.getSignalStrength()).append(", ");
+      sb.append("Connection Time Preference: ").append(data.getTimeToConnect()).append(", ");
+      sb.append("Cost Preference: ").append(data.getCost());
+    } else {
+      sb.append("Bandwidth Rank: ").append(data.getBandwidth()).append(", ");
+      sb.append("Signal Strength Rank: ").append(data.getSignalStrength()).append(", ");
+      sb.append("Connection Time Rank: ").append(data.getTimeToConnect()).append(", ");
+      sb.append("Cost Rank: ").append(data.getCost());
+    }
+
+    sb.append(">");
+
+    return String.valueOf(sb);
   }
-
-  private String getCurrentVectorToString(PolicyVector data){
-    StringBuilder builder_current = new StringBuilder();
-    builder_current.append("current state vector: <");
-    builder_current.append(data.getApplicationID()).append(" , ");
-    builder_current.append(data.getApplicationType()).append(" , ");
-    builder_current.append(data.getLatitude()).append(" , ");
-    builder_current.append(data.getLongitude());
-    builder_current.append(">");
-
-    return String.valueOf(builder_current);
-  }
-
-
 
   @Override
   public void onFragmentInteraction(Uri uri) {

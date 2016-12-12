@@ -1,6 +1,7 @@
 package android_network.hetnet.common.comparators;
 
 import java.util.Comparator;
+
 import android_network.hetnet.data.Network;
 
 public class BandwidthComparator implements Comparator<Network> {

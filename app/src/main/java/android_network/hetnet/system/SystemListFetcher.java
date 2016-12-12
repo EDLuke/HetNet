@@ -16,8 +16,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
-import android_network.hetnet.data.Application;
-
 import static android_network.hetnet.common.Constants.SYSTEM_LIST_FETCHER;
 
 /**
@@ -58,12 +56,12 @@ public class SystemListFetcher extends IntentService {
     super.onCreate();
 
     m_activityManager = (ActivityManager) (getSystemService(ACTIVITY_SERVICE));
-    m_runningAppProcessInfos  = m_activityManager.getRunningAppProcesses();
+    m_runningAppProcessInfos = m_activityManager.getRunningAppProcesses();
 
-    if(m_last_applicationListMap == null)
+    if (m_last_applicationListMap == null)
       m_last_applicationListMap = new HashMap<>();
 
-    m_applicationListMap      = new HashMap<>();
+    m_applicationListMap = new HashMap<>();
   }
 
   @Override
@@ -88,20 +86,20 @@ public class SystemListFetcher extends IntentService {
     for (ActivityManager.RunningAppProcessInfo processInfo : m_runningAppProcessInfos) {
       m_applicationListMap.put(processInfo.uid, new ApplicationList());
 
-      if(m_last_applicationListMap.get(processInfo.uid) == null)
+      if (m_last_applicationListMap.get(processInfo.uid) == null)
         m_last_applicationListMap.put(processInfo.uid, new ApplicationList());
     }
   }
 
   //Source:
   //http://stackoverflow.com/questions/12765562/how-to-get-the-correct-number-of-bytes-sent-and-received-in-trafficstats
-  private void getTrafficStats(){
+  private void getTrafficStats() {
     long rxBytes = TrafficStats.getTotalRxBytes();
     long txBytes = TrafficStats.getTotalTxBytes();
     long rxPackets = TrafficStats.getTotalRxPackets();
     long txPackets = TrafficStats.getTotalTxPackets();
 
-    if(rxBytes == TrafficStats.UNSUPPORTED || txBytes == TrafficStats.UNSUPPORTED) {
+    if (rxBytes == TrafficStats.UNSUPPORTED || txBytes == TrafficStats.UNSUPPORTED) {
       Log.e(LOG_TAG, "Your device does not support traffic stat monitoring");
       return;
     }
@@ -124,9 +122,9 @@ public class SystemListFetcher extends IntentService {
     }
   }
 
-  private void getTrafficStats(int uid){
+  private void getTrafficStats(int uid) {
 
-    if(m_applicationListMap.containsKey(uid) && m_last_applicationListMap.containsKey(uid)) {
+    if (m_applicationListMap.containsKey(uid) && m_last_applicationListMap.containsKey(uid)) {
 
       //Already checked if supported in getTrafficStats(TRACK_STATE state)
       long rxBytes = TrafficStats.getUidRxBytes(uid);
@@ -162,13 +160,12 @@ public class SystemListFetcher extends IntentService {
     for (ActivityManager.RunningAppProcessInfo processInfo : m_runningAppProcessInfos) {
       int percent = cpuUsage_app.containsKey(processInfo.processName) ? cpuUsage_app.get(processInfo.processName) : -1;
 
-      if(m_applicationListMap.containsKey(processInfo.uid)) {
+      if (m_applicationListMap.containsKey(processInfo.uid)) {
         m_applicationListMap.get(processInfo.uid).setCpuUsage(percent);
 
         //Also set the name here
         m_applicationListMap.get(processInfo.uid).setProcessName(processInfo.processName);
-      }
-      else {
+      } else {
         ApplicationList list = new ApplicationList();
         list.setCpuUsage(percent);
         list.setProcessName(processInfo.processName);

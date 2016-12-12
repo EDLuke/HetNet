@@ -17,17 +17,12 @@ import android.util.Log;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import android_network.hetnet.data.Network;
 
-import static android.R.attr.max;
-import static android.R.attr.name;
 import static android_network.hetnet.common.Constants.NETWORK_LIST_FETCHER;
 
 public class NetworkListFetcher extends IntentService {
@@ -192,7 +187,6 @@ public class NetworkListFetcher extends IntentService {
         isCurrentNet(context, network);
 
 
-
         double speed = NetworkAdditionalInfo.getNetworkSpeed(network);
 
         network.setSpeed(speed);
@@ -215,16 +209,11 @@ public class NetworkListFetcher extends IntentService {
     String current_SSID = activeNetwork.getExtraInfo();
 
     // check if network name matches current_SSID
-    if (current_SSID.contains(network.getNetworkSSID()))
-    {
+    if (current_SSID.contains(network.getNetworkSSID())) {
       network.setCurrentNetwork(true);
-    }
-    else
-    {
+    } else {
       network.setCurrentNetwork(false);
     }
-
-
 
 
   }
