@@ -5,9 +5,10 @@
               android:orientation="vertical"
               tools:context=".SystemManagerFragment">
 
-    <ExpandableListView
-        android:layout_width="match_parent"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text=""
         android:freezesText="true"
         android:id="@+id/system_logs"/>
 

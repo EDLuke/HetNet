@@ -1,20 +1,28 @@
 package android_network.hetnet;
 
 import android.content.Context;
+<<<<<<< HEAD
 import android.graphics.Typeface;
+=======
+import android.net.Uri;
+>>>>>>> parent of ff2bf1e... Added TrafficStats to SystemManager and improved the UI to use expandable list
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+<<<<<<< HEAD
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
+=======
+>>>>>>> parent of ff2bf1e... Added TrafficStats to SystemManager and improved the UI to use expandable list
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -22,11 +30,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+=======
+>>>>>>> parent of ff2bf1e... Added TrafficStats to SystemManager and improved the UI to use expandable list
 import android_network.hetnet.common.trigger_events.UITriggerEvent;
 import android_network.hetnet.data.DataStoreObject;
 import android_network.hetnet.data.PolicyEngineData;
-import android_network.hetnet.system.ApplicationList;
-import android_network.hetnet.system.SystemList;
 import android_network.hetnet.ui.TabFragment.OnFragmentInteractionListener;
 
 import static android_network.hetnet.common.Constants.POLICY_ENGINE;
@@ -36,8 +44,12 @@ public class SystemManagerFragment extends Fragment {
 
   private OnFragmentInteractionListener mListener;
 
+<<<<<<< HEAD
   ExpandableListView m_systemLogs;
   SystemExpandableListAdapter m_systemLogsAdapter;
+=======
+  TextView m_systemLogs;
+>>>>>>> parent of ff2bf1e... Added TrafficStats to SystemManager and improved the UI to use expandable list
 
   public SystemManagerFragment() {
     // Required empty public constructor
@@ -59,6 +71,7 @@ public class SystemManagerFragment extends Fragment {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
+
     //register to event bus
     EventBus.getDefault().register(this);
   }
@@ -71,7 +84,15 @@ public class SystemManagerFragment extends Fragment {
     View view = inflater.inflate(R.layout.fragment_system_manager, container, false);
 
     //Hoop up with UI
+<<<<<<< HEAD
     m_systemLogs = (ExpandableListView) (view.findViewById(R.id.system_logs));
+=======
+    m_systemLogs = (TextView)(view.findViewById(R.id.system_logs));
+
+    if(savedInstanceState != null){
+      m_systemLogs.setText(savedInstanceState.getString(SYSTEM_FRAGMENT_LOG));
+    }
+>>>>>>> parent of ff2bf1e... Added TrafficStats to SystemManager and improved the UI to use expandable list
 
     return view;
   }
@@ -93,13 +114,12 @@ public class SystemManagerFragment extends Fragment {
     mListener = null;
   }
 
-  //Source:
-  //http://www.androidhive.info/2013/07/android-expandable-list-view-tutorial/
   @Subscribe(threadMode = ThreadMode.MAIN)
   public void onMessageEvent(UITriggerEvent event) {
     if (event.getEventOriginator().equals(POLICY_ENGINE)) {
       DataStoreObject data = ((PolicyEngineData) (event.getEvent())).getDataStoreObject();
 
+<<<<<<< HEAD
       SystemList currentList = data.getSystemList();
       HashMap<Integer, ApplicationList> currentAppList = currentList.getApplicationList();
 
@@ -228,6 +248,10 @@ public class SystemManagerFragment extends Fragment {
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
       return true;
+=======
+      String dataString = String.format("%s\t%s\t%s\n", data.getApplicationID(), data.getApplicationType(), event.getTimeOfEvent().toString());
+      m_systemLogs.append(dataString);
+>>>>>>> parent of ff2bf1e... Added TrafficStats to SystemManager and improved the UI to use expandable list
     }
   }
 

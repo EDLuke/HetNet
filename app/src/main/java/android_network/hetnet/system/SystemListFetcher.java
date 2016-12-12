@@ -187,7 +187,7 @@ public class SystemListFetcher extends IntentService {
     ret[0] = memoryInfo[0].getTotalPrivateClean();
     ret[1] = memoryInfo[0].getTotalPrivateDirty();
     ret[2] = memoryInfo[0].getTotalPss();
-    ret[3] = memoryInfo[0].getTotalUss();
+    //ret[3] = memoryInfo[0].getTotalUss();
 
     return ret;
   }
