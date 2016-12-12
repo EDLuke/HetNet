@@ -2,8 +2,21 @@ package android_network.hetnet.network;
 
 import android.app.Activity;
 import android.net.TrafficStats;
+import android.net.Uri;
+import android.os.Bundle;
+import android.util.Log;
 
+import com.facebook.network.connectionclass.ConnectionClassManager;
+import com.facebook.network.connectionclass.ConnectionQuality;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 
 import android_network.hetnet.data.Network;
 
@@ -23,28 +36,15 @@ public class NetworkAdditionalInfo extends Activity {
 
   }
 
-  public static double getNetworkSpeed(Network network) {
+  public static String getNetworkSpeed(Network network) {
 
-    double rate;
+    String speed = "N/A";
 
-    if (network.isPossibleToConnect()) {
-      //ConnectionClassManager cq = ConnectionClassManager.getInstance();
-      //rate = cq.getDownloadKBitsPerSecond();
-
-      long mStartRX = TrafficStats.getTotalRxBytes();
-      long mStartTX = TrafficStats.getTotalTxBytes();
-
-      rate = mStartTX - mStartTX;
-
-
-    } else {
-      rate = 1;
-    }
-
-    return rate;
+    return speed;
 
 
   }
+
 
 
 }

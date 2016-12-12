@@ -3,14 +3,18 @@ package android_network.hetnet.cloud;
 import android.app.IntentService;
 import android.content.Intent;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.net.HttpURLConnection;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.util.*;
+import org.json.*;
+
 
 import android_network.hetnet.data.DataStoreObject;
 import android_network.hetnet.data.Network;
@@ -38,24 +42,24 @@ public class SendCloud extends IntentService {
     HttpURLConnection httpcon;
     Map<String, Object> params = new HashMap<>();
     params.put("ApplicationID", tempdata.getApplicationID());
-    params.put("ApplicationType", tempdata.getApplicationType());
-    params.put("Latitude", tempdata.getLatitude());
-    params.put("Longtitude", tempdata.getLongitude());
+    params.put("ApplicationType",tempdata.getApplicationType());
+    params.put("Latitude",tempdata.getLatitude());
+    params.put("Longtitude",tempdata.getLongitude());
     JSONObject holder = new JSONObject(params);
     JSONArray networks = new JSONArray();
-    for (Network network : tempdata.getListOfNetworks()) {
+    for(Network network : tempdata.getListOfNetworks()){
       Map<String, Object> temp = new HashMap<>();
-      temp.put("Bandwidth", network.getBandwidth());
-      temp.put("Cost", network.getCost());
-      temp.put("NetworkSSID", network.getNetworkSSID());
-      temp.put("SecurityProtocol", network.getSecurityProtocol());
-      temp.put("SignalFrequency", network.getSignalFrequency());
-      temp.put("TimeToConnect", network.getTimeToConnect());
-      temp.put("SignalStrength", network.getSignalStrength());
+      temp.put("Bandwidth",network.getBandwidth());
+      temp.put("Cost",network.getCost());
+      temp.put("NetworkSSID",network.getNetworkSSID());
+      temp.put("SecurityProtocol",network.getSecurityProtocol());
+      temp.put("SignalFrequency",network.getSignalFrequency());
+      temp.put("TimeToConnect",network.getTimeToConnect());
+      temp.put("SignalStrength",network.getSignalStrength());
       networks.put(new JSONObject(temp));
     }
     try {
-      holder.put("Networks", networks);
+      holder.put("Networks",networks);
     } catch (JSONException e) {
       e.printStackTrace();
     }

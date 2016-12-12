@@ -8,7 +8,10 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
+import android.net.wifi.WifiConfiguration;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.telephony.CellInfo;
 import android.telephony.CellInfoLte;
@@ -17,21 +20,29 @@ import android.util.Log;
 
 import org.greenrobot.eventbus.EventBus;
 
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import android_network.hetnet.data.Network;
 
+
+import static android.R.id.list;
 import static android_network.hetnet.common.Constants.NETWORK_LIST_FETCHER;
+import static java.lang.System.currentTimeMillis;
 
 public class NetworkListFetcher extends IntentService {
   private final String LOG_TAG = "NETWORK_LIST_FETCHER";
 
-  WifiManager wifiManager;
+  static WifiManager wifiManager;
   TelephonyManager telephonyManager;
   List<Network> networkList = new ArrayList<>();
   boolean wifiDataReceived = false;
+
+  static long startT;
+  static long endT;
+  static long connectT;
 
   public NetworkListFetcher() {
     super("NetworkListFetcher");
@@ -44,6 +55,7 @@ public class NetworkListFetcher extends IntentService {
 
   @Override
   protected void onHandleIntent(Intent intent) {
+
     getWifiInfo();
     getLTEInfo();
     EventBus.getDefault().post(new NetworkResponseEvent(NETWORK_LIST_FETCHER, networkList, Calendar.getInstance().getTime()));
@@ -56,6 +68,7 @@ public class NetworkListFetcher extends IntentService {
 
     List<CellInfo> cellInfoList = telephonyManager.getAllCellInfo();
 
+    // hypothetical value/connection type ie. 3G -> 1Gbps
     int speedMobile = telephonyManager.getNetworkType();
 
     int i = 1;
@@ -69,21 +82,18 @@ public class NetworkListFetcher extends IntentService {
           network.setNetworkSSID("Other");
         }
 
+        // signal strength
         network.setSignalStrength(((CellInfoLte) cellInfo).getCellSignalStrength().getLevel());
 
-        // TEST THIS
+        // display max value
         network.setBandwidth(speedMobile);
 
-        // need to calculate
-        // NetworkBandwidthCalculator.getNetworkBandwidth(network);
-
-        // need to calculate
+        // TBD
         SecurityManager.checkNetworkConnectivity(network);
 
-        // need to calculate
-        NetworkAdditionalInfo.getTimeToConnect(network);
+        // hardcoded lTE connection immediate
+        network.setTimeToConnect(0);
 
-        // already calculated - check if it gets printed
         network.setCost(getCarrierCost(carrierName));
 
         // hardcoded LTE is not selected
@@ -124,9 +134,12 @@ public class NetworkListFetcher extends IntentService {
     // Getting the WiFi Manager
     wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 
+
+    startT = System.currentTimeMillis();
     // Initiate the network scan
     registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
     wifiManager.startScan();
+
 
     while (!wifiDataReceived) {
       ;
@@ -142,6 +155,7 @@ public class NetworkListFetcher extends IntentService {
   private BroadcastReceiver wifiReceiver = new BroadcastReceiver() {
     // This method is called when number of WiFi connections changed
     public void onReceive(Context context, Intent intent) {
+
       List<ScanResult> wifiList = wifiManager.getScanResults();
 
       // gets maximum network speed
@@ -149,6 +163,7 @@ public class NetworkListFetcher extends IntentService {
 
       int i = 0;
       for (ScanResult result : wifiList) {
+
         Network network = new Network();
 
         //hypothetical value
@@ -170,28 +185,35 @@ public class NetworkListFetcher extends IntentService {
         SecurityManager.checkNetworkConnectivity(network);
 
 
-        NetworkAdditionalInfo.getTimeToConnect(network);
+        // this class not used atm can be removed
+        //NetworkAdditionalInfo.getTimeToConnect(network);
 
 
         network.setCost(0.0);
 
-        /*if (i == 0) {
-          network.setCurrentNetwork(true);
-          network.setPossibleToConnect(true);
-        } else {
-          network.setCurrentNetwork(false);
-          network.setPossibleToConnect(false);
-        }*/
-
         // check if this is current connected network
         isCurrentNet(context, network);
 
+        if (network.isCurrentNetwork())
+        {
+          endT = System.currentTimeMillis();
+          connectT = endT - startT;
 
-        double speed = NetworkAdditionalInfo.getNetworkSpeed(network);
+          network.setTimeToConnect(connectT);
+        }
+        if (!network.isCurrentNetwork())
+        {
+          network.setTimeToConnect(-1);
+        }
 
-        network.setSpeed(speed);
+        // check if network requires password
+        password(network);
+
+        // separate app for speed calculation so N/A right now
+        network.setSpeed(NetworkAdditionalInfo.getNetworkSpeed(network));
 
         networkList.add(network);
+
         i++;
       }
 
@@ -200,22 +222,75 @@ public class NetworkListFetcher extends IntentService {
   };
 
   public static void isCurrentNet(Context context, Network network) {
+    // sets current network variable
+
+    String current_SSID = "";
 
     // get current connected network
     ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-    NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
 
-    // format: "current_SSID"
-    String current_SSID = activeNetwork.getExtraInfo();
+    if (cm!=null)
+    {
+      NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
 
-    // check if network name matches current_SSID
-    if (current_SSID.contains(network.getNetworkSSID())) {
-      network.setCurrentNetwork(true);
-    } else {
-      network.setCurrentNetwork(false);
+      //System.out.println(activeNetwork);
+
+      // format: "current_SSID"
+      current_SSID = activeNetwork.getExtraInfo();
+
+      // check if network name matches current_SSID
+      if (current_SSID.contains(network.getNetworkSSID()))
+      {
+        network.setCurrentNetwork(true);
+
+        // if protocol is [WPA2-PSK..] and you know password
+        network.setPossibleToConnect(true);
+      }
+      else
+      {
+        network.setCurrentNetwork(false);
+      }
+
     }
+
+  }
+
+  public static void password(Network network)
+  {
+    //Checks if network is open (no password required)
+
+    String protocol = network.getSecurityProtocol();
+
+    // if password is needed protocol will be [WPA2-PSK....]
+    if (protocol.contains("[WPA2]") || protocol.contains("[WEP]"))
+    {
+      network.setPossibleToConnect(true);
+
+    }
+  }
+
+  public static long getTimeToConnect(Network network)
+  {
+    // used when more than one network is available for connection
+    long time = 0;
+
+    WifiInfo w = wifiManager.getConnectionInfo();
+
+    int i = w.getNetworkId();
+
+    wifiManager.disconnect();
+    wifiManager.setWifiEnabled(true);
+    wifiManager.enableNetwork(i, true);
+    wifiManager.reconnect();
+
+    System.out.println("HERE:"+ w);
+
+    return time;
 
 
   }
+
+
+
 
 }
