@@ -8,10 +8,8 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
-import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.telephony.CellInfo;
 import android.telephony.CellInfoLte;
@@ -20,17 +18,13 @@ import android.util.Log;
 
 import org.greenrobot.eventbus.EventBus;
 
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import android_network.hetnet.data.Network;
 
-
-import static android.R.id.list;
 import static android_network.hetnet.common.Constants.NETWORK_LIST_FETCHER;
-import static java.lang.System.currentTimeMillis;
 
 public class NetworkListFetcher extends IntentService {
   private final String LOG_TAG = "NETWORK_LIST_FETCHER";
@@ -194,15 +188,13 @@ public class NetworkListFetcher extends IntentService {
         // check if this is current connected network
         isCurrentNet(context, network);
 
-        if (network.isCurrentNetwork())
-        {
+        if (network.isCurrentNetwork()) {
           endT = System.currentTimeMillis();
           connectT = endT - startT;
 
           network.setTimeToConnect(connectT);
         }
-        if (!network.isCurrentNetwork())
-        {
+        if (!network.isCurrentNetwork()) {
           network.setTimeToConnect(-1);
         }
 
@@ -223,54 +215,40 @@ public class NetworkListFetcher extends IntentService {
 
   public static void isCurrentNet(Context context, Network network) {
     // sets current network variable
-
     String current_SSID = "";
 
     // get current connected network
     ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-    if (cm!=null)
-    {
+    if (cm != null) {
       NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-
-      //System.out.println(activeNetwork);
-
       // format: "current_SSID"
       current_SSID = activeNetwork.getExtraInfo();
 
       // check if network name matches current_SSID
-      if (current_SSID.contains(network.getNetworkSSID()))
-      {
+      if (current_SSID.contains(network.getNetworkSSID())) {
         network.setCurrentNetwork(true);
-
         // if protocol is [WPA2-PSK..] and you know password
         network.setPossibleToConnect(true);
-      }
-      else
-      {
+      } else {
         network.setCurrentNetwork(false);
       }
-
     }
-
   }
 
-  public static void password(Network network)
-  {
+  public static void password(Network network) {
     //Checks if network is open (no password required)
 
     String protocol = network.getSecurityProtocol();
 
     // if password is needed protocol will be [WPA2-PSK....]
-    if (protocol.contains("[WPA2]") || protocol.contains("[WEP]"))
-    {
+    if (protocol.contains("[WPA2]") || protocol.contains("[WEP]")) {
       network.setPossibleToConnect(true);
 
     }
   }
 
-  public static long getTimeToConnect(Network network)
-  {
+  public static long getTimeToConnect(Network network) {
     // used when more than one network is available for connection
     long time = 0;
 
@@ -283,14 +261,6 @@ public class NetworkListFetcher extends IntentService {
     wifiManager.enableNetwork(i, true);
     wifiManager.reconnect();
 
-    System.out.println("HERE:"+ w);
-
     return time;
-
-
   }
-
-
-
-
 }

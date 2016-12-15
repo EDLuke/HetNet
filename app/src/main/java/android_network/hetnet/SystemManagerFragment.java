@@ -84,7 +84,7 @@ public class SystemManagerFragment extends Fragment {
       mListener = (OnFragmentInteractionListener) context;
     } else {
       throw new RuntimeException(context.toString()
-              + " must implement OnFragmentInteractionListener");
+        + " must implement OnFragmentInteractionListener");
     }
   }
 
@@ -140,10 +140,10 @@ public class SystemManagerFragment extends Fragment {
 
   //Source:
   //http://stackoverflow.com/questions/18099710/format-string-into-kb-mb-and-gb
-  public static String getFileSize(long size){
+  public static String getFileSize(long size) {
     if (size <= 0)
       return "0";
-    final String[] units = new String[] { "B", "KB", "MB", "GB", "TB" };
+    final String[] units = new String[]{"B", "KB", "MB", "GB", "TB"};
     int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
     return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
   }
@@ -165,7 +165,7 @@ public class SystemManagerFragment extends Fragment {
     @Override
     public Object getChild(int groupPosition, int childPosititon) {
       return this._listDataChild.get(this._listDataHeader.get(groupPosition))
-              .get(childPosititon);
+        .get(childPosititon);
     }
 
     @Override
@@ -181,12 +181,12 @@ public class SystemManagerFragment extends Fragment {
 
       if (convertView == null) {
         LayoutInflater infalInflater = (LayoutInflater) this._context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+          .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         convertView = infalInflater.inflate(R.layout.fragment_system_list_item, null);
       }
 
       TextView txtListChild = (TextView) convertView
-              .findViewById(R.id.system_logs_item);
+        .findViewById(R.id.system_logs_item);
 
       txtListChild.setText(childText);
       return convertView;
@@ -195,7 +195,7 @@ public class SystemManagerFragment extends Fragment {
     @Override
     public int getChildrenCount(int groupPosition) {
       return this._listDataChild.get(this._listDataHeader.get(groupPosition))
-              .size();
+        .size();
     }
 
     @Override
@@ -219,12 +219,12 @@ public class SystemManagerFragment extends Fragment {
       String headerTitle = (String) getGroup(groupPosition);
       if (convertView == null) {
         LayoutInflater infalInflater = (LayoutInflater) this._context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+          .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         convertView = infalInflater.inflate(R.layout.fragment_system_list_header, null);
       }
 
       TextView lblListHeader = (TextView) convertView
-              .findViewById(R.id.system_logs_header);
+        .findViewById(R.id.system_logs_header);
       lblListHeader.setTypeface(null, Typeface.BOLD);
       lblListHeader.setText(headerTitle);
 

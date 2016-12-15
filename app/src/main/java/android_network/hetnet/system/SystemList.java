@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 import android_network.hetnet.common.trigger_events.UITriggerEvent;
 import android_network.hetnet.data.Application;
+
 import static android_network.hetnet.common.Constants.SYSTEM_EVENT_TRACKER;
 
 public class SystemList {
@@ -52,12 +53,12 @@ public class SystemList {
     HashMap<Integer, ApplicationList> applicationList = systemList.getApplicationList();
 
     String maxEntry = "";
-    int    maxCpu   = -1;
+    int maxCpu = -1;
 
     for (HashMap.Entry<Integer, ApplicationList> entry : applicationList.entrySet()) {
       if (maxEntry == null || entry.getValue().getCpuUsage() > maxCpu) {
         maxEntry = entry.getValue().getProcessName();
-        maxCpu   = entry.getValue().getCpuUsage();
+        maxCpu = entry.getValue().getCpuUsage();
       }
     }
 

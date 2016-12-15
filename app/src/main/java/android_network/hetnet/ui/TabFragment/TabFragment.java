@@ -80,7 +80,7 @@ public class TabFragment extends Fragment {
       m_fragment = new ArrayList<Fragment>();
     }
 
-    public void add(Fragment fragment){
+    public void add(Fragment fragment) {
       this.m_fragment.add(fragment);
     }
 
@@ -107,7 +107,7 @@ public class TabFragment extends Fragment {
     @Override
     public CharSequence getPageTitle(int position) {
 
-      switch(m_fragment.get(position).getClass().toString()){
+      switch (m_fragment.get(position).getClass().toString()) {
         case "class android_network.hetnet.SystemManagerFragment":
           return "System";
         case "class android_network.hetnet.NetworkManagerFragment":

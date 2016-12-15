@@ -47,7 +47,7 @@ public class PolicyEngine extends Service {
 
   Location location;
   Application application;
-  SystemList  systemList;
+  SystemList systemList;
   List<Network> networkList;
 
   boolean locationDataReceived = false;
@@ -136,7 +136,7 @@ public class PolicyEngine extends Service {
   public void onMessageEvent(SystemResponseEvent event) {
     systemDataReceived = true;
     application = SystemList.getForegroundApplication(event.getSystemList());
-    systemList  = event.getSystemList();
+    systemList = event.getSystemList();
 
     this.stopService(systemListFetcherService);
 

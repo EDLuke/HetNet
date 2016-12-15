@@ -5,8 +5,8 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.TrafficStats;
-import android.util.Log;
 import android.os.Debug.MemoryInfo;
+import android.util.Log;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -34,7 +34,7 @@ public class SystemListFetcher extends IntentService {
 
   private SystemList m_systemList;
   private ActivityManager m_activityManager;
-  private PackageManager  m_packageManager;
+  private PackageManager m_packageManager;
 
   private static long lastTotalRxBytes;
   private static long lastTotalTxBytes;
@@ -59,7 +59,7 @@ public class SystemListFetcher extends IntentService {
     super.onCreate();
 
     m_activityManager = (ActivityManager) (getSystemService(ACTIVITY_SERVICE));
-    m_packageManager  = getPackageManager();
+    m_packageManager = getPackageManager();
     m_runningAppProcessInfos = m_activityManager.getRunningAppProcesses();
 
     if (m_last_applicationListMap == null)
@@ -96,14 +96,14 @@ public class SystemListFetcher extends IntentService {
     }
   }
 
-  private void getBatteryStats(){
+  private void getBatteryStats() {
     //TODO:Multi-thread battery info
     Process p;
     try {
       String[] cmd = {
-              "sh",
-              "-c",
-              "dumpsys batterystats --checkin"};
+        "sh",
+        "-c",
+        "dumpsys batterystats --checkin"};
       p = Runtime.getRuntime().exec(cmd);
       BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
       String line;
@@ -111,7 +111,7 @@ public class SystemListFetcher extends IntentService {
       while ((line = reader.readLine()) != null && !line.equals("")) {
         String lineOutput[] = line.trim().split(",");
 
-        if (lineOutput[3].equals("br")){
+        if (lineOutput[3].equals("br")) {
           int debug = 1;
         }
 
@@ -173,12 +173,12 @@ public class SystemListFetcher extends IntentService {
   /**
    * @param pid Process id
    * @return int[]
-   *    TotalPrivateClean
-   *    TotalPrivateDirty
-   *    TotalPss (Proportional Set Size)
-   *    TotalUss (Unique Set Size)
+   * TotalPrivateClean
+   * TotalPrivateDirty
+   * TotalPss (Proportional Set Size)
+   * TotalUss (Unique Set Size)
    */
-  private int[] getMemoryStats(int pid){
+  private int[] getMemoryStats(int pid) {
     int pids[] = new int[1];
     pids[0] = pid;
     MemoryInfo[] memoryInfo = m_activityManager.getProcessMemoryInfo(pids);
@@ -241,9 +241,9 @@ public class SystemListFetcher extends IntentService {
 
         //Also set the name here
         String app_name = "";
-        try{
+        try {
           app_name = m_packageManager.getApplicationLabel(m_packageManager.getApplicationInfo(m_packageManager.getNameForUid(processInfo.uid), 0)).toString();
-        }catch (PackageManager.NameNotFoundException e){
+        } catch (PackageManager.NameNotFoundException e) {
           app_name = processInfo.processName;
         }
 
@@ -264,9 +264,9 @@ public class SystemListFetcher extends IntentService {
     HashMap<String, Integer> ret = new HashMap<>();
     try {
       String[] cmd = {
-              "sh",
-              "-c",
-              "top -n 1"};
+        "sh",
+        "-c",
+        "top -n 1"};
       p = Runtime.getRuntime().exec(cmd);
       BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
       String line = reader.readLine();
@@ -317,7 +317,7 @@ public class SystemListFetcher extends IntentService {
 
       long idle1 = Long.parseLong(toks[4]);
       long cpu1 = Long.parseLong(toks[2]) + Long.parseLong(toks[3]) + Long.parseLong(toks[5])
-              + Long.parseLong(toks[6]) + Long.parseLong(toks[7]) + Long.parseLong(toks[8]);
+        + Long.parseLong(toks[6]) + Long.parseLong(toks[7]) + Long.parseLong(toks[8]);
 
 
       // Go to the next line and parse data for a second CPU if there
@@ -329,7 +329,7 @@ public class SystemListFetcher extends IntentService {
 
       long idle2 = Long.parseLong(toks[4]);
       long cpu2 = Long.parseLong(toks[2]) + Long.parseLong(toks[3]) + Long.parseLong(toks[5])
-              + Long.parseLong(toks[6]) + Long.parseLong(toks[7]) + Long.parseLong(toks[8]);
+        + Long.parseLong(toks[6]) + Long.parseLong(toks[7]) + Long.parseLong(toks[8]);
 
       // CPU Usage Percentage is CPU usage cycles / Total CPU cycles (idles and processing)
       return (float) (cpu2 - cpu1) / ((cpu2 + idle2) - (cpu1 + idle1));

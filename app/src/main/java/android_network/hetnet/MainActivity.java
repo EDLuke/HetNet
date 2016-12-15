@@ -22,7 +22,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import android_network.hetnet.common.trigger_events.TriggerEvent;
 import android_network.hetnet.common.trigger_events.UITriggerEvent;
-import android_network.hetnet.data.DataStoreObject;
 import android_network.hetnet.data.PolicyEngineData;
 import android_network.hetnet.data.PolicyVector;
 import android_network.hetnet.policy_engine.PolicyEngine;
@@ -56,9 +55,9 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    m_eventList = (TextView)findViewById(R.id.event_list);
-    m_policyRuleVector = (TextView)findViewById(R.id.policy_rule_vector);
-    m_currentStateVector = (TextView)findViewById(R.id.current_state_vector);
+    m_eventList = (TextView) findViewById(R.id.event_list);
+    m_policyRuleVector = (TextView) findViewById(R.id.policy_rule_vector);
+    m_currentStateVector = (TextView) findViewById(R.id.current_state_vector);
 
     fragmentManager = getSupportFragmentManager();
     FragmentTransaction firstTransaction = fragmentManager.beginTransaction();
@@ -117,9 +116,9 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
         m_eventList.setText(event.getEvent() + " event received from " + event.getEventOriginator() + " at " + event.getTimeOfEvent());
         break;
       case POLICY_ENGINE:
-        PolicyVector ruleVector         = ((PolicyEngineData)(event.getEvent())).getRuleVector();
-        PolicyVector currentStateVector = ((PolicyEngineData)(event.getEvent())).getCurrentStateVector();
-        String ruleVectorString         = getRuleVectorToString(ruleVector);
+        PolicyVector ruleVector = ((PolicyEngineData) (event.getEvent())).getRuleVector();
+        PolicyVector currentStateVector = ((PolicyEngineData) (event.getEvent())).getCurrentStateVector();
+        String ruleVectorString = getRuleVectorToString(ruleVector);
         String currentStateVectorString = getCurrentVectorToString(currentStateVector);
 
         m_policyRuleVector.setText(ruleVectorString);
@@ -127,10 +126,10 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
         break;
       case SYSTEM_EVENT_TRACKER:
         NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.ic_icon)
-                        .setContentTitle("HetNet")
-                        .setContentText(event.getEvent().toString());
+          new NotificationCompat.Builder(this)
+            .setSmallIcon(R.drawable.ic_icon)
+            .setContentTitle("HetNet")
+            .setContentText(event.getEvent().toString());
 
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         // mId allows you to update the notification later on.
@@ -141,9 +140,9 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
     }
   }
 
-  private String getRuleVectorToString(PolicyVector data){
+  private String getRuleVectorToString(PolicyVector data) {
     StringBuilder builder_rule = new StringBuilder();
-    builder_rule.append("policy rule vector: <");
+    builder_rule.append("Policy Rule Vector: <");
     builder_rule.append(data.getApplicationID()).append(" , ");
     builder_rule.append(data.getApplicationType()).append(" , ");
     builder_rule.append(data.getLatitude()).append(" , ");
@@ -153,9 +152,9 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
     return String.valueOf(builder_rule);
   }
 
-  private String getCurrentVectorToString(PolicyVector data){
+  private String getCurrentVectorToString(PolicyVector data) {
     StringBuilder builder_current = new StringBuilder();
-    builder_current.append("current state vector: <");
+    builder_current.append("Current State Vector: <");
     builder_current.append(data.getApplicationID()).append(" , ");
     builder_current.append(data.getApplicationType()).append(" , ");
     builder_current.append(data.getLatitude()).append(" , ");
@@ -164,7 +163,6 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
 
     return String.valueOf(builder_current);
   }
-
 
 
   @Override
