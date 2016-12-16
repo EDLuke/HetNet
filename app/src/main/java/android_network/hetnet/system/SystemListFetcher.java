@@ -16,7 +16,9 @@ import java.io.InputStreamReader;
 import java.io.RandomAccessFile;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import static android_network.hetnet.common.Constants.SYSTEM_LIST_FETCHER;
 
@@ -79,7 +81,7 @@ public class SystemListFetcher extends IntentService {
     initializeApplicationList();
 
     getCpuUsage();
-    //getBatteryStats(); //TODO:Finish deciphering batterystats
+    getBatteryStats();
     getMemoryStats();
     getTrafficStats();
 
@@ -98,21 +100,83 @@ public class SystemListFetcher extends IntentService {
 
   private void getBatteryStats() {
     //TODO:Multi-thread battery info
+    /*Uid*/
+    HashMap<Integer, double[]> powerMap_uid = new HashMap<>();
+
+      /*For components*/
+    HashMap<String, double[]>  powerMap_components = new HashMap<>();
+
     Process p;
     try {
       String[] cmd = {
         "sh",
         "-c",
-        "dumpsys batterystats --checkin"};
+        "dumpsys batterystats"};
       p = Runtime.getRuntime().exec(cmd);
       BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
       String line;
 
-      while ((line = reader.readLine()) != null && !line.equals("")) {
-        String lineOutput[] = line.trim().split(",");
+      boolean parsePower    = false;
+      boolean parsePercent  = false;
 
-        if (lineOutput[3].equals("br")) {
-          int debug = 1;
+      /*Read from Estimated power use:
+      * to
+      * All kernel wake locks
+      * mAh values then percentage values */
+      while ((line = reader.readLine()) != null) {
+        //Skip the next line (empty)
+        reader.readLine();
+
+        if(line.contains("Estimated power use") && !parsePower){
+          parsePower = true;
+          continue;
+        }
+        else if((line.contains("All kernel wake locks") || line.trim().split(":").length != 2) && parsePower) {
+          parsePower = false;
+          parsePercent = true;
+        }
+
+        if(!parsePower)
+          continue;
+        else {
+          int valueIndex = parsePercent ? 1 : 0;
+          String lineOutput[] = line.trim().split(":");
+          if(lineOutput.length == 2){
+            double value = Double.parseDouble(lineOutput[1].trim());
+
+            if(lineOutput[0].contains("Uid")){ //UID
+              int uid = -1;
+              if(lineOutput[0].contains("u0a")){
+                uid = 10000 + Integer.parseInt(lineOutput[0].substring(7));
+              }
+              else{
+                uid = Integer.parseInt(lineOutput[0].substring(4));
+              }
+
+              double[] values = powerMap_uid.get(uid);
+              if(values == null){
+                values = new double[2];
+                values[valueIndex] = value;
+                values[valueIndex ^ 1] = 0;
+                powerMap_uid.put(uid, values);
+              }
+              else{
+                values[valueIndex] = value;
+              }
+            }else{ //Component
+              String component = lineOutput[0];
+              double[] values = powerMap_components.get(component);
+              if(values == null){
+                values = new double[2];
+                values[valueIndex] = value;
+                values[valueIndex ^ 1] = 0;
+                powerMap_components.put(component, values);
+              }
+              else{
+                values[valueIndex] = value;
+              }
+            }
+          }
         }
 
       }
@@ -120,6 +184,23 @@ public class SystemListFetcher extends IntentService {
     } catch (IOException e) {
       Log.e(LOG_TAG, "Error reading process\n" + e.toString());
     }
+
+    Iterator<Map.Entry<Integer, double[]>> powerMap_uid_it = powerMap_uid.entrySet().iterator();
+
+
+    while(powerMap_uid_it.hasNext()) {
+      Map.Entry<Integer, double[]> pair = powerMap_uid_it.next();
+      ApplicationList list = m_applicationListMap.get(pair.getKey());
+
+      if (list == null) {
+        Log.v(LOG_TAG, "" + pair.getKey());
+        continue;
+      }
+
+      list.setBatteryMah((pair.getValue())[0]);
+      list.setBatteryPercent((pair.getValue())[1]);
+    }
+
   }
 
   //Source:

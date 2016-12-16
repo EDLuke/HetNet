@@ -125,6 +125,9 @@ public class SystemManagerFragment extends Fragment {
         applicationData.add("Private Dirty: " + getFileSize(applicationList.getPrivateDirty()));
         applicationData.add("PSS: " + getFileSize(applicationList.getPss()));
         applicationData.add("USS: " + getFileSize(applicationList.getUss()));
+        applicationData.add("Battery mAh: " + applicationList.getBatteryMah());
+        applicationData.add("Battery %: " + applicationList.getBatteryPercent() + "%");
+
 
         listDataChild.put(applicationList.getProcessName(), applicationData);
 

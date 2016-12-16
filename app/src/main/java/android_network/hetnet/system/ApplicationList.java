@@ -15,6 +15,10 @@ public class ApplicationList {
   private int pss = -1;
   private int uss = -1;
 
+  /*Battery Info*/
+  private double batteryMah     = -1;
+  private double batteryPercent = -1;
+
   private int cpuUsage = -1;
 
   public long getRxBytes() {
@@ -119,5 +123,21 @@ public class ApplicationList {
 
   public void setUss(int uss) {
     this.uss = uss;
+  }
+
+  public double getBatteryMah() {
+    return batteryMah;
+  }
+
+  public void setBatteryMah(double batteryMah) {
+    this.batteryMah = batteryMah;
+  }
+
+  public double getBatteryPercent() {
+    return batteryPercent;
+  }
+
+  public void setBatteryPercent(double batteryPercent) {
+    this.batteryPercent = batteryPercent;
   }
 }
