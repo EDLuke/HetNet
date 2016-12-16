@@ -6,13 +6,13 @@
               android:weightSum="1">
 
     <TextView
-        android:text="Name"
+        android:text="@string/name_title"
         android:layout_width="match_parent"
         android:layout_height="58dp"
         android:id="@+id/package_name_textview"/>
 
     <TextView
-        android:text="PID"
+        android:text="@string/pid_title"
         android:layout_width="match_parent"
         android:layout_height="58dp"
         android:id="@+id/pid_textview"/>
@@ -23,7 +23,7 @@
         android:layout_height="62dp">
 
         <TextView
-            android:text="Delvik Private Mem"
+            android:text="@string/delvik_private_mem_title"
             android:layout_width="125dp"
             android:layout_height="36dp"
             android:id="@+id/delvik_private"/>
@@ -32,8 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="42dp"
             android:id="@+id/delvik_private_val"
-            android:gravity="right"/>
-
+            android:gravity="end"/>
     </LinearLayout>
 
     <LinearLayout
@@ -42,7 +41,7 @@
         android:layout_height="55dp">
 
         <TextView
-            android:text="Delvik Shared Mem"
+            android:text="@string/delvik_shared_mem_title"
             android:layout_width="125dp"
             android:layout_height="36dp"
             android:id="@+id/delvik_shared"/>
@@ -51,8 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="42dp"
             android:id="@+id/delvik_shared_val"
-            android:gravity="right"/>
-
+            android:gravity="end"/>
     </LinearLayout>
 
     <LinearLayout
@@ -61,7 +59,7 @@
         android:layout_height="50dp">
 
         <TextView
-            android:text="Delvik PSS"
+            android:text="@string/delvik_pss_title"
             android:layout_width="125dp"
             android:layout_height="36dp"
             android:id="@+id/delvik_pss"/>
@@ -70,8 +68,7 @@
             android:layout_width="match_parent"
             android:layout_height="42dp"
             android:id="@+id/delvik_pss_val"
-            android:gravity="right"/>
-
+            android:gravity="end"/>
     </LinearLayout>
 
     <LinearLayout
@@ -80,7 +77,7 @@
         android:layout_height="55dp">
 
         <TextView
-            android:text="Native Private"
+            android:text="@string/native_private_title"
             android:layout_width="125dp"
             android:layout_height="36dp"
             android:id="@+id/native_private"/>
@@ -89,8 +86,7 @@
             android:layout_width="match_parent"
             android:layout_height="42dp"
             android:id="@+id/native_private_val"
-            android:gravity="right"/>
-
+            android:gravity="end"/>
     </LinearLayout>
 
     <LinearLayout
@@ -99,7 +95,7 @@
         android:layout_height="55dp">
 
         <TextView
-            android:text="Native Private Mem"
+            android:text="@string/native_private_mem_title"
             android:layout_width="125dp"
             android:layout_height="36dp"
             android:id="@+id/native_shared"/>
@@ -108,8 +104,7 @@
             android:layout_width="match_parent"
             android:layout_height="42dp"
             android:id="@+id/native_shared_val"
-            android:gravity="right"/>
-
+            android:gravity="end"/>
     </LinearLayout>
 
     <LinearLayout
@@ -118,7 +113,7 @@
         android:layout_height="55dp">
 
         <TextView
-            android:text="Native PSS Mem"
+            android:text="@string/native_pss_mem_title"
             android:layout_width="125dp"
             android:layout_height="36dp"
             android:id="@+id/native_pss"/>
@@ -127,8 +122,7 @@
             android:layout_width="match_parent"
             android:layout_height="42dp"
             android:id="@+id/native_pss_val"
-            android:gravity="right"/>
-
+            android:gravity="end"/>
     </LinearLayout>
 
     <LinearLayout
@@ -137,7 +131,7 @@
         android:layout_height="55dp">
 
         <TextView
-            android:text="Total Mem"
+            android:text="@string/total_mem_title"
             android:layout_width="125dp"
             android:layout_height="36dp"
             android:id="@+id/total_mem"/>
@@ -146,9 +140,6 @@
             android:layout_width="match_parent"
             android:layout_height="42dp"
             android:id="@+id/total_mem_val"
-            android:gravity="right"/>
-
+            android:gravity="end"/>
     </LinearLayout>
-
-
 </LinearLayout>

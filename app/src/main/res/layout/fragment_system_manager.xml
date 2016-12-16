@@ -10,5 +10,4 @@
         android:layout_height="wrap_content"
         android:freezesText="true"
         android:id="@+id/system_logs"/>
-
 </LinearLayout>

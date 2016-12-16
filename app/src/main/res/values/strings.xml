@@ -15,4 +15,26 @@
     <string name="uid_title">UID</string>
     <string name="my_address">My Address</string>
     <string name="current_address">Current Address</string>
+    <string name="add_policy_button_text">Add a Network Policy</string>
+    <string name="event_title_text">Event :</string>
+    <string name="policy_rule_vector_title">Policy Rule Vector:</string>
+    <string name="current_state_vector_title">Current State Vector:</string>
+    <string name="range_selector_title">Please choose a range</string>
+    <string name="button_submit_text">Submit</string>
+    <string name="name_title">Name</string>
+    <string name="delvik_private_mem_title">Delvik Private Mem</string>
+    <string name="delvik_shared_mem_title">Delvik Shared Mem</string>
+    <string name="delvik_pss_title">Delvik PSS</string>
+    <string name="native_private_title">Native Private</string>
+    <string name="native_private_mem_title">Native Private Mem</string>
+    <string name="native_pss_mem_title">Native PSS Mem</string>
+    <string name="total_mem_title">Total Mem</string>
+    <string name="policy_engine_button_text">GO TO POLICY ENGINE</string>
+    <string name="policy_group_title">I want to add a</string>
+    <string name="show_policy_options_text">GO</string>
+    <string-array name="policy_groups">
+        <item>General Level Policy</item>
+        <item>Application Type Level Policy</item>
+        <item>Application Specific Policy</item>
+    </string-array>
 </resources>

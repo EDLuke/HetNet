@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:paddingBottom="@dimen/activity_vertical_margin"
+              android:paddingLeft="@dimen/activity_horizontal_margin"
+              android:paddingRight="@dimen/activity_horizontal_margin"
+              android:paddingTop="@dimen/activity_vertical_margin"
+              tools:context="android_network.hetnet.AddPolicyActivity"
+              android:orientation="vertical">
+
+    <Button
+        android:id="@+id/policy_engine_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/policy_engine_button_text"
+        android:onClick="showPolicyEnginePage"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/policy_group_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/policy_group_title"/>
+
+        <Spinner
+            android:id="@+id/policy_group_options"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/policy_group_title"
+            android:entries="@array/policy_groups"/>
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/show_policy_options"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/show_policy_options_text"
+        android:onClick="showAddPolicyOptions"/>
+</LinearLayout>

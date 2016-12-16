@@ -14,6 +14,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -167,5 +168,15 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
 
   @Override
   public void onFragmentInteraction(Uri uri) {
+  }
+
+  public void showAddPolicyPage(View view) {
+    Intent intent = new Intent(this, AddPolicyActivity.class);
+    startActivity(intent);
+  }
+
+  @Override
+  public void onBackPressed() {
+    moveTaskToBack(true);
   }
 }

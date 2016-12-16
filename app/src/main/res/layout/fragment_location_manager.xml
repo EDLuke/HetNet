@@ -26,36 +26,28 @@
             <TableLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/LocationNetworks">
-
-            </TableLayout>
+                android:id="@+id/LocationNetworks"/>
 
             <TextView
-                android:text="Please choose a range"
+                android:text="@string/range_selector_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/status"
-                android:layout_marginTop="21dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true"/>
+                android:layout_marginTop="21dp"/>
 
             <Spinner
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/rangeselector"
-                android:layout_below="@+id/status"
                 android:layout_marginTop="11dp"/>
 
             <Button
-                android:text="Submit"
+                android:text="@string/button_submit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/submitLocationNetworks"
-                android:layout_below="@+id/rangeselector"
-                android:layout_alignParentEnd="true"
                 android:layout_marginEnd="15dp"
                 android:layout_marginTop="33dp"/>
         </LinearLayout>
     </ScrollView>
-
 </LinearLayout>

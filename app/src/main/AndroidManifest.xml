@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
           package="android_network.hetnet">
@@ -14,8 +13,6 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.GET_TASKS"/>
     <uses-permission android:name="android.permission.INTERNET"/>
-
-
     <uses-permission
         android:name="android.permission.PACKAGE_USAGE_STATS"
         tools:ignore="ProtectedPermissions"/>
@@ -26,61 +23,55 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
+
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
         <activity android:name=".system.system_old.SystemManagerActivity"/>
-        <!--<activity android:name=".location.LocationManagerActivity"/>-->
+        <!-- <activity android:name=".location.LocationManagerActivity"/> -->
         <activity android:name=".system.system_old.ProcessDetailActivity"/>
 
         <service
             android:name=".policy_engine.PolicyEngine"
             android:exported="false"/>
-
         <service
             android:name=".network.NetworkListFetcher"
             android:exported="false"/>
-
         <service
             android:name=".network.NetworkEventTracker"
             android:exported="false"/>
-
         <service
             android:name=".system.SystemListFetcher"
             android:exported="false"/>
-
         <service
             android:name=".system.SystemEventTracker"
             android:exported="false"/>
-
         <service
             android:name=".location.LocationEventTracker"
             android:exported="false"/>
-
         <service
             android:name=".location.LocationFetcher"
             android:exported="false"/>
-
         <service
             android:name=".cloud.SendCloud"
             android:exported="false"/>
 
         <uses-feature
             android:name="android.hardware.nfc"
-            android:required="true"/><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
-     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+            android:required="true"/>
+        <!--
+ ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
+        -->
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"/>
+
+        <activity android:name=".AddPolicyActivity">
+        </activity>
     </application>
 
 </manifest>
-
-
-
-

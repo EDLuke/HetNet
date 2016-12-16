@@ -10,40 +10,34 @@
               tools:context="android_network.hetnet.MainActivity"
               android:orientation="vertical">
 
-    <TextView
-        android:text="Event :"
+    <Button
+        android:id="@+id/add_policy_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/event_list"
-        />
+        android:text="@string/add_policy_button_text"
+        android:onClick="showAddPolicyPage"/>
 
     <TextView
-        android:text="policy rule vector:"
+        android:text="@string/event_title_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/policy_rule_vector"
-        android:layout_below="@id/event_list"/>
+        android:id="@+id/event_list"/>
 
     <TextView
-        android:text="current state vector:"
+        android:text="@string/policy_rule_vector_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/current_state_vector"
-        android:layout_below="@id/policy_rule_vector"/>
+        android:id="@+id/policy_rule_vector"/>
+
+    <TextView
+        android:text="@string/current_state_vector_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/current_state_vector"/>
 
     <RelativeLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/containerView"
-        android:layout_below="@id/current_state_vector">
-    </RelativeLayout>
-
-
+        android:id="@+id/containerView"/>
 </LinearLayout>
