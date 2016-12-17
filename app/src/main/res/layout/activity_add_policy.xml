@@ -41,4 +41,124 @@
         android:layout_height="wrap_content"
         android:text="@string/show_policy_options_text"
         android:onClick="showAddPolicyOptions"/>
+
+    <TextView
+        android:id="@+id/policy_option_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/policy_option_text"
+        android:visibility="invisible"/>
+
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/wifi_only_option"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/wifi_only_option_text"
+            android:visibility="invisible"/>
+
+        <RadioButton
+            android:id="@+id/cellular_only_option"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cellular_only_text"
+            android:visibility="invisible"/>
+    </RadioGroup>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:id="@+id/application_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible">
+
+            <TextView
+                android:id="@+id/application_type_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/application_types_text"/>
+
+            <CheckBox
+                android:id="@+id/messaging"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/application_type_text"
+                android:text="@string/messaging"/>
+
+            <CheckBox
+                android:id="@+id/video"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/messaging"
+                android:text="@string/video"/>
+
+            <CheckBox
+                android:id="@+id/web_browser"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/video"
+                android:text="@string/web_browser"/>
+
+            <CheckBox
+                android:id="@+id/banking"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/web_browser"
+                android:text="@string/banking"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/application"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible">
+
+            <TextView
+                android:id="@+id/application_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/application"/>
+
+            <CheckBox
+                android:id="@+id/youtube"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/application_text"
+                android:text="@string/youtube"/>
+
+            <CheckBox
+                android:id="@+id/vudu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/youtube"
+                android:text="@string/vudu"/>
+
+            <CheckBox
+                android:id="@+id/chrome"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/vudu"
+                android:text="@string/google_chrome"/>
+
+            <CheckBox
+                android:id="@+id/bofa"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/chrome"
+                android:text="@string/bank_of_america"/>
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/add_policy_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_policy_button"
+        android:visibility="invisible"/>
 </LinearLayout>

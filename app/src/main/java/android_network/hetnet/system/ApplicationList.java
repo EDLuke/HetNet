@@ -16,7 +16,7 @@ public class ApplicationList {
   private int uss = -1;
 
   /*Battery Info*/
-  private double batteryMah     = -1;
+  private double batteryMah = -1;
   private double batteryPercent = -1;
 
   private int cpuUsage = -1;

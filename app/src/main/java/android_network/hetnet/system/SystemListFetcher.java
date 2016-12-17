@@ -104,7 +104,7 @@ public class SystemListFetcher extends IntentService {
     HashMap<Integer, double[]> powerMap_uid = new HashMap<>();
 
       /*For components*/
-    HashMap<String, double[]>  powerMap_components = new HashMap<>();
+    HashMap<String, double[]> powerMap_components = new HashMap<>();
 
     Process p;
     try {
@@ -116,8 +116,8 @@ public class SystemListFetcher extends IntentService {
       BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
       String line;
 
-      boolean parsePower    = false;
-      boolean parsePercent  = false;
+      boolean parsePower = false;
+      boolean parsePercent = false;
 
       /*Read from Estimated power use:
       * to
@@ -127,52 +127,48 @@ public class SystemListFetcher extends IntentService {
         //Skip the next line (empty)
         reader.readLine();
 
-        if(line.contains("Estimated power use") && !parsePower){
+        if (line.contains("Estimated power use") && !parsePower) {
           parsePower = true;
           continue;
-        }
-        else if((line.contains("All kernel wake locks") || line.trim().split(":").length != 2) && parsePower) {
+        } else if ((line.contains("All kernel wake locks") || line.trim().split(":").length != 2) && parsePower) {
           parsePower = false;
           parsePercent = true;
         }
 
-        if(!parsePower)
+        if (!parsePower)
           continue;
         else {
           int valueIndex = parsePercent ? 1 : 0;
           String lineOutput[] = line.trim().split(":");
-          if(lineOutput.length == 2){
+          if (lineOutput.length == 2) {
             double value = Double.parseDouble(lineOutput[1].trim());
 
-            if(lineOutput[0].contains("Uid")){ //UID
+            if (lineOutput[0].contains("Uid")) { //UID
               int uid = -1;
-              if(lineOutput[0].contains("u0a")){
+              if (lineOutput[0].contains("u0a")) {
                 uid = 10000 + Integer.parseInt(lineOutput[0].substring(7));
-              }
-              else{
+              } else {
                 uid = Integer.parseInt(lineOutput[0].substring(4));
               }
 
               double[] values = powerMap_uid.get(uid);
-              if(values == null){
+              if (values == null) {
                 values = new double[2];
                 values[valueIndex] = value;
                 values[valueIndex ^ 1] = 0;
                 powerMap_uid.put(uid, values);
-              }
-              else{
+              } else {
                 values[valueIndex] = value;
               }
-            }else{ //Component
+            } else { //Component
               String component = lineOutput[0];
               double[] values = powerMap_components.get(component);
-              if(values == null){
+              if (values == null) {
                 values = new double[2];
                 values[valueIndex] = value;
                 values[valueIndex ^ 1] = 0;
                 powerMap_components.put(component, values);
-              }
-              else{
+              } else {
                 values[valueIndex] = value;
               }
             }
@@ -188,7 +184,7 @@ public class SystemListFetcher extends IntentService {
     Iterator<Map.Entry<Integer, double[]>> powerMap_uid_it = powerMap_uid.entrySet().iterator();
 
 
-    while(powerMap_uid_it.hasNext()) {
+    while (powerMap_uid_it.hasNext()) {
       Map.Entry<Integer, double[]> pair = powerMap_uid_it.next();
       ApplicationList list = m_applicationListMap.get(pair.getKey());
 

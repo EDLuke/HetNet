@@ -32,6 +32,21 @@
     <string name="policy_engine_button_text">GO TO POLICY ENGINE</string>
     <string name="policy_group_title">I want to add a</string>
     <string name="show_policy_options_text">GO</string>
+    <string name="wifi_only_option_text">Connect only to WiFi</string>
+    <string name="cellular_only_text">Connect only to Cellular 4G LTE/3G</string>
+    <string name="policy_option_text">Policy</string>
+    <string name="policy_option_text2">for</string>
+    <string name="add_policy_button">Add Policy</string>
+    <string name="application_types_text">Application Types</string>
+    <string name="messaging">Messaging</string>
+    <string name="video">Video</string>
+    <string name="web_browser">Web Browser</string>
+    <string name="banking">Banking</string>
+    <string name="application">Application</string>
+    <string name="youtube">YouTube</string>
+    <string name="vudu">Vudu</string>
+    <string name="google_chrome">Google Chrome</string>
+    <string name="bank_of_america">Bank of America</string>
     <string-array name="policy_groups">
         <item>General Level Policy</item>
         <item>Application Type Level Policy</item>
