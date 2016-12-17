@@ -23,6 +23,14 @@
                 android:freezesText="true"
                 android:id="@+id/location_logs"/>
 
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:text="Name"
+                android:ems="10"
+                android:id="@+id/LocationName" />
+
             <TableLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

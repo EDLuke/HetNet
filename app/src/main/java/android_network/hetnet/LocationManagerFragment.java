@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -21,7 +22,10 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import android_network.hetnet.common.trigger_events.UITriggerEvent;
 import android_network.hetnet.data.DataStoreObject;
@@ -39,8 +43,10 @@ public class LocationManagerFragment extends Fragment {
   TextView m_locationLogs;
   Spinner ranger;
   Button submitLN;
+  EditText namefield;
+  DataStoreObject data;
 
-  List<Network> SSID;
+  List<String> SSID;
 
   /**
    * Use this factory method to create a new instance of
@@ -75,7 +81,7 @@ public class LocationManagerFragment extends Fragment {
     dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     ranger.setAdapter(dataAdapter);
     submitLN = (Button) view.findViewById(R.id.submitLocationNetworks);
-
+    namefield = (EditText) view.findViewById(R.id.LocationName);
     return view;
   }
 
@@ -107,18 +113,25 @@ public class LocationManagerFragment extends Fragment {
   @Subscribe(threadMode = ThreadMode.MAIN)
   public void onMessageEvent(UITriggerEvent event) {
     if (event.getEventOriginator().equals(POLICY_ENGINE)) {
-      DataStoreObject data = ((PolicyEngineData) (event.getEvent())).getDataStoreObject();
+      data = ((PolicyEngineData) (event.getEvent())).getDataStoreObject();
       String dataString = String.format("Longtitude: %.2f\tLatitude:%.2f\t\nTime:%s\n", data.getLongitude(), data.getLatitude(), event.getTimeOfEvent().toString());
       m_locationLogs.setText(dataString);
-      this.tableFormer(data.getListOfNetworks());
+      submitLN.setOnClickListener(submitlisten);
+      // remove duplication
+      List<Network> tempnet = data.getListOfNetworks();
+      HashSet<String>SSIDname = new HashSet<>();
+      for(Network net : tempnet){
+        SSIDname.add(net.getNetworkSSID());
+      }
+      this.tableFormer(new ArrayList<String>(SSIDname));
     }
   }
 
-  private CompoundButton.OnCheckedChangeListener listener = new CompoundButton.OnCheckedChangeListener() {
+  private CompoundButton.OnCheckedChangeListener checklisten = new CompoundButton.OnCheckedChangeListener() {
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
       if (isChecked) {
         // The toggle is enabled
-        SSID.add((Network) buttonView.getTag());
+        SSID.add((String) buttonView.getTag());
       } else {
         // The toggle is disabled
         SSID.remove(buttonView.getTag());
@@ -126,19 +139,34 @@ public class LocationManagerFragment extends Fragment {
     }
   };
 
-  public void tableFormer(List<Network> Networks) {
+  private Button.OnClickListener submitlisten = new Button.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+      String LocationName = namefield.getText().toString();
+      String LocationRange = ranger.getSelectedItem().toString();
+      Map<String, Object> temp = new HashMap<>();
+      temp.put("Name", LocationName);
+      temp.put("Longtitude", data.getLongitude());
+      temp.put("Latitude", data.getLatitude());
+      temp.put("NetworkList", SSID);
+      temp.put("Range", LocationRange);
+      System.out.println(temp.toString());
+    }
+  };
+
+  public void tableFormer(List<String> Networks) {
     int i = 0;
     SSID = new ArrayList<>();
-    for (Network network : Networks) {
+    for (String network : Networks) {
       TableRow row = new TableRow(mycontext);
       TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
       row.setLayoutParams(lp);
       final TextView netstring = new TextView(mycontext);
-      netstring.setText(network.getNetworkSSID());
+      netstring.setText(network);
       final ToggleButton toggle = new ToggleButton(mycontext);
       toggle.setTag(network);
       toggle.setTextOn("Added");
-      toggle.setOnCheckedChangeListener(listener);
+      toggle.setOnCheckedChangeListener(checklisten);
       row.addView(netstring);
       row.addView(toggle);
       LocationNetworks.addView(row, i);
