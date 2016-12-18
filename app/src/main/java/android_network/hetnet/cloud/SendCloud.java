@@ -7,15 +7,32 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import android_network.hetnet.data.Application;
 import android_network.hetnet.data.DataStoreObject;
 import android_network.hetnet.data.Network;
+import android_network.hetnet.system.ApplicationList;
+import android_network.hetnet.system.SystemList;
 
 public class SendCloud extends IntentService {
+  private String PreUrl= "http://35.162.120.177";
+  private String Email="test@test.com";
 
   public SendCloud() {
     super("SendCloud");
@@ -34,37 +51,79 @@ public class SendCloud extends IntentService {
   protected void onHandleIntent(Intent intent) {
     ArrayList<DataStoreObject> dataStoreObjectList = (ArrayList) intent.getSerializableExtra("currentData");
     DataStoreObject tempdata = dataStoreObjectList.get(0);
+    Date curr= Calendar.getInstance().getTime();
+    LocationPoster(tempdata.getLongitude(), tempdata.getLatitude(), curr, Email);
+    NetworkPoster(tempdata.getListOfNetworks(), curr, Email);
+    SystemPoster(tempdata.getSystemList(), curr, Email);
+  }
 
-    HttpURLConnection httpcon;
-    Map<String, Object> params = new HashMap<>();
-    params.put("ApplicationID", tempdata.getApplicationID());
-    params.put("ApplicationType", tempdata.getApplicationType());
-    params.put("Latitude", tempdata.getLatitude());
-    params.put("Longtitude", tempdata.getLongitude());
-    JSONObject holder = new JSONObject(params);
-    JSONArray networks = new JSONArray();
-    for (Network network : tempdata.getListOfNetworks()) {
-      Map<String, Object> temp = new HashMap<>();
-      temp.put("Bandwidth", network.getBandwidth());
-      temp.put("Cost", network.getCost());
-      temp.put("NetworkSSID", network.getNetworkSSID());
-      temp.put("SecurityProtocol", network.getSecurityProtocol());
-      temp.put("SignalFrequency", network.getSignalFrequency());
-      temp.put("TimeToConnect", network.getTimeToConnect());
-      temp.put("SignalStrength", network.getSignalStrength());
-      networks.put(new JSONObject(temp));
-    }
+  private void LocationPoster(double Longtitude, double Latitude, Date current, String Email){
+    Map<String, Object> temp = new HashMap<>();
+    temp.put("Time", current.toString());
+    temp.put("Latitude", Latitude);
+    temp.put("Longtitude", Longtitude);
+    temp.put("Email", Email);
+    JSONObject holder = new JSONObject(temp);
     try {
-      holder.put("Networks", networks);
-    } catch (JSONException e) {
+      CloudPoster(PreUrl+"/location", holder.toString());
+    } catch (Exception e) {
       e.printStackTrace();
     }
+  }
 
-    /*
-    String url = "http://35.162.120.177/policy";
-    String data = holder.toString();
-    String result = null;
+  private void NetworkPoster(List<Network> networks, Date current, String Email){
+    Map<String, Object> temp = new HashMap<>();
+    temp.put("Time", current.toString());
+    temp.put("Email", Email);
+    JSONArray passednetwork = new JSONArray();
+    Set<String> networkClean = new HashSet<>();
+    for(Network net : networks){
+      if(!networkClean.contains(net.getNetworkSSID())){
+        networkClean.add(net.getNetworkSSID());
+        Map<String, Object> tempnet = new HashMap<>();
+        tempnet.put("Bandwidth", net.getBandwidth());
+        tempnet.put("Cost", net.getCost());
+        tempnet.put("NetworkSSID", net.getNetworkSSID());
+        tempnet.put("SecurityProtocol", net.getSecurityProtocol());
+        tempnet.put("SignalFrequency", net.getSignalFrequency());
+        tempnet.put("TimeToConnect", net.getTimeToConnect());
+        tempnet.put("SignalStrength", net.getSignalStrength());
+        passednetwork.put(new JSONObject(tempnet));
+      }
+    }
+    temp.put("Networks", passednetwork);
     try {
+      CloudPoster(PreUrl+"/network", temp.toString());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  private void SystemPoster(SystemList systems, Date current, String Email){
+    Map<String, Object> holder = new HashMap<>();
+    holder.put("Time", current.toString());
+    holder.put("Email", Email);
+    JSONArray applications = new JSONArray();
+    Map<Integer, ApplicationList> temp = systems.getApplicationList();
+    for(ApplicationList app : temp.values()){
+      Map<String, Object> sys = new HashMap<>();
+      sys.put("ProcessName",app.getProcessName());
+      sys.put("CpuUsage", app.getCpuUsage());
+      applications.put(new JSONObject(sys));
+    }
+    holder.put("Applications", applications);
+    try {
+      CloudPoster(PreUrl+"/application", holder.toString());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  private void CloudPoster(String url, String data) throws Exception {
+    System.out.println("\nUrl: "+url+"\nData: "+data+"\n");
+    /*
+      HttpURLConnection httpcon;
+      String result = null;
       //Connect
       httpcon = (HttpURLConnection) ((new URL(url).openConnection()));
       httpcon.setDoOutput(true);
@@ -93,13 +152,7 @@ public class SendCloud extends IntentService {
       br.close();
       result = sb.toString();
       System.out.println(result);
-
-    } catch (UnsupportedEncodingException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    */
+      */
   }
 }
 
