@@ -20,6 +20,7 @@ import android.widget.ToggleButton;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,6 +28,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import android_network.hetnet.cloud.HttpService;
 import android_network.hetnet.common.trigger_events.UITriggerEvent;
 import android_network.hetnet.data.DataStoreObject;
 import android_network.hetnet.data.Network;
@@ -151,6 +153,8 @@ public class LocationManagerFragment extends Fragment {
       temp.put("NetworkList", SSID);
       temp.put("Range", LocationRange);
       System.out.println(temp.toString());
+      JSONObject myjson = new JSONObject(temp);
+      System.out.println(myjson.toString());
     }
   };
 

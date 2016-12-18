@@ -113,11 +113,17 @@ public class SendCloud extends IntentService {
       Map<String, Object> sys = new HashMap<>();
       sys.put("ProcessName",app.getProcessName());
       sys.put("CpuUsage", app.getCpuUsage());
+      sys.put("RxBytes",app.getRxBytes());
+      sys.put("TxBytes",app.getTxBytes());
+      sys.put("PrivateClean",app.getPrivateClean());
+      sys.put("BatteryPercent",app.getBatteryPercent());
+      sys.put("Uss",app.getUss());
+      sys.put("Pss",app.getPss());
       applications.put(new JSONObject(sys));
     }
     holder.put("Applications", applications);
     try {
-      CloudPoster(PreUrl+"/application", holder.toString());
+      CloudPoster(PreUrl+"/system", holder.toString());
     } catch (Exception e) {
       e.printStackTrace();
     }
