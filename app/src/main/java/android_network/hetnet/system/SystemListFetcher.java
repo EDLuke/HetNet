@@ -28,6 +28,7 @@ import static android_network.hetnet.common.Constants.SYSTEM_LIST_FETCHER;
  */
 
 public class SystemListFetcher extends IntentService {
+  private static boolean inProcess = false;
 
   private static final String LOG_TAG = "SystemListFetcher";
 
@@ -85,26 +86,33 @@ public class SystemListFetcher extends IntentService {
     getMemoryStats();
     getTrafficStats();
 
+    //Set the name last
+    getLabelName();
+
     m_systemList.setApplicationList(m_applicationListMap);
     EventBus.getDefault().post(new SystemResponseEvent(SYSTEM_LIST_FETCHER, m_systemList, Calendar.getInstance().getTime()));
   }
 
   private void initializeApplicationList() {
     for (ActivityManager.RunningAppProcessInfo processInfo : m_runningAppProcessInfos) {
-      m_applicationListMap.put(processInfo.uid, new ApplicationList());
+      ApplicationList initialInfo = new ApplicationList();
+      initialInfo.setProcessName(processInfo.processName);
+
+      m_applicationListMap.put(processInfo.uid, initialInfo);
 
       if (m_last_applicationListMap.get(processInfo.uid) == null)
-        m_last_applicationListMap.put(processInfo.uid, new ApplicationList());
+        m_last_applicationListMap.put(processInfo.uid, initialInfo);
     }
   }
 
   private void getBatteryStats() {
-    //TODO:Multi-thread battery info
     /*Uid*/
-    HashMap<Integer, double[]> powerMap_uid = new HashMap<>();
+    HashMap<Integer, Double> powerMap_uid = new HashMap<>();
 
-      /*For components*/
-    HashMap<String, double[]> powerMap_components = new HashMap<>();
+    /*For components*/
+    HashMap<String, Double> powerMap_components = new HashMap<>();
+
+    double  powerSum = 0.0;
 
     Process p;
     try {
@@ -116,32 +124,30 @@ public class SystemListFetcher extends IntentService {
       BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
       String line;
 
-      boolean parsePower = false;
-      boolean parsePercent = false;
+      boolean parsePower       = false;
 
       /*Read from Estimated power use:
       * to
       * All kernel wake locks
       * mAh values then percentage values */
       while ((line = reader.readLine()) != null) {
+        Log.v(LOG_TAG, line);
         //Skip the next line (empty)
         reader.readLine();
 
-        if (line.contains("Estimated power use") && !parsePower) {
+        if (line.contains("Estimated power use") || line.startsWith("Capacity") /*&& parseLastCharged*/ /*&& !parsePower*/) {
           parsePower = true;
           continue;
-        } else if ((line.contains("All kernel wake locks") || line.trim().split(":").length != 2) && parsePower) {
+        } else if ((line.contains("All kernel wake locks") || line.trim().split(":").length != 2) && parsePower)
           parsePower = false;
-          parsePercent = true;
-        }
 
         if (!parsePower)
           continue;
         else {
-          int valueIndex = parsePercent ? 1 : 0;
           String lineOutput[] = line.trim().split(":");
           if (lineOutput.length == 2) {
             double value = Double.parseDouble(lineOutput[1].trim());
+            powerSum += value;
 
             if (lineOutput[0].contains("Uid")) { //UID
               int uid = -1;
@@ -151,26 +157,11 @@ public class SystemListFetcher extends IntentService {
                 uid = Integer.parseInt(lineOutput[0].substring(4));
               }
 
-              double[] values = powerMap_uid.get(uid);
-              if (values == null) {
-                values = new double[2];
-                values[valueIndex] = value;
-                values[valueIndex ^ 1] = 0;
-                powerMap_uid.put(uid, values);
-              } else {
-                values[valueIndex] = value;
-              }
+              powerMap_uid.put(uid, value);
             } else { //Component
               String component = lineOutput[0];
-              double[] values = powerMap_components.get(component);
-              if (values == null) {
-                values = new double[2];
-                values[valueIndex] = value;
-                values[valueIndex ^ 1] = 0;
-                powerMap_components.put(component, values);
-              } else {
-                values[valueIndex] = value;
-              }
+
+              powerMap_components.put(component, value);
             }
           }
         }
@@ -181,20 +172,20 @@ public class SystemListFetcher extends IntentService {
       Log.e(LOG_TAG, "Error reading process\n" + e.toString());
     }
 
-    Iterator<Map.Entry<Integer, double[]>> powerMap_uid_it = powerMap_uid.entrySet().iterator();
-
+    Iterator<Map.Entry<Integer, Double>> powerMap_uid_it = powerMap_uid.entrySet().iterator();
 
     while (powerMap_uid_it.hasNext()) {
-      Map.Entry<Integer, double[]> pair = powerMap_uid_it.next();
+      Map.Entry<Integer, Double> pair = powerMap_uid_it.next();
+
       ApplicationList list = m_applicationListMap.get(pair.getKey());
 
       if (list == null) {
-        Log.v(LOG_TAG, "" + pair.getKey());
+        Log.v(LOG_TAG, "UID :" + pair.getKey() + " is not present");
         continue;
       }
 
-      list.setBatteryMah((pair.getValue())[0]);
-      list.setBatteryPercent((pair.getValue())[1]);
+      list.setBatteryMah(pair.getValue());
+      list.setBatteryPercent(pair.getValue() / powerSum);
     }
 
   }
@@ -240,10 +231,15 @@ public class SystemListFetcher extends IntentService {
     for (ActivityManager.RunningAppProcessInfo processInfo : m_runningAppProcessInfos) {
       int[] memoryStats = getMemoryStats(processInfo.pid);
 
-      m_applicationListMap.get(processInfo.uid).setPrivateClean(memoryStats[0]);
-      m_applicationListMap.get(processInfo.uid).setPrivateDirty(memoryStats[1]);
-      m_applicationListMap.get(processInfo.uid).setPss(memoryStats[2]);
-      m_applicationListMap.get(processInfo.uid).setUss(memoryStats[3]);
+      if(m_applicationListMap.containsKey(processInfo.uid)) {
+        m_applicationListMap.get(processInfo.uid).setPrivateClean(memoryStats[0]);
+        m_applicationListMap.get(processInfo.uid).setPrivateDirty(memoryStats[1]);
+        m_applicationListMap.get(processInfo.uid).setPss(memoryStats[2]);
+        m_applicationListMap.get(processInfo.uid).setUss(memoryStats[3]);
+      }
+      else{
+        Log.e(LOG_TAG, "Missing process " + processInfo.processName + "\t" + processInfo.uid);
+      }
     }
   }
 
@@ -295,6 +291,23 @@ public class SystemListFetcher extends IntentService {
     }
   }
 
+  private void getLabelName(){
+    Iterator<Map.Entry<Integer, ApplicationList>> m_applicationListMap_it = m_applicationListMap.entrySet().iterator();
+
+    while (m_applicationListMap_it.hasNext()) {
+      Map.Entry<Integer, ApplicationList> pair = m_applicationListMap_it.next();
+
+      String app_name = pair.getValue().getProcessName();
+      try {
+        app_name = m_packageManager.getApplicationLabel(m_packageManager.getApplicationInfo(m_packageManager.getNameForUid(pair.getKey()), 0)).toString();
+      } catch (PackageManager.NameNotFoundException e) {
+
+      }
+
+      pair.getValue().setProcessName(app_name);
+    }
+  }
+
   private void getCpuUsage() {
     //Total
     m_systemList.setCpuUsage(cpuUsage());
@@ -303,42 +316,55 @@ public class SystemListFetcher extends IntentService {
     getCpuUsageApplication();
   }
 
-  //TODO:this is some late night hack, please change this
   private void getCpuUsageApplication() {
     //Parse cpu usage from 'top -n 1'
-    HashMap<String, Integer> cpuUsage_app = cpuUsageApplication();
+    //Process name / [0]:UID [1]:Percent
+    HashMap<String, int[]> cpuUsage_app = cpuUsageApplication();
 
-    for (ActivityManager.RunningAppProcessInfo processInfo : m_runningAppProcessInfos) {
-      int percent = cpuUsage_app.containsKey(processInfo.processName) ? cpuUsage_app.get(processInfo.processName) : -1;
+    Iterator<Map.Entry<String, int[]>> cpuUsage_app_it = cpuUsage_app.entrySet().iterator();
 
-      if (m_applicationListMap.containsKey(processInfo.uid)) {
-        /*Only retain the maximum cpu usage*/
-        int currentPercent = m_applicationListMap.get(processInfo.uid).getCpuUsage();
-        m_applicationListMap.get(processInfo.uid).setCpuUsage(currentPercent + percent);
+    while(cpuUsage_app_it.hasNext()){
+      Map.Entry<String, int[]> pair = cpuUsage_app_it.next();
+
+      int uid     = (pair.getValue())[0];
+      int percent = (pair.getValue())[1];
+      String processName = pair.getKey();
+
+      if (m_applicationListMap.containsKey(uid)) { //Update CPU usage for existing entry
+        int currentPercent = m_applicationListMap.get(uid).getCpuUsage();
+        m_applicationListMap.get(uid).setCpuUsage(currentPercent + percent);
 
         //Also set the name here
         String app_name = "";
         try {
-          app_name = m_packageManager.getApplicationLabel(m_packageManager.getApplicationInfo(m_packageManager.getNameForUid(processInfo.uid), 0)).toString();
+          app_name = m_packageManager.getApplicationLabel(m_packageManager.getApplicationInfo(m_packageManager.getNameForUid(uid), 0)).toString();
         } catch (PackageManager.NameNotFoundException e) {
-          app_name = processInfo.processName;
+          app_name = processName;
         }
 
-        m_applicationListMap.get(processInfo.uid).setProcessName(app_name);
-      } else {
+        m_applicationListMap.get(uid).setProcessName(app_name);
+      } else { //Add new entry
         ApplicationList list = new ApplicationList();
         list.setCpuUsage(percent);
-        list.setProcessName(processInfo.processName);
 
-        m_applicationListMap.put(processInfo.uid, list);
+        //Also set the name here
+        String app_name = "";
+        try {
+          app_name = m_packageManager.getApplicationLabel(m_packageManager.getApplicationInfo(m_packageManager.getNameForUid(uid), 0)).toString();
+        } catch (PackageManager.NameNotFoundException e) {
+          app_name = processName;
+        }
+
+        list.setProcessName(app_name);
+
+        m_applicationListMap.put(uid, list);
       }
     }
-
   }
 
-  private HashMap<String, Integer> cpuUsageApplication() {
+  private HashMap<String, int[]> cpuUsageApplication() {
     Process p;
-    HashMap<String, Integer> ret = new HashMap<>();
+    HashMap<String, int[]> ret = new HashMap<>();
     try {
       String[] cmd = {
         "sh",
@@ -362,7 +388,42 @@ public class SystemListFetcher extends IntentService {
 
         int percent = Integer.parseInt(lineOutput[2].substring(0, lineOutput[2].length() - 1));
         String processName = lineOutput[9];
-        ret.put(processName, percent);
+        int uid = -1;
+        switch(lineOutput[8]){
+          case "system":
+            uid = 1000;
+            break;
+          case "media":
+            uid = 1013;
+            break;
+          case "radio":
+            uid = 1001;
+            break;
+          case "gps":
+            uid = 1021;
+            break;
+          case "nfc":
+            uid = 1027;
+            break;
+          case "root":
+            uid = 0;
+        }
+
+        if(uid == -1){
+          if(lineOutput[8].contains("u0_a")){
+            uid = 10000 + Integer.parseInt(lineOutput[8].substring(4));
+          }
+          else{
+            Log.v(LOG_TAG, "Unable to parse " + line);
+          }
+        }
+
+        //uid / percent
+        int[] value = new int[2];
+        value[0] = uid;
+        value[1] = percent;
+
+        ret.put(processName, value);
       }
 
     } catch (IOException e) {

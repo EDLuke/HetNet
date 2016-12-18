@@ -1,10 +1,12 @@
 package android_network.hetnet.policy_engine;
 
+import android.app.ActivityManager;
 import android.app.Service;
 import android.content.Intent;
 import android.location.Location;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -88,6 +90,9 @@ public class PolicyEngine extends Service {
 
     currentStateVector = new PolicyVector();
 
+    //Wait for the previous loop of IntentService to finish
+    waitForIntentServiceToComplete();
+
     locationFetcherService = new Intent(this, LocationFetcher.class);
     this.startService(locationFetcherService);
 
@@ -96,6 +101,21 @@ public class PolicyEngine extends Service {
 
     systemListFetcherService = new Intent(this, SystemListFetcher.class);
     this.startService(systemListFetcherService);
+  }
+
+  private void waitForIntentServiceToComplete(){
+    boolean allComplete = true;
+
+    do {
+      ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+      for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+        if (    service.service.getClassName().equals(SystemListFetcher.class.toString()) ||
+                service.service.getClassName().equals(NetworkListFetcher.class.toString()) ||
+                service.service.getClassName().equals(LocationFetcher.class.toString()))
+          allComplete = false;
+          Log.v(LOG_TAG, "Service: " + service.service.getClassName());
+      }
+    }while(!allComplete);
   }
 
   @Subscribe(threadMode = ThreadMode.ASYNC)

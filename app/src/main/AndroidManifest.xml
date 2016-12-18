@@ -34,9 +34,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".system.system_old.SystemManagerActivity"/>
-        <!-- <activity android:name=".location.LocationManagerActivity"/> -->
-        <activity android:name=".system.system_old.ProcessDetailActivity"/>
 
         <service
             android:name=".policy_engine.PolicyEngine"
