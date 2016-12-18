@@ -75,11 +75,12 @@ public class SendCloud extends IntentService {
     }
   }
 
-  private void NetworkPoster(List<Network> networks, Date current, String Email){
+  private void NetworkPoster(List<Network> networks, Date current, String Email) throws JSONException {
     Map<String, Object> temp = new HashMap<>();
     temp.put("Time", current.toString());
     temp.put("Email", Email);
     JSONArray passednetwork = new JSONArray();
+    JSONObject submission = new JSONObject(temp);
     Set<String> networkClean = new HashSet<>();
     for(Network net : networks){
       if(!networkClean.contains(net.getNetworkSSID())){
@@ -95,19 +96,20 @@ public class SendCloud extends IntentService {
         passednetwork.put(new JSONObject(tempnet));
       }
     }
-    temp.put("Networks", passednetwork);
+    submission.put("Networks", passednetwork);
     try {
-      CloudPoster(PreUrl+"/network", temp.toString());
+      CloudPoster(PreUrl+"/network", submission.toString());
     } catch (Exception e) {
       e.printStackTrace();
     }
   }
 
-  private void SystemPoster(SystemList systems, Date current, String Email){
+  private void SystemPoster(SystemList systems, Date current, String Email) throws JSONException {
     Map<String, Object> holder = new HashMap<>();
     holder.put("Time", current.toString());
     holder.put("Email", Email);
     JSONArray applications = new JSONArray();
+    JSONObject submission = new JSONObject(holder);
     Map<Integer, ApplicationList> temp = systems.getApplicationList();
     for(ApplicationList app : temp.values()){
       Map<String, Object> sys = new HashMap<>();
@@ -121,9 +123,9 @@ public class SendCloud extends IntentService {
       sys.put("Pss",app.getPss());
       applications.put(new JSONObject(sys));
     }
-    holder.put("Applications", applications);
+    submission.put("Applications", applications);
     try {
-      CloudPoster(PreUrl+"/system", holder.toString());
+      CloudPoster(PreUrl+"/system", submission.toString());
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -131,7 +133,7 @@ public class SendCloud extends IntentService {
 
   private void CloudPoster(String url, String data) throws Exception {
     System.out.println("\nUrl: "+url+"\nData: "+data+"\n");
-    /*
+
       HttpURLConnection httpcon;
       String result = null;
       //Connect
@@ -162,7 +164,7 @@ public class SendCloud extends IntentService {
       br.close();
       result = sb.toString();
       System.out.println(result);
-      */
+
   }
 }
 
