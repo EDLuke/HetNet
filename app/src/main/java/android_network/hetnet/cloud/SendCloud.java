@@ -52,9 +52,13 @@ public class SendCloud extends IntentService {
     ArrayList<DataStoreObject> dataStoreObjectList = (ArrayList) intent.getSerializableExtra("currentData");
     DataStoreObject tempdata = dataStoreObjectList.get(0);
     Date curr= Calendar.getInstance().getTime();
-    LocationPoster(tempdata.getLongitude(), tempdata.getLatitude(), curr, Email);
-    NetworkPoster(tempdata.getListOfNetworks(), curr, Email);
-    SystemPoster(tempdata.getSystemList(), curr, Email);
+    try {
+      LocationPoster(tempdata.getLongitude(), tempdata.getLatitude(), curr, Email);
+      NetworkPoster(tempdata.getListOfNetworks(), curr, Email);
+      SystemPoster(tempdata.getSystemList(), curr, Email);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   private void LocationPoster(double Longtitude, double Latitude, Date current, String Email){

@@ -2,6 +2,7 @@ package android_network.hetnet.system;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.HashMap;
 
@@ -10,7 +11,7 @@ import android_network.hetnet.data.Application;
 
 import static android_network.hetnet.common.Constants.SYSTEM_EVENT_TRACKER;
 
-public class SystemList {
+public class SystemList implements Serializable {
 
   /*Device List*/
   //CPU Usage

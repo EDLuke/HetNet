@@ -15,12 +15,13 @@ public class DataStoreObject implements Serializable {
   private double longitude;
   private List<Network> listOfNetworks;
 
-  public DataStoreObject(String applicationID, String applicationType, double latitude, double longitude, List<Network> listOfNetworks) {
+  public DataStoreObject(String applicationID, String applicationType, double latitude, double longitude, List<Network> listOfNetworks, SystemList systemlist) {
     this.applicationID = applicationID;
     this.applicationType = applicationType;
     this.latitude = latitude;
     this.longitude = longitude;
     this.listOfNetworks = listOfNetworks;
+    this.systemList = systemlist;
   }
 
   public String getApplicationID() {

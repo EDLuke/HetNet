@@ -149,11 +149,9 @@ public class PolicyEngine extends Service {
     if (networkDataReceived && locationDataReceived && systemDataReceived) {
       ruleVector = DummyMachineLearningEngine.getPolicyRuleVector(location, application);
       DataStoreObject dataStoreObject = new DataStoreObject(application.getApplicationID(), application.getApplicationType(), location.getLatitude(),
-        location.getLongitude(), networkList);
+        location.getLongitude(), networkList, systemList);
+      //dataStoreObject.setSystemList(systemList);
       sendDataToCloud(dataStoreObject);
-
-      dataStoreObject.setSystemList(systemList);
-
       PolicyEngineData data = new PolicyEngineData(ruleVector, currentStateVector, dataStoreObject);
       EventBus.getDefault().post(new UITriggerEvent(Constants.POLICY_ENGINE, data, Calendar.getInstance().getTime()));
     }

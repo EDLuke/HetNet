@@ -1,6 +1,8 @@
 package android_network.hetnet.system;
 
-public class ApplicationList {
+import java.io.Serializable;
+
+public class ApplicationList implements Serializable {
   private String processName = "";
 
   /*TrafficStats*/
