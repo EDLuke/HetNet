@@ -133,7 +133,7 @@ public class SendCloud extends IntentService {
 
   private void CloudPoster(String url, String data) throws Exception {
     System.out.println("\nUrl: "+url+"\nData: "+data+"\n");
-
+    /*
       HttpURLConnection httpcon;
       String result = null;
       //Connect
@@ -164,7 +164,7 @@ public class SendCloud extends IntentService {
       br.close();
       result = sb.toString();
       System.out.println(result);
-
+	*/
   }
 }
 
