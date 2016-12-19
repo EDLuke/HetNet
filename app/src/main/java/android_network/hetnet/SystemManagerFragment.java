@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,7 @@ import static android_network.hetnet.common.Constants.POLICY_ENGINE;
 
 public class SystemManagerFragment extends Fragment {
   static final String SYSTEM_FRAGMENT_LOG = "system_log";
+  static final String LOG_TAG = "SystemManagerFragment";
 
   private OnFragmentInteractionListener mListener;
 
@@ -118,7 +120,7 @@ public class SystemManagerFragment extends Fragment {
         List<String> applicationData = new ArrayList<String>();
         applicationData.add("CPU Usage: " + applicationList.getCpuUsage() + "%");
         applicationData.add("Received bytes: " + getFileSize(applicationList.getRxBytes()));
-        applicationData.add("Trasmitted bytes: " + getFileSize(applicationList.getTxBytes()));
+        applicationData.add("Transmitted bytes: " + getFileSize(applicationList.getTxBytes()));
         applicationData.add("Received packets: " + getFileSize(applicationList.getRxPackets()));
         applicationData.add("Transmitted packets: " + getFileSize(applicationList.getTxPackets()));
         applicationData.add("Private Clean: " + getFileSize(applicationList.getPrivateClean()));
@@ -127,6 +129,21 @@ public class SystemManagerFragment extends Fragment {
         applicationData.add("USS: " + getFileSize(applicationList.getUss()));
         applicationData.add("Battery mAh: " + applicationList.getBatteryMah());
         applicationData.add("Battery %: " + applicationList.getBatteryPercent() + "%");
+        applicationData.add("Wake lock count: " + applicationList.getWakeLockCount());
+
+        Log.v(LOG_TAG, applicationList.getProcessName() + "," +
+                       applicationList.getCpuUsage() + "," +
+                       applicationList.getRxBytes() + "," +
+                       applicationList.getTxBytes() + "," +
+                       applicationList.getRxPackets() + "," +
+                       applicationList.getTxPackets() + "," +
+                       applicationList.getPrivateClean() + "," +
+                       applicationList.getPrivateDirty() + "," +
+                       applicationList.getPss() + "," +
+                       applicationList.getUss() + "," +
+                       applicationList.getBatteryMah() + "," +
+                       applicationList.getBatteryPercent() + "," +
+                       applicationList.getWakeLockCount());
 
 
         listDataChild.put(applicationList.getProcessName(), applicationData);
@@ -148,7 +165,7 @@ public class SystemManagerFragment extends Fragment {
       return "0";
     final String[] units = new String[]{"B", "KB", "MB", "GB", "TB"};
     int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
-    return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+    return new DecimalFormat("###0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
   }
 
   public class SystemExpandableListAdapter extends BaseExpandableListAdapter {

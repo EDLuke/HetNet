@@ -23,6 +23,8 @@ public class ApplicationList implements Serializable {
 
   private int cpuUsage = -1;
 
+  private int wakeLockCount = -1;
+
   public long getRxBytes() {
     return rxBytes;
   }
@@ -141,5 +143,13 @@ public class ApplicationList implements Serializable {
 
   public void setBatteryPercent(double batteryPercent) {
     this.batteryPercent = batteryPercent;
+  }
+
+  public int getWakeLockCount() {
+    return wakeLockCount;
+  }
+
+  public void addWakeLockCount() {
+    this.wakeLockCount++;
   }
 }

@@ -5,8 +5,12 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.TrafficStats;
+import android.os.BatteryStats;
 import android.os.Debug.MemoryInfo;
 import android.util.Log;
+import android.util.SparseArray;
+
+import com.android.internal.os.BatteryStatsImpl;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -85,6 +89,7 @@ public class SystemListFetcher extends IntentService {
     getBatteryStats();
     getMemoryStats();
     getTrafficStats();
+    getWakeLocks();
 
     //Set the name last
     getLabelName();
@@ -147,7 +152,9 @@ public class SystemListFetcher extends IntentService {
           String lineOutput[] = line.trim().split(":");
           if (lineOutput.length == 2) {
             double value = Double.parseDouble(lineOutput[1].trim());
-            powerSum += value;
+
+            if(!lineOutput[0].equals("Unaccounted")) //Don't sum the Unaccounted battery usage
+              powerSum += value;
 
             if (lineOutput[0].contains("Uid")) { //UID
               int uid = -1;
@@ -260,8 +267,7 @@ public class SystemListFetcher extends IntentService {
     ret[0] = memoryInfo[0].getTotalPrivateClean();
     ret[1] = memoryInfo[0].getTotalPrivateDirty();
     ret[2] = memoryInfo[0].getTotalPss();
-    //Set USS to 0 for now
-    ret[3] = 0; /*memoryInfo[0].getTotalUss();*/
+    ret[3] = ret[0] + ret[1];
 
     return ret;
   }
@@ -275,6 +281,7 @@ public class SystemListFetcher extends IntentService {
       long txBytes = TrafficStats.getUidTxBytes(uid);
       long rxPackets = TrafficStats.getUidRxPackets(uid);
       long txPackets = TrafficStats.getUidTxPackets(uid);
+
 
       //Total
       //Use lastTotals for now TODO: either store lastTotals and monitor or change to service
@@ -308,6 +315,53 @@ public class SystemListFetcher extends IntentService {
     }
   }
 
+  private void getWakeLocks(){
+    Process p;
+    HashMap<String, int[]> ret = new HashMap<>();
+    try {
+      String[] cmd = {
+              "sh",
+              "-c",
+              "dumpsys power"};
+      p = Runtime.getRuntime().exec(cmd);
+      BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+      String line = reader.readLine();
+
+      boolean parseLock = false;
+      int wakelockCount = -1;
+      int wakelockIndex = 0;
+
+      while ((line = reader.readLine()) != null) {
+        Log.v(LOG_TAG, line);
+        if(!parseLock && line.contains("Wake Locks:")){
+          parseLock = true;
+          wakelockCount = Integer.parseInt(line.substring(line.indexOf("size=") + ("size=").length()));
+          continue;
+        }
+
+        if(parseLock && wakelockCount > 0){
+          try {
+            int uid = Integer.parseInt(line.substring(line.indexOf("uid=") + ("uid=").length(), line.indexOf(",")));
+            if(m_applicationListMap.containsKey(uid))
+              m_applicationListMap.get(uid).addWakeLockCount();
+            wakelockIndex++;
+
+            if (wakelockIndex >= wakelockCount) {
+              parseLock = false; //OK to return prematurely here until we need more data from 'dumpsys power'
+              return;
+            }
+          }catch(StringIndexOutOfBoundsException e){
+            Log.e(LOG_TAG, "Error parse wakelock at line: " + line);
+          }
+        }
+
+      }
+
+    } catch (IOException e) {
+      Log.e(LOG_TAG, "Error reading process\n" + e.toString());
+    }
+  }
+
   private void getCpuUsage() {
     //Total
     m_systemList.setCpuUsage(cpuUsage());
@@ -328,7 +382,7 @@ public class SystemListFetcher extends IntentService {
 
       int uid     = (pair.getValue())[0];
       int percent = (pair.getValue())[1];
-      String processName = pair.getKey();
+      String processName = pair.getKey().equals("") ? m_applicationListMap.get(uid).getProcessName() : pair.getKey();
 
       if (m_applicationListMap.containsKey(uid)) { //Update CPU usage for existing entry
         int currentPercent = m_applicationListMap.get(uid).getCpuUsage();
@@ -363,6 +417,8 @@ public class SystemListFetcher extends IntentService {
   }
 
   private HashMap<String, int[]> cpuUsageApplication() {
+    BatteryStatsImpl batteryStatsImpl = new BatteryStatsImpl();
+
     Process p;
     HashMap<String, int[]> ret = new HashMap<>();
     try {
@@ -388,16 +444,26 @@ public class SystemListFetcher extends IntentService {
 
         int percent = Integer.parseInt(lineOutput[2].substring(0, lineOutput[2].length() - 1));
         String processName = lineOutput[9];
+        int pid = Integer.parseInt(lineOutput[0]);
         int uid = -1;
         switch(lineOutput[8]){
           case "system":
             uid = 1000;
             break;
+          case "radio":
+            uid = 1001;
+            break;
+          case "log":
+            uid = 1007;
+            break;
+          case "wifi":
+            uid = 1010;
+            break;
           case "media":
             uid = 1013;
             break;
-          case "radio":
-            uid = 1001;
+          case "sdcard_rw":
+            uid = 1015;
             break;
           case "gps":
             uid = 1021;
@@ -407,6 +473,10 @@ public class SystemListFetcher extends IntentService {
             break;
           case "root":
             uid = 0;
+            break;
+          case "shell":
+            uid = 2000;
+            break;
         }
 
         if(uid == -1){
