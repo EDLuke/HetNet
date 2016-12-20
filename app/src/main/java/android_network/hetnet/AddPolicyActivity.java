@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 public class AddPolicyActivity extends Activity {
@@ -34,27 +36,60 @@ public class AddPolicyActivity extends Activity {
     RadioButton wifiOnlyOption = (RadioButton) findViewById(R.id.wifi_only_option);
     RadioButton cellularOnlyOption = (RadioButton) findViewById(R.id.cellular_only_option);
     Button addPolicyButton = (Button) findViewById(R.id.add_policy_button);
+    RadioGroup radioGroup = (RadioGroup) findViewById(R.id.policy_options);
 
     policyOptionText.setVisibility(View.VISIBLE);
     wifiOnlyOption.setVisibility(View.VISIBLE);
     cellularOnlyOption.setVisibility(View.VISIBLE);
     addPolicyButton.setVisibility(View.VISIBLE);
 
+    radioGroup.clearCheck();
+
     Spinner policyLevels = (Spinner) findViewById(R.id.policy_group_options);
     String policyLevel = String.valueOf(policyLevels.getSelectedItem());
     RelativeLayout applicationType = (RelativeLayout) findViewById(R.id.application_type);
     RelativeLayout application = (RelativeLayout) findViewById(R.id.application);
 
-    if (policyLevel.equals("Application Type Level Policy")) {
-      applicationType.setVisibility(View.VISIBLE);
-      application.setVisibility(View.INVISIBLE);
-    } else if (policyLevel.equals("Application Specific Policy")) {
-      application.setVisibility(View.VISIBLE);
-      applicationType.setVisibility(View.INVISIBLE);
+    switch (policyLevel) {
+      case "General Level Policy":
+        application.setVisibility(View.INVISIBLE);
+        applicationType.setVisibility(View.INVISIBLE);
+        break;
+      case "Application Type Level Policy":
+        application.setVisibility(View.INVISIBLE);
+        applicationType.setVisibility(View.VISIBLE);
+        break;
+      default:
+        applicationType.setVisibility(View.INVISIBLE);
+        application.setVisibility(View.VISIBLE);
+        break;
     }
   }
 
   public void onCheckboxClicked(View view) {
 
+  }
+
+  public void addPolicy(View view) {
+    Spinner policyLevels = (Spinner) findViewById(R.id.policy_group_options);
+    String policyLevel = String.valueOf(policyLevels.getSelectedItem());
+    TableLayout generalPolicyTable = (TableLayout) findViewById(R.id.policy_table_general);
+    TableLayout appTypePolicyTable = (TableLayout) findViewById(R.id.policy_table_app_type);
+    TableLayout appSpecificPolicyTable = (TableLayout) findViewById(R.id.policy_table_app_specific);
+
+    switch (policyLevel) {
+      case "General Level Policy":
+        generalPolicyTable.setVisibility(View.VISIBLE);
+        break;
+      case "Application Type Level Policy":
+        generalPolicyTable.setVisibility(View.INVISIBLE);
+        appTypePolicyTable.setVisibility(View.VISIBLE);
+        break;
+      default:
+        generalPolicyTable.setVisibility(View.INVISIBLE);
+        appTypePolicyTable.setVisibility(View.INVISIBLE);
+        appSpecificPolicyTable.setVisibility(View.VISIBLE);
+        break;
+    }
   }
 }
