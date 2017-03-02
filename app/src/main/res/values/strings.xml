@@ -47,6 +47,10 @@
     <string name="vudu">Vudu</string>
     <string name="google_chrome">Google Chrome</string>
     <string name="bank_of_america">Bank of America</string>
+    <string name="policy_header">Policy</string>
+    <string name="applied_to_header">Applied to</string>
+    <string name="all_apps_text">All apps</string>
+    <string name="video_banking_text">Video, Banking</string>
     <string-array name="policy_groups">
         <item>General Level Policy</item>
         <item>Application Type Level Policy</item>
