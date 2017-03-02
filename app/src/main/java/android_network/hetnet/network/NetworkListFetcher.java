@@ -253,19 +253,4 @@ public class NetworkListFetcher extends IntentService {
     }
   }
 
-  public static long getTimeToConnect(Network network) {
-    // used when more than one network is available for connection
-    long time = 0;
-
-    WifiInfo w = wifiManager.getConnectionInfo();
-
-    int i = w.getNetworkId();
-
-    wifiManager.disconnect();
-    wifiManager.setWifiEnabled(true);
-    wifiManager.enableNetwork(i, true);
-    wifiManager.reconnect();
-
-    return time;
-  }
 }
