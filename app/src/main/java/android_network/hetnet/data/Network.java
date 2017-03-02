@@ -12,7 +12,7 @@ public class Network implements Serializable, Cloneable {
   private double timeToConnect;
   private double cost;
   private boolean currentNetwork;
-  private String speed;
+  private double speed;
 
   public String getNetworkSSID() {
     return networkSSID;
@@ -91,7 +91,7 @@ public class Network implements Serializable, Cloneable {
     return speed;
   }
 
-  public String setSpeed(String speed) {
+  public double setSpeed(double speed) {
     return this.speed = speed;
   }
 

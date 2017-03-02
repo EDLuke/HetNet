@@ -100,6 +100,7 @@ public class NetworkListFetcher extends IntentService {
 
   @NonNull
   private Double getCarrierCost(String carrierName) {
+    // skeleton code for cost calculation
     Double cost = 0.0;
 
     switch (carrierName) {
@@ -155,6 +156,7 @@ public class NetworkListFetcher extends IntentService {
       // gets maximum network speed
       double max_speed = wifiManager.getConnectionInfo().getLinkSpeed();
 
+
       int i = 0;
       for (ScanResult result : wifiList) {
 
@@ -162,6 +164,8 @@ public class NetworkListFetcher extends IntentService {
 
         //hypothetical value
         network.setBandwidth(max_speed);
+
+
 
         //name
         network.setNetworkSSID(result.SSID);
@@ -222,6 +226,7 @@ public class NetworkListFetcher extends IntentService {
 
     if (cm != null) {
       NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+
       // format: "current_SSID"
       current_SSID = activeNetwork.getExtraInfo();
 

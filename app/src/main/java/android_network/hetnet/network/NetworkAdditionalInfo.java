@@ -22,9 +22,9 @@ public class NetworkAdditionalInfo extends Activity {
 
   }
 
-  public static String getNetworkSpeed(Network network) {
+  public static double getNetworkSpeed(Network network) {
 
-    String speed = "N/A";
+    double speed = 0;
 
     return speed;
 
